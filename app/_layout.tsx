@@ -1,29 +1,46 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Theme } from "@/constants/theme";
+import { parse } from "expo-linking";
+import { router, Stack } from "expo-router";
+import React from "react";
+import { Alert, Linking } from "react-native";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+  React.useEffect(() => {
+    const handleDeepLink = (event: { url: any; }) => {
+      const data = parse(event.url);
+      console.log("Received deep link:", data);
+      if (data.queryParams?.status === "success") {
+        Alert.alert("Success", "Payment completed successfully!");
+        router.replace("/dashboard/home"); // or wherever appropriate
+      } else if (data.queryParams?.status === "cancel") {
+        Alert.alert("Cancelled", "Payment was cancelled.");
+      }
+    };
+  
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+  
+    // Check if app was launched by a deep link
+    Linking.getInitialURL().then((url) => {
+      if (url) handleDeepLink({ url });
+    });
+  
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack
+      screenOptions={{
+        contentStyle: {
+          backgroundColor: Theme.background
+        }
+      }}
+    >
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="dashboard" options={{ headerShown: false }} />
+    </Stack>
   );
 }
