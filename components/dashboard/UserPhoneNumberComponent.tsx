@@ -1,9 +1,10 @@
 import SIZES from '@/constants/size';
+import STYLES from '@/constants/styles';
 import { Theme } from '@/constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/build/FontAwesome5';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { Card, Text } from "react-native-paper";
 
 interface UserPhoneNumberData {
@@ -13,7 +14,7 @@ interface UserPhoneNumberData {
 
 const UserPhoneNumberComponent: React.FC<UserPhoneNumberData> = ( {phoneNumber='',  phoneNumberVerified} ) => {
   return (
-    <Card style={styles.card}>
+    <Card style={STYLES.card}>
         {phoneNumber ? (
             <Card.Content style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 5 }}>
                 <View
@@ -36,11 +37,3 @@ const UserPhoneNumberComponent: React.FC<UserPhoneNumberData> = ( {phoneNumber='
 }
 
 export default UserPhoneNumberComponent;
-
-const styles = StyleSheet.create({
-    card: {
-        backgroundColor: "transparent",
-        marginBottom: 20,
-        padding: 10,
-    }
-});

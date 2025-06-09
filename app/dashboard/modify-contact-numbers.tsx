@@ -236,10 +236,6 @@ const ModifyContactNumbersScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  label: {
-    fontWeight: "600",
-    fontSize: SIZES.title
-  },
   skipButton: {
     position: "absolute",
     right: 20,

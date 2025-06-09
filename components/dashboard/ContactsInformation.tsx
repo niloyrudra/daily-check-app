@@ -1,10 +1,10 @@
 import SIZES from '@/constants/size';
+import STYLES from '@/constants/styles';
 import { Theme } from '@/constants/theme';
 import { Contact } from '@/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/build/FontAwesome5';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { Card, Divider, Text } from "react-native-paper";
 
 interface ContactsInformationData {
@@ -16,7 +16,7 @@ const ContactsInformationComponent = ({ contact1, contact2 }: ContactsInformatio
 
     if (!contact1 && !contact2) {
         return (
-            <Card style={styles.card}>
+            <Card style={STYLES.card}>
                 <Text variant="bodyMedium" style={{ color: Theme.borderColor, fontSize: SIZES.contentText }}>
                 No contact(s) verified yet.
                 </Text>
@@ -27,7 +27,7 @@ const ContactsInformationComponent = ({ contact1, contact2 }: ContactsInformatio
     const contactNumbers = { contact1, contact2 };
 
     return (
-        <Card style={styles.card}>
+        <Card style={STYLES.card}>
             {contactNumbers?.contact1?.phoneNumber || contactNumbers?.contact2?.phoneNumber
             ?
                 (            
@@ -68,15 +68,3 @@ const ContactsInformationComponent = ({ contact1, contact2 }: ContactsInformatio
 }
 
 export default ContactsInformationComponent;
-
-const styles = StyleSheet.create({
-    card: {
-        backgroundColor: "transparent",
-        marginBottom: 20,
-        padding: 10,
-        // borderWidth: 1,
-        // borderColor: Theme.borderColor
-        // elevation: 0,
-        // boxShadow: "none"
-    }
-});

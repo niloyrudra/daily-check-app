@@ -1,6 +1,8 @@
+import ActivityIndicatorComponent from "@/components/ActivityIndicatorComponent";
 import ActionButton from "@/components/dashboard/ActionButton";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import ContactsInformationComponent from "@/components/dashboard/ContactsInformation";
+import MotiAnimatedSection from "@/components/dashboard/MotiAnimatedSection";
 import SectionTitle from "@/components/dashboard/SectionTitle";
 import UserInfoComponent from "@/components/dashboard/UserInfo";
 import UserPhoneNumberComponent from "@/components/dashboard/UserPhoneNumberComponent";
@@ -11,9 +13,8 @@ import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
 import { useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
-import { MotiView } from "moti";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Divider } from "react-native-paper";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
@@ -22,6 +23,7 @@ const DashboardScreen: React.FC = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
   const membershipCancellationHandler = async () => {
     try {
       setLoading(true)
@@ -71,11 +73,7 @@ const DashboardScreen: React.FC = () => {
   }, []);
 
   if (!userData) {
-    return (
-      <SafeAreaLayout>
-        <ActivityIndicator size="large" color={Theme.accent} />
-      </SafeAreaLayout>
-    );
+    return (<ActivityIndicatorComponent />);
   }
 
   return (
@@ -123,27 +121,22 @@ const DashboardScreen: React.FC = () => {
           <ActionButton
             title="Signout"
             onPress={async () => {
-                await auth.signOut();
-                router.replace("/(auth)/login");
-              }}
+              await auth.signOut();
+              router.replace("/(auth)/login");
+            }}
             mode="elevated"
             buttonColor={Theme.accent}
             loading={loading}
           />
         </View>
 
-
         <Divider style={{marginVertical: 30, backgroundColor: "#333" }} />
 
         {/* Scheduler Section */}
-        <MotiView
-          from={{ opacity: 0, translateY: 20 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "spring", duration: 500 }}
-        >
+        <MotiAnimatedSection>
           <SectionTitle title="Set Your Schedule" />
           <CalendarComponent />
-        </MotiView>
+        </MotiAnimatedSection>
 
         <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: "#333" }} />
 
@@ -154,6 +147,8 @@ const DashboardScreen: React.FC = () => {
           mode="elevated"
           loading={loading}
         />
+
+        <View style={{height:30}} />
 
       </ScrollView>
 

@@ -77,6 +77,12 @@ const errorMessage: StyleProp<TextStyle> = {
     fontSize: SIZES.contentText,
 };
 
+const card: StyleProp<ViewStyle> = {
+    backgroundColor: "transparent",
+    marginBottom: 20,
+    padding: 10
+};
+
 const STYLES = {
     container,
     headerContainer,
@@ -88,7 +94,8 @@ const STYLES = {
     actionButtonTextStyle,
     errorMessage,
     formGroup,
-    formLabel
+    formLabel,
+    card
 };
 
 export default STYLES;

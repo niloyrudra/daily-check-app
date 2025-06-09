@@ -19,7 +19,7 @@ const WelcomeSection: React.FC<UserData> = ( {name, email} ) => {
     >
         <Text variant="titleLarge" style={{ color: Theme.text, fontSize: SIZES.header }}>Welcome,</Text>
         <Text variant="bodyMedium" style={{ color: "green", fontSize: SIZES.title }}> {/* "#aaa" */}
-        {name || email || "User"}
+          {name || email || "User"}
         </Text>
     </MotiView>
   )
