@@ -11,7 +11,6 @@ import TextInputComponent from "@/components/form-components/TextInputComponent"
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import SIZES from "@/constants/size";
 import STYLES from "@/constants/styles";
-import { Theme } from "@/constants/theme";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
 
@@ -25,7 +24,7 @@ const phoneSchema = Yup.object().shape({
 });
 
 const errorMap: Record<number, string> = {
-  21408: "We are not allowed to send SMS to this country.",
+  21408: "SMS/Text is not allowed to this country.",
   21610: "User has opted out of messages. They must reply START to receive messages again.",
   21614: "Invalid phone number. Please use the E.164 format.",
   20429: "Too many OTP requests. Please wait a while.",
@@ -114,8 +113,10 @@ const PhoneAuthScreen: React.FC = () => {
   };
 
   const renderPhoneInput = (values: any, handleChange: any, errors: any, touched: any) => (
-    <View style={styles.formGroup}>
-      <Text style={styles.label}>Your Phone Number:</Text>
+    <View style={[STYLES.formGroup, {alignItems: "center"}]}>
+      
+      <Text style={STYLES.formLabel}>Your Phone Number:</Text>
+      
       <TextInputComponent
         placeholder="+1234567890"
         value={values.phone}
@@ -123,22 +124,28 @@ const PhoneAuthScreen: React.FC = () => {
         keyboardType="phone-pad"
         isPassword={false}
       />
-      {touched.phone && errors.phone && <Text style={styles.error}>{errors.phone}</Text>}
+      {touched.phone && errors.phone && <Text style={STYLES.errorMessage}>{errors.phone}</Text>}
+      
       <ActionPrimaryButton buttonTitle="Send Code" onSubmit={() => handleSendCode(values.phone)} isLoading={loading} />
+    
     </View>
   );
 
   const renderCodeInput = (values: any, handleChange: any, errors: any, touched: any) => (
-    <View style={styles.formGroup}>
-      <Text style={styles.label}>Enter Code:</Text>
+    <View style={STYLES.formGroup}>
+      
+      <Text style={STYLES.formLabel}>Enter Code:</Text>
+      
       <TextInputComponent
         placeholder="123456"
         value={values.code}
         onChange={handleChange("code")}
         keyboardType="number-pad"
       />
-      {touched.code && errors.code && <Text style={styles.error}>{errors.code}</Text>}
+      {touched.code && errors.code && <Text style={STYLES.errorMessage}>{errors.code}</Text>}
+      
       <ActionPrimaryButton buttonTitle="Verify Code" onSubmit={() => handleVerifyCode(values.code)} isLoading={loading} />
+    
     </View>
   );
 
@@ -166,19 +173,6 @@ const PhoneAuthScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  formGroup: {
-    gap: 20,
-    width: SIZES.screenBodyWidth,
-    alignItems:"center"
-  },
-  label: {
-    fontSize: SIZES.title,
-    color: Theme.primary
-  },
-  error: {
-    color: "red",
-    fontSize: SIZES.contentText,
-  },
   skipButton: {
     position: "absolute",
     right: 20,

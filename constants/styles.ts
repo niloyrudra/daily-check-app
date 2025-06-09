@@ -1,5 +1,6 @@
 import SIZES from "@/constants/size";
 import { StyleProp, TextStyle, ViewProps, ViewStyle } from "react-native";
+import { Theme } from "./theme";
 
 const headerContainer: StyleProp<ViewProps> = {
     flexDirection: "row",
@@ -60,6 +61,21 @@ const actionButtonTextStyle: StyleProp<TextStyle> = {
     fontWeight: "500"
 } as ViewProps;
 
+const formGroup: StyleProp<ViewStyle> = {
+    gap: 20,
+    width: SIZES.screenBodyWidth,
+    // alignItems:"center"
+};
+
+const formLabel: StyleProp<TextStyle> = {
+    fontSize: SIZES.title,
+    color: Theme.primary
+};
+
+const errorMessage: StyleProp<TextStyle> = {
+    color: Theme.accent,
+    fontSize: SIZES.contentText,
+};
 
 const STYLES = {
     container,
@@ -69,7 +85,10 @@ const STYLES = {
     textShadow,
     contentCentered,
     childContentCentered,
-    actionButtonTextStyle
+    actionButtonTextStyle,
+    errorMessage,
+    formGroup,
+    formLabel
 };
 
 export default STYLES;

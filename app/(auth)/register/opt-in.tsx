@@ -69,9 +69,7 @@ const OptInScreen: React.FC = () => {
         {({ handleSubmit }) => (
           <View style={[STYLES.childContentCentered, {marginTop: 20}]}>
 
-            <View
-              style={[ STYLES.childContentCentered, { gap:30, marginBottom: 30 }]}
-            >
+            <View style={[ STYLES.childContentCentered, { gap:30 } ]}>
 
               <Text style={{color:Theme.primary, textAlign: "center", fontSize: SIZES.contentText, fontWeight: "800"}}>Please, make your confirmation about receiving texts and answering calls from Daily Check App by switching the following button ON.</Text>
 
@@ -101,18 +99,16 @@ const OptInScreen: React.FC = () => {
                   <CheckboxField name="optIn" />
                 </View>
 
-                <Text style={{color:Theme.primary, textAlign:"center", fontSize: SIZES.contentText}}>I would like to receive emergency SMS(text messages) as safety checks and acknowledge I can opt out at any time by replying STOP.</Text>
+                <Text style={{color:Theme.primary, textAlign:"center", fontSize: SIZES.contentText}}>I would like to receive emergency SMS(text messages) and/or calls as safety checks and acknowledge I can opt out at any time by replying STOP.</Text>
 
               </View>
 
+              <ActionPrimaryButton
+                buttonTitle="Continue"
+                onSubmit={handleSubmit}
+                isLoading={loading}
+              />
             </View>
-
-            <ActionPrimaryButton
-              buttonTitle="Continue"
-              onSubmit={handleSubmit}
-              isLoading={loading}
-              buttonStyle={{width: "auto", paddingHorizontal: 30}}
-            />
 
           </View>
         )}

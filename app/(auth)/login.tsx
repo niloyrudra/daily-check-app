@@ -3,7 +3,7 @@ import PlainTextLink from "@/components/form-components/auth/PlainTextLink";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import { auth, signInWithEmailAndPassword } from "@/config/firebase";
-import SIZES from "@/constants/size";
+import STYLES from "@/constants/styles";
 import { Theme } from "@/constants/theme";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, useRouter } from "expo-router";
@@ -50,19 +50,15 @@ const Login: React.FC = () => {
         onSubmit={(values) => handleLogin(values.email, values.password)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-          <View
-            style={{
-              gap: 20,
-              width: SIZES.screenBodyWidth
-            }}
-          >
+          <View style={STYLES.formGroup}>
+
             <TextInputComponent
               placeholder="Email"
               value={values.email}
               onChange={handleChange("email")}
               onBlur={handleBlur("email")}
             />
-            {errors.email && touched.email && <Text>{errors.email}</Text>}
+            {errors.email && touched.email && <Text style={STYLES.errorMessage}>{errors.email}</Text>}
 
             <TextInputComponent
               placeholder="Password"
@@ -71,7 +67,7 @@ const Login: React.FC = () => {
               onChange={handleChange("password")}
               onBlur={handleBlur("password")}
             />
-            {errors.password && touched.password && <Text>{errors.password}</Text>}
+            {errors.password && touched.password && <Text style={STYLES.errorMessage}>{errors.password}</Text>}
 
             <View
               style={{

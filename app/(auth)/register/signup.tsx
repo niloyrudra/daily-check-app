@@ -3,7 +3,7 @@ import PlainTextLink from "@/components/form-components/auth/PlainTextLink";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import { auth, db } from "@/config/firebase";
-import SIZES from "@/constants/size";
+import STYLES from "@/constants/styles";
 import { MembershipPlan, UserData } from "@/types";
 import { useRouter } from "expo-router";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
@@ -97,12 +97,8 @@ const SignUpScreen: React.FC = () => {
         onSubmit={(values) => handleSignUpScreen(values.name, values.zipCode, values.country, values.email, values.password)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-          <View
-            style={{
-              gap: 20,
-              width: SIZES.screenBodyWidth,
-            }}
-          >
+          <View style={STYLES.formGroup}>
+            
             <TextInputComponent
               placeholder="Full Name"
               inputMode="text"
@@ -110,7 +106,7 @@ const SignUpScreen: React.FC = () => {
               onChange={handleChange("name")}
               onBlur={handleBlur("name")}
             />
-            {errors.name && touched.name && <Text>{errors.name}</Text>}
+            {errors.name && touched.name && <Text style={STYLES.errorMessage}>{errors.name}</Text>}
             
             <TextInputComponent
               placeholder="Email"
@@ -119,7 +115,7 @@ const SignUpScreen: React.FC = () => {
               onChange={handleChange("email")}
               onBlur={handleBlur("email")}
             />
-            {errors.email && touched.email && <Text>{errors.email}</Text>}
+            {errors.email && touched.email && <Text style={STYLES.errorMessage}>{errors.email}</Text>}
 
             <TextInputComponent
               placeholder="Password"
@@ -128,7 +124,7 @@ const SignUpScreen: React.FC = () => {
               onChange={handleChange("password")}
               onBlur={handleBlur("password")}
             />
-            {errors.password && touched.password && <Text>{errors.password}</Text>}
+            {errors.password && touched.password && <Text style={STYLES.errorMessage}>{errors.password}</Text>}
 
             <TextInputComponent
               placeholder="Confirm Password"
@@ -137,7 +133,7 @@ const SignUpScreen: React.FC = () => {
               onChange={handleChange("confirmPassword")}
               onBlur={handleBlur("confirmPassword")}
             />
-            {errors.confirmPassword && touched.confirmPassword && <Text>{errors.confirmPassword}</Text>}
+            {errors.confirmPassword && touched.confirmPassword && <Text style={STYLES.errorMessage}>{errors.confirmPassword}</Text>}
 
             <TextInputComponent
               placeholder="Zip-code"
@@ -146,7 +142,7 @@ const SignUpScreen: React.FC = () => {
               onChange={handleChange("zipCode")}
               onBlur={handleBlur("zipCode")}
             />
-            {errors.zipCode && touched.zipCode && <Text>{errors.zipCode}</Text>}
+            {errors.zipCode && touched.zipCode && <Text style={STYLES.errorMessage}>{errors.zipCode}</Text>}
 
             <TextInputComponent
               placeholder="Country"
@@ -155,7 +151,7 @@ const SignUpScreen: React.FC = () => {
               onChange={handleChange("country")}
               onBlur={handleBlur("country")}
             />
-            {errors.country && touched.country && <Text>{errors.country}</Text>}
+            {errors.country && touched.country && <Text style={STYLES.errorMessage}>{errors.country}</Text>}
 
             {/* Submit Button */}
             <ActionPrimaryButton
@@ -168,6 +164,8 @@ const SignUpScreen: React.FC = () => {
       </Formik>
 
       <PlainTextLink text="Already have an account?" route="/(auth)/login" linkText="Login here." />
+
+      <View style={{height:20}} />
       
     </AuthScreenLayout>
   );

@@ -4,10 +4,11 @@ import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/dat
 import dayjs from "dayjs";
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Alert, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { Paragraph } from "react-native-paper";
+import { Text } from "react-native-paper";
 import ActionPrimaryButton from "../form-components/ActionPrimaryButton";
+import ActionButton from "./ActionButton";
 
 // Marked dates structure
 interface MarkedDates {
@@ -142,7 +143,7 @@ const CalendarComponent: React.FC = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, gap: 20 }}>
       <Calendar
         onDayPress={handleDayPress}
         markedDates={markedDates}
@@ -151,30 +152,26 @@ const CalendarComponent: React.FC = () => {
           borderWidth: 1,
           borderColor: "#aaa",
           borderRadius: 15,
-          marginBottom: 20,
         }}
       />
 
-      <TouchableOpacity
-        style={{ backgroundColor: Theme.primary, padding: 10, borderRadius: 30, marginBottom: 10 }}
+      <ActionButton
+        title="Select Full Current Month"
         onPress={handleMonthSelect}
-      >
-        <Text style={{ color: "white", textAlign: "center", fontSize: 18, fontWeight: "800" }}>Select Full Current Month</Text>
-      </TouchableOpacity>
+        loading={loading}
+      />
 
-      <TouchableOpacity
-        style={{ backgroundColor: Theme.primary, padding: 10, borderRadius: 30, marginBottom: 10 }}
+      <ActionButton
+        title="Pick Start Time"
         onPress={() => setShowTimePicker("start")}
-      >
-        <Text style={{ color: "white", textAlign: "center", fontSize: 18, fontWeight: "800" }}>Pick Start Time</Text>
-      </TouchableOpacity>
+        loading={loading}
+      />
 
-      <TouchableOpacity
-        style={{ backgroundColor: Theme.primary, padding: 10, borderRadius: 30, marginBottom: 10 }}
+      <ActionButton
+        title="Pick End Time"
         onPress={() => setShowTimePicker("end")}
-      >
-        <Text style={{ color: "white", textAlign: "center", fontSize: 18, fontWeight: "800" }}>Pick End Time</Text>
-      </TouchableOpacity>
+        loading={loading}
+      />
 
       {showTimePicker && (
         <DateTimePicker
@@ -184,10 +181,10 @@ const CalendarComponent: React.FC = () => {
         />
       )}
 
-      <View style={{ marginVertical: 20 }}>
-        <Paragraph style={{fontSize: 18}}>Selected Range: {range.start} → {range.end || "..."}</Paragraph>
-        <Paragraph style={{fontSize: 18}}>Start Time: {startTime.toLocaleTimeString()}</Paragraph>
-        <Paragraph style={{fontSize: 18}}>End Time: {endTime.toLocaleTimeString()}</Paragraph>
+      <View>
+        <Text variant="bodyMedium" style={{fontSize: 18}}>Selected Range: {range.start} → {range.end || "..."}</Text>
+        <Text variant="bodyMedium" style={{fontSize: 18}}>Start Time: {startTime.toLocaleTimeString()}</Text>
+        <Text variant="bodyMedium" style={{fontSize: 18}}>End Time: {endTime.toLocaleTimeString()}</Text>
       </View>
 
       <ActionPrimaryButton

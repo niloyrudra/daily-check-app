@@ -89,7 +89,7 @@ const MembershipScreen: React.FC = () => {
   if (!authReady) {
     return (
       <AuthScreenLayout title="Membership Plans">
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={Theme.accent} />
       </AuthScreenLayout>
     );
   }

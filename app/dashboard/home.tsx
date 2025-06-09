@@ -1,3 +1,4 @@
+import ActionButton from "@/components/dashboard/ActionButton";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import ContactsInformationComponent from "@/components/dashboard/ContactsInformation";
 import SectionTitle from "@/components/dashboard/SectionTitle";
@@ -6,16 +7,14 @@ import UserPhoneNumberComponent from "@/components/dashboard/UserPhoneNumberComp
 import WelcomeSection from "@/components/dashboard/WelcomeSection";
 import SafeAreaLayout from "@/components/layout/SafeAreaLayout";
 import { auth, db } from "@/config/firebase";
-import SIZES from "@/constants/size";
-import STYLES from "@/constants/styles";
 import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
 import { useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import { MotiView } from "moti";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView } from "react-native";
-import { Button, Divider, Text } from "react-native-paper";
+import { ActivityIndicator, ScrollView, View } from "react-native";
+import { Divider } from "react-native-paper";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
 
@@ -23,7 +22,6 @@ const DashboardScreen: React.FC = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-// console.log(user)
   const membershipCancellationHandler = async () => {
     try {
       setLoading(true)
@@ -96,21 +94,13 @@ const DashboardScreen: React.FC = () => {
         <UserPhoneNumberComponent phoneNumber={userData?.phoneNumber} phoneNumberVerified={userData?.phoneNumberVerified || false} />
 
         {/* Actions */}
-        <MotiView
-          from={{ opacity: 0, translateY: 20 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "spring", duration: 500 }}
-        >
-          <Button
-            mode="elevated"
-            buttonColor={Theme.primary} //"#1E88E5"
-            style={[{ marginBottom: 20 }]}
-            onPress={() => router.push("/dashboard/modify-phone-number")}
-          >
-            <Text style={{fontSize: SIZES.title, color: "#FFFFFF", paddingVertical: 6}}>Modify Phone Number</Text>
-            
-          </Button>
-        </MotiView>
+        <ActionButton
+          title="Modify Phone Number"
+          onPress={() => router.push("/dashboard/modify-phone-number")}
+          mode="elevated"
+          loading={loading}
+          buttonStyle={{marginBottom: 20}}
+        />
 
         {/* Contact Information Status */}
         <SectionTitle title="Contact Information" />
@@ -121,31 +111,26 @@ const DashboardScreen: React.FC = () => {
         />
 
         {/* Actions */}
-        <MotiView
-          from={{ opacity: 0, translateY: 20 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "spring", duration: 500 }}
-        >
-          <Button
-            mode="elevated"
-            buttonColor={Theme.primary} //"#1E88E5"
-            style={[{ marginBottom: 10 }]}
+        <View style={{gap:20}}>
+
+          <ActionButton
+            title="Modify Contact Details"
             onPress={() => router.push("/dashboard/modify-contact-numbers")}
-          >
-            <Text style={{fontSize: SIZES.title, color: "#FFFFFF", paddingVertical: 6}}>Modify Contact Details</Text>
-            
-          </Button>
-          <Button
+            mode="elevated"
+            loading={loading}
+          />
+
+          <ActionButton
+            title="Signout"
+            onPress={async () => {
+                await auth.signOut();
+                router.replace("/(auth)/login");
+              }}
             mode="elevated"
             buttonColor={Theme.accent}
-            onPress={async () => {
-              await auth.signOut();
-              router.replace("/(auth)/login");
-            }}
-          >
-            <Text style={{fontSize: SIZES.title, color: "#FFFFFF", paddingVertical: 6}}>Signout</Text>
-          </Button>
-        </MotiView>
+            loading={loading}
+          />
+        </View>
 
 
         <Divider style={{marginVertical: 30, backgroundColor: "#333" }} />
@@ -163,25 +148,12 @@ const DashboardScreen: React.FC = () => {
         <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: "#333" }} />
 
         {/* Cancel Membership Actions */}
-        <MotiView
-          from={{ opacity: 0, translateY: 20 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "spring", duration: 500 }}
-        >
-          {loading ? 
-            (<ActivityIndicator size="large" color={Theme.secondary} />) : (
-              <Button
-                mode="elevated"
-                buttonColor={Theme.primary} //"#1E88E5"
-                style={[{ marginBottom: 10 }, STYLES.boxShadow]}
-                onPress={membershipCancellationHandler}
-              >
-                <Text style={{fontSize: SIZES.title, color: "#FFFFFF", paddingVertical: 6}}>Cancel Membership</Text>
-                
-              </Button>
-            )
-          }
-        </MotiView>
+        <ActionButton
+          title="Cancel Membership"
+          onPress={membershipCancellationHandler}
+          mode="elevated"
+          loading={loading}
+        />
 
       </ScrollView>
 

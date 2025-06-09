@@ -3,6 +3,7 @@ import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButto
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import { auth } from "@/config/firebase";
+import STYLES from "@/constants/styles";
 import { Theme } from "@/constants/theme";
 import { useRouter } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
@@ -48,22 +49,19 @@ const ForgotPassword: React.FC = () => {
         onSubmit={(values) => handleReset(values.email)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-          <View
-            style={{
-              gap: 20
-            }}
-          >
+          <View style={STYLES.formGroup}>
+
             <TextInputComponent
               placeholder="Email"
               value={values.email}
               onChange={handleChange("email")}
               onBlur={handleBlur("email")}
             />
-            {errors.email && touched.email && <Text>{errors.email}</Text>}
+            {errors.email && touched.email && <Text style={STYLES.errorMessage}>{errors.email}</Text>}
 
             {/* Submit Button */}
             <ActionPrimaryButton
-              buttonTitle="Login"
+              buttonTitle="Reset Password"
               onSubmit={handleSubmit}
               isLoading={loading}
             />

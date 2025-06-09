@@ -25,7 +25,7 @@ export default {
     web: {
       bundler: "metro",
       output: "static",
-      favicon: "./assets/images/daily-check-app.png",
+      favicon: "./assets/images/daily-check-app-fav-icon.png",
     },
     plugins: [
       "expo-router",

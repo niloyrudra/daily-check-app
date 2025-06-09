@@ -28,7 +28,7 @@ const phoneSchema = Yup.object().shape({
 });
 
 const errorMap: Record<number, string> = {
-  21408: "SMS not allowed to this country.",
+  21408: "SMS/Text is not allowed to this country.",
   21610: "User opted out. Reply START to re-enable.",
   21614: "Invalid phone number.",
   20429: "Too many OTP requests. Please wait.",
@@ -157,22 +157,21 @@ const ModifyContactNumbersScreen: React.FC = () => {
       onSubmit={() => {}}
     >
       {({ handleChange, values, errors, touched }) => (
-        <View style={styles.formGroup}>
+        <View style={[STYLES.formGroup, {alignItems: "center"}]}>
         
-          <Text style={styles.label}>
+          <Text style={STYLES.formLabel}>
             {contactKey === "contact1" ? "Primary Contact Number" : "Secondary Contact Number"}
           </Text>
 
           {step === "enterPhone" ? (
             <>
-              
               <TextInputComponent
                 placeholder="Name"
                 value={values.name}
                 onChange={handleChange("name")}
                 isPassword={false}
               />
-              {touched.name && errors.name && <Text style={styles.error}>{errors.name}</Text>}
+              {touched.name && errors.name && <Text style={STYLES.errorMessage}>{errors.name}</Text>}
               
               <TextInputComponent
                 placeholder="+1234567890"
@@ -181,7 +180,7 @@ const ModifyContactNumbersScreen: React.FC = () => {
                 keyboardType="phone-pad"
                 isPassword={false}
               />
-              {touched.phone && errors.phone && <Text style={styles.error}>{errors.phone}</Text>}
+              {touched.phone && errors.phone && <Text style={STYLES.errorMessage}>{errors.phone}</Text>}
               
               <ActionPrimaryButton
                 buttonTitle="Send Code"
@@ -201,7 +200,8 @@ const ModifyContactNumbersScreen: React.FC = () => {
                 onChange={handleChange("code")}
                 keyboardType="number-pad"
               />
-              {touched.code && errors.code && <Text style={styles.error}>{errors.code}</Text>}
+              {touched.code && errors.code && <Text style={STYLES.errorMessage}>{errors.code}</Text>}
+              
               <ActionPrimaryButton
                 buttonTitle="Verify Code"
                 onSubmit={() => handleVerifyCode(values.code, contactKey, storedPhone)}
@@ -236,18 +236,9 @@ const ModifyContactNumbersScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  formGroup: {
-    gap: 20,
-    width: SIZES.screenBodyWidth,
-    alignItems:"center"
-  },
   label: {
     fontWeight: "600",
     fontSize: SIZES.title
-  },
-  error: {
-    color: "red",
-    fontSize: SIZES.contentText
   },
   skipButton: {
     position: "absolute",

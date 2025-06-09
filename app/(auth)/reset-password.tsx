@@ -2,6 +2,7 @@ import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButto
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import { auth } from "@/config/firebase";
+import STYLES from "@/constants/styles";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { confirmPasswordReset, verifyPasswordResetCode } from "firebase/auth";
 import { Formik } from "formik";
@@ -43,11 +44,8 @@ const ResetPassword: React.FC = () => {
         onSubmit={(values) => handleResetPassword(values.password)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-          <View
-            style={{
-              gap: 20
-            }}
-          >
+          <View style={STYLES.formGroup}>
+            
             <TextInputComponent
               placeholder="New Password"
               value={values.password}
@@ -55,7 +53,7 @@ const ResetPassword: React.FC = () => {
               onChange={handleChange("password")}
               onBlur={handleBlur("password")}
             />
-            {errors.password && touched.password && <Text>{errors.password}</Text>}
+            {errors.password && touched.password && <Text style={STYLES.errorMessage}>{errors.password}</Text>}
 
             <ActionPrimaryButton
               buttonTitle="Reset Password"
