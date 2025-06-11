@@ -155,6 +155,8 @@ const CalendarComponent: React.FC = () => {
         }}
       />
 
+      <Text variant="bodyMedium" style={{fontSize: 18}}>To reset days click arrow to the previous month and back.</Text>
+
       <ActionButton
         title="Select Full Current Month"
         onPress={handleMonthSelect}
@@ -167,11 +169,11 @@ const CalendarComponent: React.FC = () => {
         loading={loading}
       />
 
-      <ActionButton
+      {/* <ActionButton
         title="Pick End Time"
         onPress={() => setShowTimePicker("end")}
         loading={loading}
-      />
+      /> */}
 
       {showTimePicker && (
         <DateTimePicker
@@ -184,7 +186,7 @@ const CalendarComponent: React.FC = () => {
       <View>
         <Text variant="bodyMedium" style={{fontSize: 18}}>Selected Range: {range.start} → {range.end || "..."}</Text>
         <Text variant="bodyMedium" style={{fontSize: 18}}>Start Time: {startTime.toLocaleTimeString()}</Text>
-        <Text variant="bodyMedium" style={{fontSize: 18}}>End Time: {endTime.toLocaleTimeString()}</Text>
+        {/* <Text variant="bodyMedium" style={{fontSize: 18}}>End Time: {endTime.toLocaleTimeString()}</Text> */}
       </View>
 
       <ActionPrimaryButton

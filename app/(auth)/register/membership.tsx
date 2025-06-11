@@ -108,13 +108,13 @@ const MembershipScreen: React.FC = () => {
       ) : (
         <View style={{gap: 40}}>
           <MembershipPlanOptionComponent
-            detailedText="We will text you one time each day, at your appointed time. You pick how long we must wait for your answer (1, 2 OR 3 hours), if after your selected time frame, you have not texted &apos;YES&apos; back, we will text your emergency contacts to let them know. Basic Plan $0.99/mo billed annually $11.88 after free trial."
+            detailedText="We will text you one time each day, at your appointed time. You pick how long we must wait for your answer (1, 2 OR 3 hours). If after your selected time frame, you have not texted &apos;YES&apos; back, we will text your emergency contact to let them know. Basic Plan $0.99/mo billed annually $11.88, plus tax, after free trial."
             buttonText="Start your 7 day Free Trial"
             handler={() => handleCheckout("basic")}
           />
           
           <MembershipPlanOptionComponent
-            detailedText="We will text you 2 times each day, at your appointed time and 1 hour later, if after 2 hours and 2 texts, you have not texted &apos;YES&apos; back, we will call you to make sure you hear the phone ring. After you don&apos;t answer 2 texts and 1 phone call, we will text your emergency contacts to let them know. Premium Plan $1.99/mo billed annually $23.88 after free trial."
+            detailedText="We will text you 2 times each day, at your appointed time and 1 hour later. If after 2 hours and 2 texts, you have not texted &apos;YES&apos; back, we will call you to make sure you hear the phone ring. We will text your emergency contacts to let them know. Premium Plan $1.99/mo billed annually $23.88, plus tax, after free trial."
             buttonText="Start your 7 day Free Trial"
             handler={() => handleCheckout("premium")}
           />

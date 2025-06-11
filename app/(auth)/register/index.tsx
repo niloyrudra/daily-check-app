@@ -5,6 +5,8 @@ import { View } from "react-native";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import OnboardingInfoComponent from "@/components/OnboardingInfoComponent";
+import STYLES from "@/constants/styles";
+import { Theme } from "@/constants/theme";
 
 
 const OnboardingScreen: React.FC = () => {
@@ -13,18 +15,11 @@ const OnboardingScreen: React.FC = () => {
   return (
     <AuthScreenLayout isScrollable={true}>
 
-      <View
-        style={{
-          flex: 1,
-          gap: 40,
-          justifyContent: "flex-start",
-          paddingVertical: 20
-        }}
-      >
+      <View style={STYLES.infoContainer}>
 
         <OnboardingInfoComponent
           iconName="person-circle-check"
-          content="Do you wish to have the security of someone checking-up on you promptly each every morning after you wake up to make sure you're ok?"
+          content="Do you wish you had the security of someone checking-up on you promptly every morning after you wake up to make sure you're ok?"
         />
 
         <OnboardingInfoComponent
@@ -37,11 +32,21 @@ const OnboardingScreen: React.FC = () => {
           content="We will text you daily at your specified time. If you don&apos;t text us back a quick Y or YES within your appointed time window, we will alert your safety contacts."
         />
 
-        {/* Submit Button */}
-        <ActionPrimaryButton
-          buttonTitle="Continue"
-          onSubmit={() => router.push("/(auth)/register/signup")}
-        />
+        <View style={{flex:1, flexDirection: "row", justifyContent:"space-around", alignItems: "flex-end"}}>
+          {/* Login Button */}
+          <ActionPrimaryButton
+            buttonTitle="Log In"
+            onSubmit={() => router.push("/(auth)/login")}
+            buttonStyle={{backgroundColor: Theme.primary}}
+          />
+
+          {/* Submit Button */}
+          <ActionPrimaryButton
+            buttonTitle="Next"
+            onSubmit={() => router.push("/(auth)/register/onboarding-two")}
+          />
+        </View>
+
 
       </View>
 

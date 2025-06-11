@@ -3,13 +3,13 @@ import { useRouter } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import * as Yup from "yup";
 
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
-import SIZES from "@/constants/size";
+import SkipButton from "@/components/SkipButton";
 import STYLES from "@/constants/styles";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
@@ -151,9 +151,8 @@ const PhoneAuthScreen: React.FC = () => {
 
   return (
     <AuthScreenLayout title="Phone Number Verification">
-      <TouchableOpacity onPress={() => router.push("/(auth)/register/contacts-verification")} style={styles.skipButton}>
-        <Text style={{fontSize: SIZES.contentText}}>SKIP</Text>
-      </TouchableOpacity>
+      
+      <SkipButton onPress={() => router.push( "/(auth)/register/contacts-verification" )} />
 
       <Formik
         initialValues={{ phone: "", code: "" }}
@@ -171,13 +170,5 @@ const PhoneAuthScreen: React.FC = () => {
     </AuthScreenLayout>
   );
 };
-
-const styles = StyleSheet.create({
-  skipButton: {
-    position: "absolute",
-    right: 20,
-    top: 30,
-  },
-});
 
 export default PhoneAuthScreen;

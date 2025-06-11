@@ -1,11 +1,10 @@
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
-import PlainTextLink from "@/components/form-components/auth/PlainTextLink";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import { auth, db } from "@/config/firebase";
 import STYLES from "@/constants/styles";
 import { MembershipPlan, UserData } from "@/types";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { Formik } from "formik";
@@ -32,6 +31,8 @@ const defaultMembershipPlan: MembershipPlan = {
 
 const SignUpScreen: React.FC = () => {
   const router = useRouter();
+  const { initialEmail } = useLocalSearchParams();
+  const safeInitialEmail = typeof initialEmail === 'string' ? initialEmail : '';
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSignUpScreen = async (
@@ -92,7 +93,7 @@ const SignUpScreen: React.FC = () => {
     <AuthScreenLayout title="Sign Up" isScrollable={true}>
 
       <Formik
-        initialValues={{ name: "", zipCode: "", country: "", email: "", password: "", confirmPassword: "" }}
+        initialValues={{ name: "", zipCode: "", country: "", email: safeInitialEmail, password: "", confirmPassword: "" }}
         validationSchema={SignUpScreenSchema}
         onSubmit={(values) => handleSignUpScreen(values.name, values.zipCode, values.country, values.email, values.password)}
       >
@@ -163,7 +164,7 @@ const SignUpScreen: React.FC = () => {
         )}
       </Formik>
 
-      <PlainTextLink text="Already have an account?" route="/(auth)/login" linkText="Login here." />
+      {/* <PlainTextLink text="Already have an account?" route="/(auth)/login" linkText="Login here." /> */}
 
       <View style={{height:20}} />
       

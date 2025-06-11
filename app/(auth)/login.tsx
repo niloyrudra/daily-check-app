@@ -1,3 +1,4 @@
+import ArrowButton from "@/components/ArrowButton";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import PlainTextLink from "@/components/form-components/auth/PlainTextLink";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
@@ -43,6 +44,8 @@ const Login: React.FC = () => {
 
   return (
     <AuthScreenLayout title="Login">
+
+      <ArrowButton />
 
       <Formik
         initialValues={{ email: "", password: "" }}

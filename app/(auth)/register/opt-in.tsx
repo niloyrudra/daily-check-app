@@ -71,7 +71,7 @@ const OptInScreen: React.FC = () => {
 
             <View style={[ STYLES.childContentCentered, { gap:30 } ]}>
 
-              <Text style={{color:Theme.primary, textAlign: "center", fontSize: SIZES.contentText, fontWeight: "800"}}>Please, make your confirmation about receiving texts and answering calls from Daily Check App by switching the following button ON.</Text>
+              <Text style={{color:Theme.primary, textAlign: "center", fontSize: SIZES.contentText, fontWeight: "800"}}>Please, confirm receiving texts and answering calls from Daily Check App by switching the following button ON.</Text>
 
               <View
                 style={{
@@ -99,7 +99,7 @@ const OptInScreen: React.FC = () => {
                   <CheckboxField name="optIn" />
                 </View>
 
-                <Text style={{color:Theme.primary, textAlign:"center", fontSize: SIZES.contentText}}>I would like to receive emergency SMS(text messages) and/or calls as safety checks and acknowledge I can opt out at any time by replying STOP.</Text>
+                <Text style={{color:Theme.primary, textAlign:"center", fontSize: SIZES.contentText}}>I would like to receive emergency SMS (text messages) and/or calls as safety checks and acknowledge I can opt out at any time by replying STOP.</Text>
 
               </View>
 

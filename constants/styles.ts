@@ -83,6 +83,13 @@ const card: StyleProp<ViewStyle> = {
     padding: 10
 };
 
+const infoContainer: StyleProp<ViewStyle> = {
+    flex: 1,
+    gap: 30,
+    justifyContent: "flex-start",
+    paddingVertical: 20
+};
+
 const STYLES = {
     container,
     headerContainer,
@@ -95,7 +102,8 @@ const STYLES = {
     errorMessage,
     formGroup,
     formLabel,
-    card
+    card,
+    infoContainer
 };
 
 export default STYLES;

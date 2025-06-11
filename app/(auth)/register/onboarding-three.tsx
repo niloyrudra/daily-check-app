@@ -1,36 +1,30 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import OnboardingInfoComponent from "@/components/OnboardingInfoComponent";
+import STYLES from "@/constants/styles";
 
 
 const OnboardingScreenThree: React.FC = () => {
   const router = useRouter();
+  const { initialEmail } = useLocalSearchParams();
 
   return (
     <AuthScreenLayout title="Why Daily Check-App?" isScrollable={true}>
 
-      <View
-        style={{
-          flex: 1,
-          gap: 40,
-          justifyContent: "flex-start",
-          alignItems:"center",
-          paddingVertical: 20
-        }}
-      >
+      <View style={STYLES.infoContainer}>
 
         <OnboardingInfoComponent
           iconName="stethoscope"
-          content="Have the peace of mind that if something happens to you, others will find out very soon and come to you."
+          content="Have the peace of mind that if something happens to you, others will find out very soon and come to your aid."
         />
 
         <OnboardingInfoComponent
           iconName="shield-dog"
-          content="Your pets and young children can be quickly tended to, should anything happen to you."
+          content="Your pets and young children can be quickly tended to, should anything happen."
         />
 
         <OnboardingInfoComponent
@@ -41,7 +35,7 @@ const OnboardingScreenThree: React.FC = () => {
         {/* Submit Button */}
         <ActionPrimaryButton
           buttonTitle="Continue"
-          onSubmit={() => router.push("/(auth)/register/verify-phone")}
+          onSubmit={() => router.push({pathname: "/(auth)/register/signup", params: { initialEmail: initialEmail }})}
         />
 
       </View>
