@@ -13,7 +13,7 @@ interface ActionButtonProps {
     mode?: ButtonMode,
     buttonColor?: string | null, // ColorValue | undefined,
     buttonStyle?: StyleProp<ViewStyle>, // ColorValue | undefined,
-    loading: boolean
+    loading?: boolean
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, buttonColor, buttonStyle, loading}) => {

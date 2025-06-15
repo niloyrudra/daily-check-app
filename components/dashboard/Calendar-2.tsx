@@ -1,3 +1,4 @@
+// CalendarComponent.tsx (refined, focuses on backend compatibility & clarity)
 import { auth, db } from "@/config/firebase";
 import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
@@ -13,10 +14,9 @@ import DropDownComponent from "../form-components/DropDownComponent";
 import TitleComponent from "../TitleComponent";
 import ActionButton from "./ActionButton";
 
-// Marked dates structure
 interface CalendarProps {
-  onModalHandler: () => void,
-  userData: UserData
+  onModalHandler: () => void;
+  userData: UserData;
 }
 
 interface MarkedDates {
@@ -38,7 +38,7 @@ type DateObject = {
   timestamp: number;
 };
 
-const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) => {
+const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }) => {
   const [markedDates, setMarkedDates] = useState<MarkedDates>({});
   const [range, setRange] = useState<{ start: string | null; end: string | null }>({ start: null, end: null });
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -49,7 +49,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
     const selected = day.dateString;
 
     if (!range.start || (range.start && range.end)) {
-      // Start new range
       setRange({ start: selected, end: null });
       setMarkedDates({
         [selected]: {
@@ -61,7 +60,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
         },
       });
     } else {
-      // End range
       const start = dayjs(range.start);
       const end = dayjs(selected);
       if (end.isBefore(start)) {
@@ -79,7 +77,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
         };
       }
 
-      // Add range flags
       rangeDays[range.start]!.startingDay = true;
       rangeDays[selected]!.endingDay = true;
 
@@ -88,31 +85,10 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
     }
   };
 
-  const handleMonthSelect = () => {
-    const today = dayjs();
-    const firstDay = today.startOf("month");
-    const lastDay = today.endOf("month");
-
-    const monthDays: MarkedDates = {};
-    for (let i = 0; i <= lastDay.diff(firstDay, "day"); i++) {
-      const date = firstDay.add(i, "day").format("YYYY-MM-DD");
-      monthDays[date] = {
-        selected: true,
-        marked: true,
-        color: Theme.primary,
-        textColor: "#fff",
-      };
-    }
-    setRange({ start: firstDay.format("YYYY-MM-DD"), end: lastDay.format("YYYY-MM-DD") });
-    setMarkedDates(monthDays);
-  };
-
   const handleTimeChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (!selectedDate) return;
     setShowTimePicker(null);
-    if (showTimePicker === "start") {
-      setStartTime(selectedDate);
-    }
+    setStartTime(selectedDate);
   };
 
   const saveSchedule = async () => {
@@ -128,15 +104,12 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
 
       const userRef = doc(db, "users", user.uid);
       await updateDoc(userRef, {
-        'automation.startingDate': range.start,
-        'automation.endingDate': range.end,
-        'automation.startingTime': startTime.toISOString(),
+        "automation.startingDate": range.start,
+        "automation.endingDate": range.end,
+        "automation.startingTime": startTime.toISOString(),
       });
 
-      // Alert.alert("Congratulations!", "Your schedule has been saved!");
-
       onModalHandler();
-
     } catch (error: any) {
       Alert.alert("Error", error.message);
     } finally {
@@ -150,27 +123,13 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
         onDayPress={handleDayPress}
         markedDates={markedDates}
         markingType="period"
-        style={{
-          borderWidth: 1,
-          borderColor: "#aaa",
-          borderRadius: 15,
-        }}
+        style={{ borderWidth: 1, borderColor: "#aaa", borderRadius: 15 }}
       />
 
-      <Text variant="bodyMedium" style={{fontSize: 18}}>To reset days click arrow to the previous month and back.</Text>
+      <ActionButton title="Pick Start Time" onPress={() => setShowTimePicker("start")} />
 
-      <ActionButton
-        title="Select Full Current Month"
-        onPress={handleMonthSelect}
-      />
-
-      <ActionButton
-        title="Pick Start Time"
-        onPress={() => setShowTimePicker("start")}
-      />
-
-      {userData?.membershipPlan?.plan === 'basic' && (
-        <View style={{gap:10}}>
+      {userData?.membershipPlan?.plan === "basic" && (
+        <View style={{ gap: 10 }}>
           <TitleComponent title="Your Response Time:" />
           <DropDownComponent />
         </View>
@@ -178,22 +137,22 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
 
       {showTimePicker && (
         <DateTimePicker
-          value={showTimePicker === "start" ? startTime : new Date()}
+          value={startTime}
           mode="time"
           onChange={handleTimeChange}
         />
       )}
 
       <View>
-        <Text variant="bodyMedium" style={{fontSize: 18}}>Selected Range: {range.start} → {range.end || "..."}</Text>
-        <Text variant="bodyMedium" style={{fontSize: 18}}>Start Time: {startTime.toLocaleTimeString()}</Text>
+        <Text variant="bodyMedium" style={{ fontSize: 18 }}>
+          Selected Range: {range.start} → {range.end || "..."}
+        </Text>
+        <Text variant="bodyMedium" style={{ fontSize: 18 }}>
+          Start Time: {startTime.toLocaleTimeString()}
+        </Text>
       </View>
 
-      <ActionPrimaryButton
-        buttonTitle="Save Schedule"
-        onSubmit={saveSchedule}
-        isLoading={loading}
-      />
+      <ActionPrimaryButton buttonTitle="Save Schedule" onSubmit={saveSchedule} isLoading={loading} />
     </View>
   );
 };

@@ -75,6 +75,15 @@ const SignUpScreen: React.FC = () => {
         membershipPlan: defaultMembershipPlan,
         stripeCustomerId: '',
         stripeSubscriptionId: '',
+        automation: {
+          startingDate: null,
+          endingDate: null,
+          startingTime: null,
+          responseTime: 1,
+          lastInteraction: null,
+          scheduleStatus: "not_started",
+          lastChecked: null
+        }
       };
   
       // 3️⃣ Write to Firestore using setDoc

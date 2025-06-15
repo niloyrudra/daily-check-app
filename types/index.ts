@@ -47,7 +47,16 @@ type UserData = {
   paymentHistory?: {
     type: 'paid' | 'failed',
     at: WritableTimestamp
-  }[]
+  }[],
+  automation?: {
+    startingDate: Timestamp | null,
+    endingDate: Timestamp | null,
+    startingTime: Timestamp | null,
+    responseTime?: number,
+    lastInteraction: Timestamp | null,
+    scheduleStatus: 'not_started' | 'text_sent' | 'followup_sent' | 'call_made' | 'pending' | 'done',
+    lastChecked: Timestamp | null
+  }
 }
 
 type AuthUser =  User | null;

@@ -38,6 +38,7 @@ const ContactsInformationComponent = ({ contact1, contact2 }: ContactsInformatio
                                 <Text variant="bodyMedium" style={{ color: Theme.borderColor, fontSize: SIZES.contentText }}>
                                     {key === 'contact1' ? "Primary" : "Secondary"} contact&apos;s not added yet.
                                 </Text>
+                                {key === 'contact1' && (<Divider style={{ backgroundColor: "#333", marginTop: 10 }} />)}
                             </React.Fragment>
                         );
 

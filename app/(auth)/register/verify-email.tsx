@@ -38,7 +38,7 @@ const VerifyEmail: React.FC = () => {
           <Text style={[{fontSize: SIZES.contentText}, (verified && {color: "green"})]}>{verified ? "Email Verified!" : "Waiting for email verification..."}</Text>
           {!verified && (<ActivityIndicator size={24} color="blue" />)}
         </View>
-        {verified && <ActionPrimaryButton buttonTitle="Continue" onSubmit={() => router.push("/(auth)/register/onboarding-three")} />}
+        {verified && <ActionPrimaryButton buttonTitle="Continue" onSubmit={() => router.push("/(auth)/register/verify-phone")} />}
       </View>
     </AuthScreenLayout>
   );
