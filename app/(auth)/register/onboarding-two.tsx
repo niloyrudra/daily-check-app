@@ -24,7 +24,7 @@ const OnboardingTwo: React.FC = () => {
     try {
       Alert.alert(
         "Congratulations!",
-        "Your email address is stated."
+        "Your email address is stowed for future use case."
       );
   
       router.push({pathname: "/(auth)/register/onboarding-three", params: { initialEmail: email }});
