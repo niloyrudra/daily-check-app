@@ -7,16 +7,17 @@ import ActionPrimaryButton from './form-components/ActionPrimaryButton'
 interface PlanProps {
   handler: () => void,
   detailedText: string,
-  buttonText: string
+  buttonText: string,
+  disabled: boolean
 }
 
-const MembershipPlanOptionComponent: React.FC<PlanProps> = ({handler, detailedText, buttonText}) => {
+const MembershipPlanOptionComponent: React.FC<PlanProps> = ({handler, detailedText, buttonText, disabled}) => {
   return (
     <View style={{ gap: 20, borderWidth: 1, borderColor: Theme.primary, borderRadius: 8, padding: 15}}>
       <Text style={{fontSize: SIZES.contentText, color: Theme.primary}}>
         {detailedText}
       </Text>
-      <ActionPrimaryButton buttonTitle={buttonText} onSubmit={handler} />
+      <ActionPrimaryButton buttonTitle={buttonText} onSubmit={handler} disabled={disabled} />
     </View>
   )
 }

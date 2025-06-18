@@ -9,10 +9,10 @@ import { Card, Text } from "react-native-paper";
 
 interface UserPhoneNumberData {
     phoneNumber?: string,
-    phoneNumberVerified: boolean,
+    isVerified: boolean,
 }
 
-const UserPhoneNumberComponent: React.FC<UserPhoneNumberData> = ( {phoneNumber='',  phoneNumberVerified} ) => {
+const UserPhoneNumberComponent: React.FC<UserPhoneNumberData> = ( {phoneNumber='',  isVerified} ) => {
   return (
     <Card style={STYLES.card}>
         {phoneNumber ? (
@@ -27,10 +27,10 @@ const UserPhoneNumberComponent: React.FC<UserPhoneNumberData> = ( {phoneNumber='
                     <Text style={{ color: Theme.text, fontSize: SIZES.contentText }}>{phoneNumber}</Text>
                 </View>
 
-                {phoneNumberVerified ? (<FontAwesome5 name="check-circle" size={24} color="green" />) : (<MaterialCommunityIcons name="timer-sand-complete" size={24} color="orange" />)}
+                {isVerified ? (<FontAwesome5 name="check-circle" size={24} color="green" />) : (<MaterialCommunityIcons name="timer-sand-complete" size={24} color="orange" />)}
             </Card.Content>
         ) : (
-            <Text variant="bodyMedium" style={{ color: "#aaa", fontSize: SIZES.contentText }}>No phone number is verified yet.</Text>
+            <Text variant="bodyMedium" style={{ color: "#aaa", fontSize: SIZES.contentText }}>No phone number is available.</Text>
         )}
     </Card>
   )

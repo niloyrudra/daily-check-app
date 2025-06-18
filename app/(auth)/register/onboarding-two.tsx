@@ -49,10 +49,10 @@ const OnboardingTwo: React.FC = () => {
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <View style={STYLES.formGroup}>
 
-            <Text style={STYLES.formLabel}>Enter your email to get started.</Text>
+            <Text style={STYLES.formLabel}>Enter your email address to get started.</Text>
 
             <TextInputComponent
-              placeholder="Email"
+              placeholder="Email Address"
               inputMode="email"
               value={values.email}
               onChange={handleChange("email")}

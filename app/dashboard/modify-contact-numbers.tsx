@@ -1,16 +1,16 @@
 import { auth, db } from "@/config/firebase";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import * as Yup from "yup";
 
 import ArrowButton from "@/components/ArrowButton";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
-import SIZES from "@/constants/size";
+import SkipButton from "@/components/SkipButton";
 import STYLES from "@/constants/styles";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
@@ -45,6 +45,7 @@ const getErrorMessage = (error: any): string => {
 
 const ModifyContactNumbersScreen: React.FC = () => {
   const router = useRouter();
+  const { c1Name, c1PhnNum, c2Name, c2PhnNum } = useLocalSearchParams();
   const user = auth.currentUser;
 
   const [loading1, setLoading1] = useState<boolean>(false);
@@ -152,7 +153,12 @@ const ModifyContactNumbersScreen: React.FC = () => {
     stepSetter: (v: "enterPhone" | "enterCode") => void
   ) => (
     <Formik
-      initialValues={{ name: "", phone: "", code: "" }}
+      enableReinitialize
+      initialValues={{
+        name: contactKey === "contact1" ? (storedName || (typeof c1Name === "string" ? c1Name : "")) : (storedName || (typeof c2Name === "string" ? c2Name : "")),
+        phone: contactKey === "contact1" ? (storedPhone || (typeof c1PhnNum === "string" ? c1PhnNum : "")) : (storedPhone || (typeof c2PhnNum === "string" ? c2PhnNum : "")),
+        code: ""
+      }}
       validationSchema={phoneSchema}
       onSubmit={() => {}}
     >
@@ -219,9 +225,10 @@ const ModifyContactNumbersScreen: React.FC = () => {
       
       <ArrowButton />
 
-      <TouchableOpacity onPress={() => router.push("/dashboard/home")} style={styles.skipButton}>
-        <Text style={{fontSize: SIZES.contentText}}>Cancel</Text>
-      </TouchableOpacity>
+      <SkipButton
+        onPress={() => router.push("/dashboard/home")}
+        title="CANCEL"
+      />
 
       <View style={STYLES.container}>
         {renderContactInput(step1, "contact1", contact1Name, setContact1Name, contact1Phone, setContact1Phone, setStep1)}
@@ -234,14 +241,5 @@ const ModifyContactNumbersScreen: React.FC = () => {
     </AuthScreenLayout>
   );
 };
-
-const styles = StyleSheet.create({
-  skipButton: {
-    position: "absolute",
-    right: 20,
-    top: 30,
-    fontSize: SIZES.contentText
-  }
-});
 
 export default ModifyContactNumbersScreen;

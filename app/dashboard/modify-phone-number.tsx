@@ -1,16 +1,16 @@
 import { auth, db } from "@/config/firebase";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import * as Yup from "yup";
 
 import ArrowButton from "@/components/ArrowButton";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
-import SIZES from "@/constants/size";
+import SkipButton from "@/components/SkipButton";
 import STYLES from "@/constants/styles";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
@@ -42,6 +42,7 @@ const getErrorMessage = (error: any): string => {
 
 const PhoneNumberModificationScreen: React.FC = () => {
   const router = useRouter();
+  const { existingPhoneNumber } = useLocalSearchParams();
   const user = auth.currentUser;
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<"enterPhone" | "enterCode">("enterPhone");
@@ -154,12 +155,14 @@ const PhoneNumberModificationScreen: React.FC = () => {
 
       <ArrowButton />
 
-      <TouchableOpacity onPress={() => router.push("/dashboard/home")} style={styles.skipButton}>
-        <Text style={{fontSize: SIZES.contentText}}>Cancel</Text>
-      </TouchableOpacity>
+      <SkipButton
+        onPress={() => router.push("/dashboard/home")}
+        title="CANCEL"
+      />
 
       <Formik
-        initialValues={{ phone: "", code: "" }}
+        enableReinitialize
+        initialValues={{ phone: existingPhoneNumber || "", code: "" }}
         validationSchema={phoneSchema}
         onSubmit={() => {}}
       >
@@ -174,13 +177,5 @@ const PhoneNumberModificationScreen: React.FC = () => {
     </AuthScreenLayout>
   );
 };
-
-const styles = StyleSheet.create({
-  skipButton: {
-    position: "absolute",
-    right: 20,
-    top: 30,
-  },
-});
 
 export default PhoneNumberModificationScreen;

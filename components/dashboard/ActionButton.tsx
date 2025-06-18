@@ -8,12 +8,12 @@ import MotiAnimatedSection from './MotiAnimatedSection'
 type ButtonMode = 'text' | 'outlined' | 'contained' | 'elevated' | 'contained-tonal';
 
 interface ActionButtonProps {
-    title: string,
-    onPress: () => void,
-    mode?: ButtonMode,
-    buttonColor?: string | null, // ColorValue | undefined,
-    buttonStyle?: StyleProp<ViewStyle>, // ColorValue | undefined,
-    loading?: boolean
+  title: string,
+  onPress: () => void,
+  mode?: ButtonMode,
+  buttonColor?: string | null, // ColorValue | undefined,
+  buttonStyle?: StyleProp<ViewStyle>, // ColorValue | undefined,
+  loading?: boolean
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, buttonColor, buttonStyle, loading}) => {

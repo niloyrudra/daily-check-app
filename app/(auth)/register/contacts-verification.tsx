@@ -221,10 +221,14 @@ const ContactsVerificationScreen: React.FC = () => {
 
       <SkipButton onPress={() => router.push( "/(auth)/register/opt-in" )} />
 
+      <View style={{marginBottom: 30}}>
+        <Text style={[STYLES.formLabel, {fontWeight:"800", textAlign:"center"}]}>Let your contacts know that they need to reply to our text messages.</Text>
+      </View>
+
       <View style={STYLES.container}>
         {renderContactInput(step1, "contact1", contact1Name, setContact1Name, contact1Phone, setContact1Phone, setStep1)}
         
-        <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: "#aaa", marginVertical: 30}} />
+        <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: "#aaa", marginVertical: 20}} />
         
         {renderContactInput(step2, "contact2", contact2Name, setContact2Name, contact2Phone, setContact2Phone, setStep2)}
       </View>

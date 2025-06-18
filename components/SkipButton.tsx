@@ -3,10 +3,10 @@ import { Theme } from '@/constants/theme'
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
-const SkipButton = ({onPress}: {onPress: () => void}) => {
+const SkipButton = ({onPress, title}: {onPress: () => void, title?: string | undefined}) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.skipButton}>
-      <Text style={{fontSize: SIZES.title, color: Theme.primary}}>SKIP</Text>
+      <Text style={{fontSize: SIZES.title, color: Theme.primary}}>{title ?? "SKIP"}</Text>
     </TouchableOpacity>
   )
 }

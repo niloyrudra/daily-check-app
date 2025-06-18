@@ -162,11 +162,13 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
       <ActionButton
         title="Select Full Current Month"
         onPress={handleMonthSelect}
+        mode="elevated"
       />
 
       <ActionButton
         title="Pick Start Time"
         onPress={() => setShowTimePicker("start")}
+        mode="elevated"
       />
 
       {userData?.membershipPlan?.plan === 'basic' && (
@@ -184,7 +186,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
         />
       )}
 
-      <View>
+      <View style={{gap: 5}}>
         <Text variant="bodyMedium" style={{fontSize: 18}}>Selected Range: {range.start} → {range.end || "..."}</Text>
         <Text variant="bodyMedium" style={{fontSize: 18}}>Start Time: {startTime.toLocaleTimeString()}</Text>
       </View>

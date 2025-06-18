@@ -119,7 +119,7 @@ const SignUpScreen: React.FC = () => {
             {errors.name && touched.name && <Text style={STYLES.errorMessage}>{errors.name}</Text>}
             
             <TextInputComponent
-              placeholder="Email"
+              placeholder="Email Address"
               inputMode="email"
               value={values.email}
               onChange={handleChange("email")}

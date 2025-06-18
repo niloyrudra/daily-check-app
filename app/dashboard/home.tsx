@@ -86,11 +86,8 @@ const DashboardScreen: React.FC = () => {
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}
         />
-
-        {/* <PopupFormComponent visible={modalVisible} onRequestClose={() => setModalVisible(false)}/> */}
         
         <SafeAreaLayout>
-  
   
           <ScrollView style={{ flex: 1 }}>
   
@@ -102,12 +99,15 @@ const DashboardScreen: React.FC = () => {
   
             {/* Phone Number Status */}
             <SectionTitle title="Phone Number" />
-            <UserPhoneNumberComponent phoneNumber={userData?.phoneNumber} phoneNumberVerified={userData?.phoneNumberVerified || false} />
+            <UserPhoneNumberComponent phoneNumber={userData?.phoneNumber} isVerified={userData?.phoneNumberVerified || false} />
   
             {/* Actions */}
             <ActionButton
               title="Modify Phone Number"
-              onPress={() => router.push("/dashboard/modify-phone-number")}
+              onPress={() => router.push({
+                pathname: "/dashboard/modify-phone-number",
+                params: {existingPhoneNumber: userData.phoneNumber}
+              })}
               mode="elevated"
               loading={loading}
               buttonStyle={{marginBottom: 20}}
@@ -126,7 +126,7 @@ const DashboardScreen: React.FC = () => {
   
               <ActionButton
                 title="Modify Contact Details"
-                onPress={() => router.push("/dashboard/modify-contact-numbers")}
+                onPress={() => router.push({pathname: "/dashboard/modify-contact-numbers", params: {c1Name: userData.contactNumbers.contact1.contactName, c1PhnNum: userData.contactNumbers.contact1.phoneNumber, c2Name:userData.contactNumbers.contact2.contactName, c2PhnNum:userData.contactNumbers.contact2.phoneNumber }})}
                 mode="elevated"
                 loading={loading}
               />

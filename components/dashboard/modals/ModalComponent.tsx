@@ -44,19 +44,30 @@ const ModalComponent: React.FC<EmergencyModalProps> = ({visible, onRequestClose}
     extra: '',
   };
 
-  const containerStyle = {backgroundColor: 'white', paddingHorizontal: SIZES.bodyPaddingHorizontal, paddingVertical: SIZES.bodyPaddingVertical, borderRadius: 12};
+  const containerStyle = {
+    flex: 1,
+    backgroundColor: Theme.background,
+    paddingHorizontal: SIZES.bodyPaddingHorizontal,
+    paddingVertical: SIZES.bodyPaddingVertical,
+    borderRadius: 12,
+    maxHeight: '80%' as `${number}%`,
+  };
 
   return (
     <Portal>
         <Modal visible={visible} onDismiss={onRequestClose} contentContainerStyle={containerStyle}>
-          <KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS === "ios" ? "padding": "height"}>
+          <KeyboardAvoidingView
+            style={{flex:1}}
+            behavior={Platform.OS === "ios" ? "padding": undefined} // "height"
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+          >
             
             <View
               style={{
                 gap: 20
               }}
             >
-              <Text style={{ fontSize: SIZES.title, color: Theme.primary, fontWeight: "800", textAlign: "center", marginBottom: 30 }}>
+              <Text style={{ fontSize: SIZES.title, color: Theme.primary, fontWeight: "800", textAlign: "center", marginBottom: 10 }}>
                 In Case of Emergency, list your dependent loved ones at home:
               </Text>
               
