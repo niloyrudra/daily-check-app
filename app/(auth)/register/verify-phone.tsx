@@ -11,6 +11,7 @@ import TextInputComponent from "@/components/form-components/TextInputComponent"
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import SkipButton from "@/components/SkipButton";
 import STYLES from "@/constants/styles";
+import { Theme } from "@/constants/theme";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
 
@@ -42,9 +43,10 @@ const getErrorMessage = (error: any): string => {
 const PhoneAuthScreen: React.FC = () => {
   const router = useRouter();
   const user = auth.currentUser;
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingResend, setLoadingResend] = useState<boolean>(false);
   const [step, setStep] = useState<"enterPhone" | "enterCode">("enterPhone");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
 
   const handleSendCode = async (phone: string) => {
     if (!user) return Alert.alert("Invalid User");
@@ -78,6 +80,39 @@ const PhoneAuthScreen: React.FC = () => {
       Alert.alert(getErrorMessage(error));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendCode = async () => {
+    if (!user) return Alert.alert("Invalid User");
+    setLoadingResend(true);
+    try {
+
+      const response = await fetch(`${BASE_URL}/api/send-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phoneNumber }),
+      });
+
+      const data = await response.json();
+
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        phoneNumber: phoneNumber,
+        phoneNumberVerified: false,
+      });
+
+      setStep("enterCode");
+
+      if (data?.error?.status === 400) {
+        Alert.alert(getErrorMessage(data.error));
+      }
+
+    } catch (error) {
+      console.error("Send OTP failed:", error);
+      Alert.alert(getErrorMessage(error));
+    } finally {
+      setLoadingResend(false);
     }
   };
 
@@ -144,7 +179,12 @@ const PhoneAuthScreen: React.FC = () => {
       />
       {touched.code && errors.code && <Text style={STYLES.errorMessage}>{errors.code}</Text>}
       
-      <ActionPrimaryButton buttonTitle="Verify Code" onSubmit={() => handleVerifyCode(values.code)} isLoading={loading} />
+      <View style={{flexDirection: "row", justifyContent: 'space-between'}}>
+
+        <ActionPrimaryButton buttonTitle="Verify Code" onSubmit={() => handleVerifyCode(values.code)} isLoading={loading} />
+        <ActionPrimaryButton buttonTitle="Resend Code" onSubmit={() => handleResendCode()} isLoading={loadingResend} buttonStyle={{backgroundColor: Theme.primary}} />
+
+      </View>
     
     </View>
   );

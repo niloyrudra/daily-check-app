@@ -23,7 +23,7 @@ const OnboardingTwo: React.FC = () => {
     setLoading(true);
     try {
       Alert.alert(
-        "Congratulations!",
+        "Thank you!",
         "Your email address is stowed for future use case."
       );
   
