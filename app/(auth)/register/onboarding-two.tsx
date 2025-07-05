@@ -54,6 +54,7 @@ const OnboardingTwo: React.FC = () => {
             <TextInputComponent
               placeholder="Email Address"
               inputMode="email"
+              autoCapitalize="none"
               value={values.email}
               onChange={handleChange("email")}
               onBlur={handleBlur("email")}

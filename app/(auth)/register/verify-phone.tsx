@@ -15,6 +15,7 @@ import { Theme } from "@/constants/theme";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
 
+// Yup Validation Schema
 const phoneSchema = Yup.object().shape({
   phone: Yup.string()
     .matches(/^\+[1-9]\d{1,14}$/, "Phone number must be in E.164 format (e.g. +1234567890)")
@@ -24,6 +25,7 @@ const phoneSchema = Yup.object().shape({
     .max(8, "Code too long"),
 });
 
+// Twilio Error Map
 const errorMap: Record<number, string> = {
   21408: "SMS/Text is not allowed to this country.",
   21610: "User has opted out of messages. They must reply START to receive messages again.",
@@ -34,6 +36,7 @@ const errorMap: Record<number, string> = {
   20404: "Verification SID not found or deleted.",
 };
 
+// Error message helper
 const getErrorMessage = (error: any): string => {
   if (error?.code && errorMap[error.code]) return errorMap[error.code];
   if (error?.message) return error.message;
@@ -48,6 +51,7 @@ const PhoneAuthScreen: React.FC = () => {
   const [step, setStep] = useState<"enterPhone" | "enterCode">("enterPhone");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
 
+  // Send OTP handler
   const handleSendCode = async (phone: string) => {
     if (!user) return Alert.alert("Invalid User");
     setLoading(true);
@@ -62,19 +66,24 @@ const PhoneAuthScreen: React.FC = () => {
 
       const data = await response.json();
 
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        phoneNumber: phone,
-        phoneNumberVerified: false,
-      });
+      console.log(data)
 
-      setStep("enterCode");
-
-      if (data?.error?.status === 400) {
-        Alert.alert(getErrorMessage(data.error));
+      if (!data.success) {
+        return Alert.alert("Error", getErrorMessage(data.error || data));
       }
 
-    
+      try {
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, {
+          phoneNumber: phone,
+          phoneNumberVerified: false,
+        });
+      } catch (err) {
+        console.error("Firestore update error:", err);
+        Alert.alert("Sorry!", "Your information failed to store in the Database.");
+      }
+
+      setStep("enterCode");
     } catch (error) {
       console.error("Send OTP failed:", error);
       Alert.alert(getErrorMessage(error));
@@ -83,62 +92,81 @@ const PhoneAuthScreen: React.FC = () => {
     }
   };
 
+  // Resend OTP handler
   const handleResendCode = async () => {
     if (!user) return Alert.alert("Invalid User");
     setLoadingResend(true);
     try {
-
       const response = await fetch(`${BASE_URL}/api/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber }),
+        body: JSON.stringify({ phone: phoneNumber }),
       });
 
       const data = await response.json();
 
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        phoneNumber: phoneNumber,
-        phoneNumberVerified: false,
-      });
+      console.log(data)
 
-      setStep("enterCode");
 
-      if (data?.error?.status === 400) {
-        Alert.alert(getErrorMessage(data.error));
+      if (!data.success) {
+        return Alert.alert("Sorry!", getErrorMessage(data.error || data));
       }
 
+      try {
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, {
+          phoneNumber: phoneNumber,
+          phoneNumberVerified: false,
+        });
+      } catch (err) {
+        console.error("Firestore update error:", err);
+      }
+
+      Alert.alert("New Code Sent", "Previous code is now invalid. Please use the new one.");
     } catch (error) {
-      console.error("Send OTP failed:", error);
+      console.error("Resend OTP failed:", error);
       Alert.alert(getErrorMessage(error));
     } finally {
       setLoadingResend(false);
     }
   };
 
+  // Verify OTP handler
   const handleVerifyCode = async (code: string) => {
     if (!user) return Alert.alert("Invalid User");
+
+    const trimmedCode = code.trim();
+    if (!trimmedCode || trimmedCode.length < 4) {
+      return Alert.alert("Validation Error", "Please enter a valid code.");
+    }
+
     setLoading(true);
     try {
       const response = await fetch(`${BASE_URL}/api/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber, otp: code }),
+        body: JSON.stringify({ phone: phoneNumber, otp: trimmedCode }),
       });
 
       const data = await response.json();
 
-      if (data.success) {
+      if (!data.success) {
+        throw new Error(data.message || "Invalid code");
+      }
+
+      try {
         const userRef = doc(db, "users", user.uid);
         await updateDoc(userRef, {
           phoneNumber,
           phoneNumberVerified: true,
         });
-        Alert.alert("Success", "Phone number verified!");
-        router.push("/(auth)/register/contacts-verification");
-      } else {
-        throw new Error("Invalid code");
+      } catch (err) {
+        console.error("Firestore update error:", err);
+        Alert.alert("Sorry!", "Server issue occurred.");
       }
+
+      Alert.alert("Success", "Phone number verified!");
+      router.push("/(auth)/register/contacts-verification");
     } catch (error) {
       console.error("Verify OTP failed:", error);
       Alert.alert(getErrorMessage(error));
@@ -147,53 +175,67 @@ const PhoneAuthScreen: React.FC = () => {
     }
   };
 
+  // Render phone input view
   const renderPhoneInput = (values: any, handleChange: any, errors: any, touched: any) => (
-    <View style={[STYLES.formGroup, {alignItems: "center"}]}>
-      
+    <View style={[STYLES.formGroup, { alignItems: "center" }]}>
       <Text style={STYLES.formLabel}>Your Phone Number:</Text>
-      
       <TextInputComponent
         placeholder="+1234567890"
         value={values.phone}
         onChange={handleChange("phone")}
         keyboardType="phone-pad"
+        inputMode="tel"
         isPassword={false}
       />
       {touched.phone && errors.phone && <Text style={STYLES.errorMessage}>{errors.phone}</Text>}
-      
-      <ActionPrimaryButton buttonTitle="Send Code" onSubmit={() => handleSendCode(values.phone)} isLoading={loading} />
-    
+
+      <ActionPrimaryButton
+        buttonTitle="Send Code"
+        isLoading={loading}
+        onSubmit={async () => {
+          try {
+            await phoneSchema.validateAt("phone", values);
+            handleSendCode(values.phone);
+          } catch (validationError: any) {
+            Alert.alert("Validation Error", validationError.message);
+          }
+        }}
+      />
     </View>
   );
 
+  // Render code input view
   const renderCodeInput = (values: any, handleChange: any, errors: any, touched: any) => (
     <View style={STYLES.formGroup}>
-      
       <Text style={STYLES.formLabel}>Enter Code:</Text>
-      
       <TextInputComponent
         placeholder="123456"
+        keyboardType="number-pad"
+        inputMode="numeric"
         value={values.code}
         onChange={handleChange("code")}
-        keyboardType="number-pad"
       />
       {touched.code && errors.code && <Text style={STYLES.errorMessage}>{errors.code}</Text>}
-      
-      <View style={{flexDirection: "row", justifyContent: 'space-between'}}>
 
-        <ActionPrimaryButton buttonTitle="Verify Code" onSubmit={() => handleVerifyCode(values.code)} isLoading={loading} />
-        <ActionPrimaryButton buttonTitle="Resend Code" onSubmit={() => handleResendCode()} isLoading={loadingResend} buttonStyle={{backgroundColor: Theme.primary}} />
-
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <ActionPrimaryButton
+          buttonTitle="Verify Code"
+          isLoading={loading}
+          onSubmit={() => handleVerifyCode(values.code)}
+        />
+        <ActionPrimaryButton
+          buttonTitle="Resend Code"
+          isLoading={loadingResend}
+          onSubmit={handleResendCode}
+          buttonStyle={{ backgroundColor: Theme.primary }}
+        />
       </View>
-    
     </View>
   );
 
   return (
     <AuthScreenLayout title="Phone Number Verification">
-      
-      <SkipButton onPress={() => router.push( "/(auth)/register/contacts-verification" )} />
-
+      <SkipButton onPress={() => router.push("/(auth)/register/contacts-verification")} />
       <Formik
         initialValues={{ phone: "", code: "" }}
         validationSchema={phoneSchema}

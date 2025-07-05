@@ -131,7 +131,7 @@ const MembershipScreen: React.FC = () => {
             
             <MembershipPlanOptionComponent
               title="Premium"
-              detailedText="We will text you 2 times each day, at your appointed time and 1 hour later. If after 2 hours and 2 texts, you have not texted &apos;YES&apos; back, we will call you to make sure you hear the phone ring. We will text your emergency contacts to let them know. Premium Plan $2.99/mo billed annually $35.88, plus tax, after free trial."
+              detailedText="We will text you 2 times each day, at your appointed time and 1 hour later if you didn't reply. If after 2 hours and 2 texts, you have not texted &apos;YES&apos; back, we will call you. If you don't answer, we will text your 2 safety contacts to let them know. Premium Plan $2.99/mo billed annually $35.88, plus tax, after free trial."
               buttonText="Start your 7 day Free Trial"
               handler={() => handleCheckout("premium")}
               disabled={!isChecked}

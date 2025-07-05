@@ -112,6 +112,7 @@ const SignUpScreen: React.FC = () => {
             <TextInputComponent
               placeholder="Full Name"
               inputMode="text"
+              autoCapitalize="words"
               value={values.name}
               onChange={handleChange("name")}
               onBlur={handleBlur("name")}
@@ -121,6 +122,7 @@ const SignUpScreen: React.FC = () => {
             <TextInputComponent
               placeholder="Email Address"
               inputMode="email"
+              autoCapitalize="none"
               value={values.email}
               onChange={handleChange("email")}
               onBlur={handleBlur("email")}
@@ -148,6 +150,7 @@ const SignUpScreen: React.FC = () => {
             <TextInputComponent
               placeholder="Zip-code"
               inputMode="text"
+              autoCapitalize="characters"
               value={values.zipCode}
               onChange={handleChange("zipCode")}
               onBlur={handleBlur("zipCode")}

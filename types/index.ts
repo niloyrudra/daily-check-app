@@ -6,7 +6,7 @@ import { ReactNode } from "react"
 import { ColorValue, InputModeOptions, KeyboardType, StyleProp, TextStyle, ViewStyle } from "react-native"
 
 type WritableTimestamp = Timestamp | FieldValue;
-
+type AutoCapitalizeType = 'none' | 'sentences' | 'words' | 'characters';
 type Plan = "" | "basic" | "premium"; //  "free" | "monthly" | "yearly";
 
 type Contact = {
@@ -73,6 +73,7 @@ type InputProps = { // extends TextInputProps -> better approach
   maxLength?: number,
   inputMode?: InputModeOptions | undefined,
   keyboardType?: KeyboardType | undefined,
+  autoCapitalize?: AutoCapitalizeType | undefined,
   placeholderTextColor?: ColorValue | undefined,
   isPassword?: boolean,
   contentContainerStyle?: StyleProp<ViewStyle>

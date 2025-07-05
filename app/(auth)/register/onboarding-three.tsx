@@ -29,7 +29,7 @@ const OnboardingScreenThree: React.FC = () => {
 
         <OnboardingInfoComponent
           iconName="people-roof"
-          content="Your two safety contacts will be quickly notified to check-up on you and your dependent loved ones if we get no response from you"
+          content="Your safety contacts will be quickly notified to check-up on you and your dependent loved ones if we get no response from you"
         />
 
         {/* Submit Button */}

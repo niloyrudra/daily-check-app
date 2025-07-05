@@ -99,7 +99,7 @@ const OptInScreen: React.FC = () => {
                   <CheckboxField name="optIn" />
                 </View>
 
-                <Text style={{color:Theme.primary, textAlign:"center", fontSize: SIZES.contentText}}>I would like to receive emergency SMS (text messages) and/or calls as safety checks and acknowledge I can opt out at any time by replying STOP.</Text>
+                <Text style={{color:Theme.primary, textAlign:"center", fontSize: SIZES.contentText}}>I would like to receive SMS (text messages) and/or calls as safety checks and acknowledge I can opt out at any time by replying STOP.</Text>
 
               </View>
 

@@ -6,12 +6,12 @@ import React, { useState } from "react";
 import { Alert, Text, View } from "react-native";
 import * as Yup from "yup";
 
-import ArrowButton from "@/components/ArrowButton";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import SkipButton from "@/components/SkipButton";
 import STYLES from "@/constants/styles";
+import { Theme } from "@/constants/theme";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
 
@@ -112,7 +112,7 @@ const ModifyContactNumbersScreen: React.FC = () => {
       const response = await fetch(`${BASE_URL}/api/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber: phone, otp: code }),
+        body: JSON.stringify({ phoneNumber: phone, otp: code.trim() }),
       });
 
       const data = await response.json();
@@ -166,13 +166,14 @@ const ModifyContactNumbersScreen: React.FC = () => {
         <View style={[STYLES.formGroup, {alignItems: "center"}]}>
         
           <Text style={STYLES.formLabel}>
-            {contactKey === "contact1" ? "Primary Contact Number" : "Secondary Contact Number"}
+            {contactKey === "contact1" ? "Primary Contact" : "Secondary Contact"}
           </Text>
 
           {step === "enterPhone" ? (
             <>
               <TextInputComponent
                 placeholder="Name"
+                autoCapitalize="words"
                 value={values.name}
                 onChange={handleChange("name")}
                 isPassword={false}
@@ -181,9 +182,10 @@ const ModifyContactNumbersScreen: React.FC = () => {
               
               <TextInputComponent
                 placeholder="+1234567890"
+                keyboardType="phone-pad"
+                inputMode="tel"
                 value={values.phone}
                 onChange={handleChange("phone")}
-                keyboardType="phone-pad"
                 isPassword={false}
               />
               {touched.phone && errors.phone && <Text style={STYLES.errorMessage}>{errors.phone}</Text>}
@@ -202,9 +204,10 @@ const ModifyContactNumbersScreen: React.FC = () => {
             <>
               <TextInputComponent
                 placeholder="123456"
+                keyboardType="number-pad"
+                inputMode="numeric"
                 value={values.code}
                 onChange={handleChange("code")}
-                keyboardType="number-pad"
               />
               {touched.code && errors.code && <Text style={STYLES.errorMessage}>{errors.code}</Text>}
               
@@ -223,7 +226,7 @@ const ModifyContactNumbersScreen: React.FC = () => {
   return (
     <AuthScreenLayout title="Emergency Contacts" isScrollable={true}>
       
-      <ArrowButton />
+      {/* <ArrowButton /> */}
 
       <SkipButton
         onPress={() => router.push("/dashboard/home")}
@@ -233,7 +236,7 @@ const ModifyContactNumbersScreen: React.FC = () => {
       <View style={STYLES.container}>
         {renderContactInput(step1, "contact1", contact1Name, setContact1Name, contact1Phone, setContact1Phone, setStep1)}
         
-        <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: "#aaa", marginVertical: 30}} />
+        <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: Theme.borderColor, marginVertical: 30}} />
         
         {renderContactInput(step2, "contact2", contact2Name, setContact2Name, contact2Phone, setContact2Phone, setStep2)}
       </View>

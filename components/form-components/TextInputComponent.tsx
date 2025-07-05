@@ -18,6 +18,7 @@ const TextInputComponent = ({
     maxLength=100,
     inputMode='text',
     keyboardType='default',
+    autoCapitalize="sentences",
     placeholderTextColor,
     isPassword=false,
     contentContainerStyle={}
@@ -31,7 +32,7 @@ const TextInputComponent = ({
             placeholder={placeholder}
             value={value}
             keyboardType={keyboardType}
-
+            autoFocus={false}
             style={[
                 styles.input,
                 ( isFocused && { borderColor: Theme.primary } ),
@@ -44,10 +45,10 @@ const TextInputComponent = ({
             multiline={multiline}
             numberOfLines={numberOfLines}
             maxLength={maxLength}
-            placeholderTextColor={placeholderTextColor}
+            placeholderTextColor={placeholderTextColor ?? Theme.primary}
             enterKeyHint="done"
             inputMode={inputMode}
-    
+            autoCapitalize={autoCapitalize}
             secureTextEntry={ isSecureTextEntry ?? isPassword }
 
             onChangeText={onChange}
