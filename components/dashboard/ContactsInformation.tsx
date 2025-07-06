@@ -9,16 +9,17 @@ import { Card, Divider, Text } from "react-native-paper";
 
 interface ContactsInformationData {
     contact1: Contact | undefined,
-    contact2: Contact | undefined 
+    contact2: Contact | undefined,
+    membershipPlan: string | undefined
 }
 
-const ContactsInformationComponent = ({ contact1, contact2 }: ContactsInformationData) => {
+const ContactsInformationComponent = ({ contact1, contact2, membershipPlan }: ContactsInformationData) => {
 
     if (!contact1 && !contact2) {
         return (
             <Card style={STYLES.card}>
                 <Text variant="bodyMedium" style={{ color: Theme.borderColor, fontSize: SIZES.contentText }}>
-                No contact(s) verified yet.
+                    No contact(s) verified yet.
                 </Text>
             </Card>
         );
@@ -44,7 +45,7 @@ const ContactsInformationComponent = ({ contact1, contact2 }: ContactsInformatio
 
                         return (
                             <React.Fragment key={key}>
-                                <Card.Content style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 5 }}>
+                                <Card.Content style={[{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 5 }, (membershipPlan && membershipPlan === "basic" && {opacity: 0.67})]}>
                                     <Text style={{ color: Theme.text, fontSize: SIZES.contentText }}>  
                                         {value?.contactName || "Contact"}: {value?.phoneNumber}
                                     </Text>

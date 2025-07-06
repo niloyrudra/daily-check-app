@@ -107,7 +107,6 @@ const PhoneAuthScreen: React.FC = () => {
 
       console.log(data)
 
-
       if (!data.success) {
         return Alert.alert("Sorry!", getErrorMessage(data.error || data));
       }
@@ -120,9 +119,10 @@ const PhoneAuthScreen: React.FC = () => {
         });
       } catch (err) {
         console.error("Firestore update error:", err);
+        Alert.alert("Sorry", "Your information is not updated.");
       }
 
-      Alert.alert("New Code Sent", "Previous code is now invalid. Please use the new one.");
+      Alert.alert("New OTP Code Sent", "Previous code is now invalid. Please use the new one.");
     } catch (error) {
       console.error("Resend OTP failed:", error);
       Alert.alert(getErrorMessage(error));

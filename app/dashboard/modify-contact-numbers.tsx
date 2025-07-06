@@ -45,7 +45,7 @@ const getErrorMessage = (error: any): string => {
 
 const ModifyContactNumbersScreen: React.FC = () => {
   const router = useRouter();
-  const { c1Name, c1PhnNum, c2Name, c2PhnNum } = useLocalSearchParams();
+  const { c1Name, c1PhnNum, c2Name, c2PhnNum, membershipPlan } = useLocalSearchParams();
   const user = auth.currentUser;
 
   const [loading1, setLoading1] = useState<boolean>(false);
@@ -128,7 +128,7 @@ const ModifyContactNumbersScreen: React.FC = () => {
         if (contactKey === "contact1") setStep1("enterCode");
         else setStep2("enterCode");
 
-        router.push( "/dashboard/home" );
+        // router.push( "/dashboard/home" );
 
       } else {
         Alert.alert("Sorry!", `Number verification is failed!`);
@@ -235,11 +235,26 @@ const ModifyContactNumbersScreen: React.FC = () => {
 
       <View style={STYLES.container}>
         {renderContactInput(step1, "contact1", contact1Name, setContact1Name, contact1Phone, setContact1Phone, setStep1)}
+
+        {
+          membershipPlan && membershipPlan === "premium" && (
+            <>
+              <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: Theme.borderColor, marginVertical: 30}} />
+              
+              {renderContactInput(step2, "contact2", contact2Name, setContact2Name, contact2Phone, setContact2Phone, setStep2)}
+            </>
+          )
+        }
         
-        <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: Theme.borderColor, marginVertical: 30}} />
-        
-        {renderContactInput(step2, "contact2", contact2Name, setContact2Name, contact2Phone, setContact2Phone, setStep2)}
       </View>
+
+      <ActionPrimaryButton
+        buttonTitle="Go To Dashboard"
+        buttonStyle={{
+          backgroundColor: Theme.primary
+        }}
+        onSubmit={() => router.push( "/dashboard/home" )}
+      />
 
     </AuthScreenLayout>
   );

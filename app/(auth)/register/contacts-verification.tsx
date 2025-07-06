@@ -128,7 +128,7 @@ const ContactsVerificationScreen: React.FC = () => {
         if (contactKey === "contact1") setStep1("enterCode");
         else setStep2("enterCode");
 
-        router.push( "/(auth)/register/opt-in" );
+        // router.push( "/(auth)/register/opt-in" );
 
       } else {
         Alert.alert("Sorry!", `Number verification is failed!`);
@@ -166,7 +166,6 @@ const ContactsVerificationScreen: React.FC = () => {
 
           {step === "enterPhone" ? (
             <>
-              
               <TextInputComponent
                 placeholder="Name"
                 inputMode="text"
@@ -238,6 +237,14 @@ const ContactsVerificationScreen: React.FC = () => {
         
         {renderContactInput(step2, "contact2", contact2Name, setContact2Name, contact2Phone, setContact2Phone, setStep2)}
       </View>
+
+      <ActionPrimaryButton
+        buttonTitle="Continue"
+        buttonStyle={{
+          backgroundColor: Theme.primary
+        }}
+        onSubmit={() => router.push( "/(auth)/register/opt-in" )}
+      />
 
     </AuthScreenLayout>
   );

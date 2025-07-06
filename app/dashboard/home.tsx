@@ -119,6 +119,7 @@ const DashboardScreen: React.FC = () => {
             <ContactsInformationComponent
               contact1={userData?.contactNumbers?.contact1}
               contact2={userData?.contactNumbers?.contact2}
+              membershipPlan={userData.membershipPlan.plan || ""}
             />
   
             {/* Actions */}
@@ -126,7 +127,16 @@ const DashboardScreen: React.FC = () => {
   
               <ActionButton
                 title="Modify Contact Details"
-                onPress={() => router.push({pathname: "/dashboard/modify-contact-numbers", params: {c1Name: userData.contactNumbers.contact1.contactName, c1PhnNum: userData.contactNumbers.contact1.phoneNumber, c2Name:userData.contactNumbers.contact2.contactName, c2PhnNum:userData.contactNumbers.contact2.phoneNumber }})}
+                onPress={() => router.push({
+                  pathname: "/dashboard/modify-contact-numbers",
+                  params: {
+                    c1Name: userData.contactNumbers.contact1.contactName,
+                    c1PhnNum: userData.contactNumbers.contact1.phoneNumber,
+                    c2Name: userData.contactNumbers.contact2.contactName,
+                    c2PhnNum: userData.contactNumbers.contact2.phoneNumber,
+                    membershipPlan: userData.membershipPlan.plan,
+                  }
+                })}
                 mode="elevated"
                 loading={loading}
               />
