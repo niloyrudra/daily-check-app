@@ -45,7 +45,7 @@ const ContactsInformationComponent = ({ contact1, contact2, membershipPlan }: Co
 
                         return (
                             <React.Fragment key={key}>
-                                <Card.Content style={[{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 5 }, (membershipPlan && membershipPlan === "basic" && {opacity: 0.67})]}>
+                                <Card.Content style={[{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 5 }, (membershipPlan && membershipPlan === "basic" && key === 'contact2' && {opacity: 0.25})]}>
                                     <Text style={{ color: Theme.text, fontSize: SIZES.contentText }}>  
                                         {value?.contactName || "Contact"}: {value?.phoneNumber}
                                     </Text>
@@ -57,7 +57,7 @@ const ContactsInformationComponent = ({ contact1, contact2, membershipPlan }: Co
 
                                 </Card.Content>
 
-                                {key === 'contact1' && (<Divider style={{ backgroundColor: "#333", marginBottom: 10 }} />)}
+                                {key === 'contact1' && (<Divider style={{ backgroundColor: "#333", marginVertical: 5 }} />)}
 
                             </React.Fragment>
                         )

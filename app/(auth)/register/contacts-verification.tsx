@@ -9,10 +9,12 @@ import * as Yup from "yup";
 import ArrowButton from "@/components/ArrowButton";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
+import GreetingCard from "@/components/GreetingCard";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import SkipButton from "@/components/SkipButton";
 import STYLES from "@/constants/styles";
 import { Theme } from "@/constants/theme";
+import { getErrorMessage } from "@/utils";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
 
@@ -28,28 +30,15 @@ const phoneSchema = Yup.object().shape({
     .max(8, "Code too long"),
 });
 
-const errorMap: Record<number, string> = {
-  21408: "SMS/Text is not allowed to this country.",
-  21610: "User opted out. Reply START to re-enable.",
-  21614: "Invalid phone number.",
-  20429: "Too many OTP requests. Please wait.",
-  60200: "Invalid format.",
-  60203: "Blacklisted number.",
-  20404: "Verification SID not found.",
-};
-
-const getErrorMessage = (error: any): string => {
-  if (error?.code && errorMap[error.code]) return errorMap[error.code];
-  if (error?.message) return error.message;
-  return "Unexpected error occurred.";
-};
-
 const ContactsVerificationScreen: React.FC = () => {
   const router = useRouter();
   const user = auth.currentUser;
 
   const [loading1, setLoading1] = useState<boolean>(false);
   const [loading2, setLoading2] = useState<boolean>(false);
+
+  const [isVerified1, setIsVerified1] = useState<boolean>(false);
+  const [isVerified2, setIsVerified2] = useState<boolean>(false);
 
   const [step1, setStep1] = useState<"enterPhone" | "enterCode">("enterPhone");
   const [step2, setStep2] = useState<"enterPhone" | "enterCode">("enterPhone");
@@ -78,22 +67,29 @@ const ContactsVerificationScreen: React.FC = () => {
         // return;
       }
 
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        [`contactNumbers.${contactKey}.contactName`]: name,
-        [`contactNumbers.${contactKey}.phoneNumber`]: phone,
-        [`contactNumbers.${contactKey}.verified`]: false,
-      });
+      try {
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, {
+          [`contactNumbers.${contactKey}.contactName`]: name,
+          [`contactNumbers.${contactKey}.phoneNumber`]: phone,
+          [`contactNumbers.${contactKey}.verified`]: false,
+        });
 
-      if (contactKey === "contact1") {
-        setContact1Name(name);
-        setContact1Phone(phone);
-        setStep1("enterCode");
-      } else {
-        setContact2Name(name);
-        setContact2Phone(phone);
-        setStep2("enterCode");
+        if (contactKey === "contact1") {
+          setContact1Name(name);
+          setContact1Phone(phone);
+          setStep1("enterCode");
+        } else {
+          setContact2Name(name);
+          setContact2Phone(phone);
+          setStep2("enterCode");
+        }
+
+      } catch (err) {
+        console.error("Firestore update error:", err);
+        Alert.alert("Sorry!", "Your information failed to store in the Database.");
       }
+
     } catch (error) {
       console.error("Send OTP failed:", error);
       Alert.alert(getErrorMessage(error));
@@ -112,7 +108,7 @@ const ContactsVerificationScreen: React.FC = () => {
       const response = await fetch(`${BASE_URL}/api/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber: phone, otp: code.trim() }),
+        body: JSON.stringify({ phone: phone, otp: code.trim() }),
       });
 
       const data = await response.json();
@@ -125,8 +121,11 @@ const ContactsVerificationScreen: React.FC = () => {
 
         Alert.alert("Success", `${contactKey === "contact1" ? "Primary" : "Secondary"} number verified!`);
         
-        if (contactKey === "contact1") setStep1("enterCode");
-        else setStep2("enterCode");
+        if (contactKey === "contact1") setIsVerified1(true);
+        else setIsVerified2(true);
+
+        // if (contactKey === "contact1") setStep1("enterCode");
+        // else setStep2("enterCode");
 
         // router.push( "/(auth)/register/opt-in" );
 
@@ -231,11 +230,17 @@ const ContactsVerificationScreen: React.FC = () => {
       </View>
 
       <View style={STYLES.container}>
-        {renderContactInput(step1, "contact1", contact1Name, setContact1Name, contact1Phone, setContact1Phone, setStep1)}
+        { isVerified1
+          ? (<GreetingCard greet="Your primary contact&apos;s phone number is verified." />)
+          : renderContactInput(step1, "contact1", contact1Name, setContact1Name, contact1Phone, setContact1Phone, setStep1)
+        }
+
+        <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: Theme.borderColor, marginVertical: 30}} />
         
-        <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: Theme.borderColor, marginVertical: 20}} />
-        
-        {renderContactInput(step2, "contact2", contact2Name, setContact2Name, contact2Phone, setContact2Phone, setStep2)}
+        { isVerified2
+          ? (<GreetingCard greet="Your secondary contact&apos;s phone number is verified." />)
+          : renderContactInput(step2, "contact2", contact2Name, setContact2Name, contact2Phone, setContact2Phone, setStep2)
+        }
       </View>
 
       <ActionPrimaryButton

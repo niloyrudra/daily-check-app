@@ -12,6 +12,7 @@ import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import SkipButton from "@/components/SkipButton";
 import STYLES from "@/constants/styles";
 import { Theme } from "@/constants/theme";
+import { getErrorMessage } from "@/utils";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
 
@@ -24,24 +25,6 @@ const phoneSchema = Yup.object().shape({
     .min(4, "Code too short")
     .max(8, "Code too long"),
 });
-
-// Twilio Error Map
-const errorMap: Record<number, string> = {
-  21408: "SMS/Text is not allowed to this country.",
-  21610: "User has opted out of messages. They must reply START to receive messages again.",
-  21614: "Invalid phone number. Please use the E.164 format.",
-  20429: "Too many OTP requests. Please wait a while.",
-  60200: "Invalid phone number format.",
-  60203: "Your phone number is blacklisted.",
-  20404: "Verification SID not found or deleted.",
-};
-
-// Error message helper
-const getErrorMessage = (error: any): string => {
-  if (error?.code && errorMap[error.code]) return errorMap[error.code];
-  if (error?.message) return error.message;
-  return "An unexpected error occurred.";
-};
 
 const PhoneAuthScreen: React.FC = () => {
   const router = useRouter();
@@ -78,12 +61,13 @@ const PhoneAuthScreen: React.FC = () => {
           phoneNumber: phone,
           phoneNumberVerified: false,
         });
+
+        setStep("enterCode");
       } catch (err) {
         console.error("Firestore update error:", err);
         Alert.alert("Sorry!", "Your information failed to store in the Database.");
       }
 
-      setStep("enterCode");
     } catch (error) {
       console.error("Send OTP failed:", error);
       Alert.alert(getErrorMessage(error));
