@@ -37,7 +37,8 @@ export default {
           resizeMode: "contain",
           backgroundColor: "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     experiments: {
       typedRoutes: true
@@ -61,7 +62,8 @@ export default {
       },
       eas: {
         projectId: "74d8e8d1-5554-4427-a143-0ed11e031fcc"
-      }
+      },
+      
     },
     owner: "ada_loli"
   }

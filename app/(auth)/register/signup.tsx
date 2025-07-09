@@ -5,7 +5,7 @@ import { auth, db } from "@/config/firebase";
 import STYLES from "@/constants/styles";
 import { MembershipPlan, UserData } from "@/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { Formik } from "formik";
 import React, { useState } from "react";
@@ -24,9 +24,9 @@ const SignUpScreenSchema = Yup.object().shape({
 });
 
 const defaultMembershipPlan: MembershipPlan = {
-  plan: "",              // user starts on the free tier
-  status: "pending",         // pending until they actively subscribe
-  since: serverTimestamp()   // Firestore timestamp when this record is created
+  plan: "",
+  status: "pending",
+  since: serverTimestamp()
 };
 
 const SignUpScreen: React.FC = () => {
@@ -50,11 +50,11 @@ const SignUpScreen: React.FC = () => {
         email,
         password
       );
-      await sendEmailVerification(userCredential.user);
-      Alert.alert(
-        "Check your email!",
-        "Please verify your email before logging in."
-      );
+      // await sendEmailVerification(userCredential.user);
+      // Alert.alert(
+      //   "Check your email!",
+      //   "Please verify your email before logging in."
+      // );
   
       // 2️⃣ Build UserData with Firestore serverTimestamp
       const userData: UserData = {
@@ -90,7 +90,9 @@ const SignUpScreen: React.FC = () => {
       await setDoc(doc(db, "users", userCredential.user.uid), userData);
   
       // 4️⃣ Navigate to the “verify email” screen
-      router.push("/(auth)/register/verify-email");
+      // router.push("/(auth)/register/verify-email");
+      router.push("/(auth)/register/verify-phone");
+
     } catch (error: any) {
       Alert.alert("User Info Error", error.message);
     } finally {

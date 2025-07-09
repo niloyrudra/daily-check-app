@@ -52,7 +52,9 @@ const ForgotPassword: React.FC = () => {
           <View style={STYLES.formGroup}>
 
             <TextInputComponent
-              placeholder="Email"
+              placeholder="Email address"
+              inputMode="email"
+              autoCapitalize="none"
               value={values.email}
               onChange={handleChange("email")}
               onBlur={handleBlur("email")}

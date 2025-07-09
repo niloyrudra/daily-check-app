@@ -4,14 +4,14 @@ import { auth, db } from "@/config/firebase";
 import SIZES from "@/constants/size";
 import { useRouter } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 
 const VerifyEmail: React.FC = () => {
-  const [verified, setVerified] = useState<boolean>(false);
+  const [verified, setVerified] = React.useState<boolean>(false);
   const router = useRouter();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const checkVerification = async () => {
       await auth.currentUser?.reload();
       if (auth.currentUser?.emailVerified) {
@@ -30,11 +30,7 @@ const VerifyEmail: React.FC = () => {
   return (
     <AuthScreenLayout title="Email Verification">
       <View style={{gap: 20, justifyContent: "center", alignItems: "center"}}>
-        <View
-          style={{
-            gap: 6
-          }}
-        >
+        <View style={{ gap: 6 }}>
           <Text style={[{fontSize: SIZES.contentText}, (verified && {color: "green"})]}>{verified ? "Email Verified!" : "Waiting for email verification..."}</Text>
           {!verified && (<ActivityIndicator size={24} color="blue" />)}
         </View>

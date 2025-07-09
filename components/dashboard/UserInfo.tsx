@@ -16,6 +16,13 @@ const UserInfoComponent: React.FC<UserData> = ( {name, email, emailVerified} ) =
     <Card style={[STYLES.card, {padding: 0}]}>
         <Card.Title
             title={name || email || "User"}
+            subtitle={email ? `Email: ${email} ✅` : "Email: No Email ❌"}
+            left={(props) => (<FontAwesome name="user-circle" size={40} color={Theme.primary} />)}
+            titleStyle={{ color: Theme.text, fontSize: SIZES.title }}
+            subtitleStyle={{ color: Theme.borderColor, fontSize: SIZES.contentText }}
+        />
+        {/* <Card.Title
+            title={name || email || "User"}
             subtitle={emailVerified ? "Email: Verified ✅" : "Email: Unverified ❌"}
             left={(props) => (
                 // <Avatar.Image
@@ -27,7 +34,7 @@ const UserInfoComponent: React.FC<UserData> = ( {name, email, emailVerified} ) =
             )}
             titleStyle={{ color: Theme.text, fontSize: SIZES.title }}
             subtitleStyle={{ color: "#aaa", fontSize: SIZES.contentText }}
-        />
+        /> */}
     </Card>
   )
 }

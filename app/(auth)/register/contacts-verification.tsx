@@ -219,14 +219,14 @@ const ContactsVerificationScreen: React.FC = () => {
   );
 
   return (
-    <AuthScreenLayout title="Emergency Contacts" isScrollable={true}>
+    <AuthScreenLayout title="Safety Contacts" isScrollable={true}>
       
       <ArrowButton />
 
       <SkipButton onPress={() => router.push( "/(auth)/register/opt-in" )} />
 
       <View style={{marginBottom: 30}}>
-        <Text style={[STYLES.formLabel, {fontWeight:"800", textAlign:"center"}]}>Let your safety contacts know that they need to reply to our text message.</Text>
+        <Text style={[STYLES.formLabel, {fontWeight:"800", textAlign:"center"}]}>Text or call your safety contacts and let them know they will be receiving a verification code for you.</Text>
       </View>
 
       <View style={STYLES.container}>
@@ -235,7 +235,7 @@ const ContactsVerificationScreen: React.FC = () => {
           : renderContactInput(step1, "contact1", contact1Name, setContact1Name, contact1Phone, setContact1Phone, setStep1)
         }
 
-        <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: Theme.borderColor, marginVertical: 30}} />
+        <View style={{width: "100%", height:0, borderBottomWidth: 1, borderBottomColor: Theme.borderColor, marginVertical: 30}} />
         
         { isVerified2
           ? (<GreetingCard greet="Your secondary contact&apos;s phone number is verified." />)
