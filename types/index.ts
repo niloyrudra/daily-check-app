@@ -26,7 +26,7 @@ type UserData = {
   zipCode: string,
   country: string,
   email: string,
-  emailVerified: boolean,
+  emailVerified?: boolean,
   phoneNumber: string,
   phoneNumberVerified: boolean,
   optInStatus?: boolean,

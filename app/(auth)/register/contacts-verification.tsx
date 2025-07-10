@@ -57,7 +57,7 @@ const ContactsVerificationScreen: React.FC = () => {
       const response = await fetch(`${BASE_URL}/api/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone, type: contactKey }),
       });
 
       const data = await response.json();

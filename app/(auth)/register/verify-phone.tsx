@@ -44,12 +44,12 @@ const PhoneAuthScreen: React.FC = () => {
       const response = await fetch(`${BASE_URL}/api/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone, type: "user" }),
       });
 
       const data = await response.json();
 
-      console.log(data)
+      // console.log(data)
 
       if (!data.success) {
         return Alert.alert("Error", getErrorMessage(data.error || data));
@@ -84,12 +84,12 @@ const PhoneAuthScreen: React.FC = () => {
       const response = await fetch(`${BASE_URL}/api/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: phoneNumber }),
+        body: JSON.stringify({ phone: phoneNumber, type: "user" }),
       });
 
       const data = await response.json();
 
-      console.log(data)
+      // console.log(data)
 
       if (!data.success) {
         return Alert.alert("Sorry!", getErrorMessage(data.error || data));
