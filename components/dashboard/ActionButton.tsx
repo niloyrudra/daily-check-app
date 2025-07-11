@@ -1,5 +1,6 @@
 import SIZES from '@/constants/size'
 import { Theme } from '@/constants/theme'
+import { View } from 'moti'
 import React from 'react'
 import { ActivityIndicator, StyleProp, Text, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
@@ -23,14 +24,19 @@ const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, button
         ? 
           (<ActivityIndicator size="large" color={Theme.secondary} />)
         : (
-          <Button
-            mode={mode || "contained"}
-            buttonColor={buttonColor ? buttonColor : Theme.primary}
-            style={[{height: 50, borderRadius:30, alignItems: "center", justifyContent: "center" }, (buttonStyle && buttonStyle)]}
-            onPress={onPress}
+          <View
+            style={{width:"auto", alignItems: "center", justifyContent: "center" }}
           >
-            <Text style={{fontSize: SIZES.title, color: "#FFFFFF"}}>{title}</Text>
-          </Button>
+
+            <Button
+              mode={mode || "contained"}
+              buttonColor={buttonColor ? buttonColor : Theme.primary}
+              style={[{height: 55, borderRadius:30, alignItems: "center", justifyContent: "center" }, (buttonStyle && buttonStyle)]}
+              onPress={onPress}
+            >
+              <Text style={{fontSize: SIZES.title, color: "#FFFFFF"}}>{title}</Text>
+            </Button>
+          </View>
         )
       }
     </MotiAnimatedSection>

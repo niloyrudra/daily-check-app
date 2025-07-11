@@ -28,7 +28,7 @@ const ContactsInformationComponent = ({ contact1, contact2, membershipPlan }: Co
     const contactNumbers = { contact1, contact2 };
 
     return (
-        <Card style={STYLES.card}>
+        <Card style={STYLES.card} mode='contained'>
             {contactNumbers?.contact1?.phoneNumber || contactNumbers?.contact2?.phoneNumber
             ?
                 (            

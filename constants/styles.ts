@@ -64,7 +64,7 @@ const actionButtonTextStyle: StyleProp<TextStyle> = {
 const formGroup: StyleProp<ViewStyle> = {
     gap: 20,
     width: SIZES.screenBodyWidth,
-    // alignItems:"center"
+    alignItems:"center"
 };
 
 const formLabel: StyleProp<TextStyle> = {
@@ -80,14 +80,17 @@ const errorMessage: StyleProp<TextStyle> = {
 const card: StyleProp<ViewStyle> = {
     backgroundColor: "transparent",
     marginBottom: 20,
-    padding: 10
+    padding: 10,
+    borderWidth: 1,
+    borderColor: Theme.primary
 };
 
 const infoContainer: StyleProp<ViewStyle> = {
     flex: 1,
     gap: 30,
     justifyContent: "flex-start",
-    paddingVertical: 20
+    paddingVertical: 20,
+    alignItems:"center"
 };
 
 const STYLES = {

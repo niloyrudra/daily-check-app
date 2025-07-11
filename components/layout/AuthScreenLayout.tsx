@@ -1,4 +1,5 @@
 import STYLES from '@/constants/styles';
+import { Theme } from '@/constants/theme';
 import React, { ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import AuthTopBannerComponent from '../AuthTopBannerComponent';
@@ -26,7 +27,8 @@ const AuthScreenLayout = ({title, children, isScrollable=false}: {title?: string
                         <TitleComponent
                             title={title}
                             titleStyle={{
-                                fontSize: 32
+                                fontSize: 32,
+                                color: Theme.primary    
                             }}
                             style={{
                                 marginBottom: 20
@@ -40,7 +42,7 @@ const AuthScreenLayout = ({title, children, isScrollable=false}: {title?: string
 
             </ScrollView>)
             
-            : (<View style={[STYLES.container]}>
+            :   (<View style={[STYLES.container]}>
                     {/* Banner */}
                     <AuthTopBannerComponent />
 

@@ -17,7 +17,7 @@ const WelcomeSection: React.FC<UserData> = ( {name, email} ) => {
         transition={{ type: "spring", duration: 500 }}
         style={{ marginBottom: 20 }}
     >
-        <Text variant="titleLarge" style={{ color: Theme.text, fontSize: SIZES.header }}>Welcome,</Text>
+        <Text variant="titleLarge" style={{ color: Theme.primary, fontSize: SIZES.header }}>Welcome,</Text>
         <Text variant="bodyMedium" style={{ color: "green", fontSize: SIZES.title }}> {/* "#aaa" */}
           {name || email || "User"}
         </Text>

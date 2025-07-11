@@ -109,8 +109,9 @@ const DashboardScreen: React.FC = () => {
                 params: {existingPhoneNumber: userData.phoneNumber}
               })}
               mode="elevated"
+
               loading={loading}
-              buttonStyle={{marginBottom: 20}}
+              buttonStyle={{marginBottom: 20, backgroundColor: Theme.accent}}
             />
   
             {/* Contact Information Status */}
@@ -138,6 +139,7 @@ const DashboardScreen: React.FC = () => {
                   }
                 })}
                 mode="elevated"
+                buttonColor={Theme.accent}
                 loading={loading}
               />
   
@@ -153,7 +155,7 @@ const DashboardScreen: React.FC = () => {
               />
             </View>
   
-            <Divider style={{marginVertical: 30, backgroundColor: "#333" }} />
+            <Divider style={{marginVertical: 30, backgroundColor: Theme.primary }} />
   
             {/* Scheduler Section */}
             <MotiAnimatedSection>
@@ -161,13 +163,14 @@ const DashboardScreen: React.FC = () => {
               <CalendarComponent onModalHandler={() => setModalVisible(true)} userData={userData} />
             </MotiAnimatedSection>
   
-            <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: "#333" }} />
+            <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: Theme.primary }} />
   
             {/* Cancel Membership Actions */}
             <ActionButton
               title="Cancel Membership"
               onPress={membershipCancellationHandler}
               mode="elevated"
+              buttonColor={Theme.accent}
               loading={loading}
             />
   

@@ -13,12 +13,12 @@ interface UserData {
 
 const UserInfoComponent: React.FC<UserData> = ( {name, email, emailVerified} ) => {
   return (
-    <Card style={[STYLES.card, {padding: 0}]}>
+    <Card style={[STYLES.card, {padding: 0}]} mode='contained'>
         <Card.Title
             title={name || email || "User"}
             subtitle={email ? `✅ ${email}` : "❌ No Email"}
             left={(props) => (<FontAwesome name="user-circle" size={40} color={Theme.primary} />)}
-            titleStyle={{ color: Theme.text, fontSize: SIZES.title }}
+            titleStyle={{ color: Theme.primary, fontSize: SIZES.title }}
             subtitleStyle={{ color: Theme.borderColor, fontSize: SIZES.contentText }}
         />
         {/* <Card.Title

@@ -5,8 +5,8 @@ import { View } from "react-native";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import OnboardingInfoComponent from "@/components/OnboardingInfoComponent";
+import SIZES from "@/constants/size";
 import STYLES from "@/constants/styles";
-import { Theme } from "@/constants/theme";
 
 
 const OnboardingScreen: React.FC = () => {
@@ -32,12 +32,11 @@ const OnboardingScreen: React.FC = () => {
           content="We will text you daily at your specified time. If you don&apos;t text us back a quick Y or YES within your appointed time window, we will alert your safety contacts."
         />
 
-        <View style={{flex:1, flexDirection: "row", justifyContent:"space-around", alignItems: "flex-end"}}>
+        <View style={{flex:1, flexDirection: "row", justifyContent:"space-around", alignItems: "flex-end", marginTop: 10, width: SIZES.screenBodyWidth }}>
           {/* Login Button */}
           <ActionPrimaryButton
             buttonTitle="Log In"
             onSubmit={() => router.push("/(auth)/login")}
-            buttonStyle={{backgroundColor: Theme.primary}}
           />
 
           {/* Submit Button */}

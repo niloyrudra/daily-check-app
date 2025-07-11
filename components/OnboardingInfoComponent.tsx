@@ -15,7 +15,7 @@ interface InfoProps {
 const OnboardingInfoComponent: React.FC<InfoProps> = ({iconName, content}) => {
   return (
     <View style={[STYLES.childContentCentered, {gap: 10}]}>
-        <FontAwesome6 name={iconName} size={36} color={Theme.link} />
+        <FontAwesome6 name={iconName} size={36} color={Theme.primary} />
         <Text
             style={{
                 color: Theme.primary,

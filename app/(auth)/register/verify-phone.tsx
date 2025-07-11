@@ -10,8 +10,8 @@ import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButto
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import SkipButton from "@/components/SkipButton";
+import SIZES from "@/constants/size";
 import STYLES from "@/constants/styles";
-import { Theme } from "@/constants/theme";
 import { getErrorMessage } from "@/utils";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
@@ -201,17 +201,18 @@ const PhoneAuthScreen: React.FC = () => {
       />
       {touched.code && errors.code && <Text style={STYLES.errorMessage}>{errors.code}</Text>}
 
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", width: SIZES.screenBodyWidth }}>
+        
         <ActionPrimaryButton
           buttonTitle="Verify Code"
           isLoading={loading}
           onSubmit={() => handleVerifyCode(values.code)}
         />
+
         <ActionPrimaryButton
           buttonTitle="Resend Code"
           isLoading={loadingResend}
           onSubmit={handleResendCode}
-          buttonStyle={{ backgroundColor: Theme.primary }}
         />
       </View>
     </View>

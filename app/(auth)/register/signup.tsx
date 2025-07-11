@@ -173,6 +173,9 @@ const SignUpScreen: React.FC = () => {
               buttonTitle="Sign Up"
               onSubmit={handleSubmit}
               isLoading={loading}
+              buttonStyle={{
+                marginTop: 10
+              }}
             />
           </View>
         )}

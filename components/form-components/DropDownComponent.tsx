@@ -53,18 +53,8 @@ const NumberDropdown: React.FC = () => {
           maxMenuHeight={300}
           menuContentStyle={{
             borderColor: Theme.primary,
-            borderRadius: 30,
-            // fontSize: SIZES.contentText
+            borderRadius: 30
           }}
-          // theme={{}}
-          // dropdownContainerStyle={{
-          //   backgroundColor: '#ffffff', // 👈 force white background
-          //   borderRadius: 16,
-          //   borderWidth: 1,
-          //   borderColor: Theme.primary,
-          //   elevation: 4, // for shadow on Android
-          //   zIndex: 9999 // optional, to bring it above
-          // }}
         />
       </View>
 

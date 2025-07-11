@@ -243,11 +243,10 @@ const ContactsVerificationScreen: React.FC = () => {
         }
       </View>
 
+      <View style={{width: "100%", height:0, borderBottomWidth: 1, borderBottomColor: Theme.borderColor, marginVertical: 30}} />
+
       <ActionPrimaryButton
         buttonTitle="Continue"
-        buttonStyle={{
-          backgroundColor: Theme.primary
-        }}
         onSubmit={() => router.push( "/(auth)/register/opt-in" )}
       />
 

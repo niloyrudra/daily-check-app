@@ -14,7 +14,7 @@ interface UserPhoneNumberData {
 
 const UserPhoneNumberComponent: React.FC<UserPhoneNumberData> = ( {phoneNumber='',  isVerified} ) => {
   return (
-    <Card style={STYLES.card}>
+    <Card style={STYLES.card} mode='contained'>
         {phoneNumber ? (
             <Card.Content style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 5 }}>
                 <View

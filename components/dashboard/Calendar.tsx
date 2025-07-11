@@ -152,7 +152,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
         markingType="period"
         style={{
           borderWidth: 1,
-          borderColor: "#aaa",
+          borderColor: Theme.primary,
           borderRadius: 15,
         }}
       />
@@ -160,15 +160,17 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
       <Text variant="bodyMedium" style={{fontSize: 18, color: Theme.primary}}>To reset days click arrow to the previous month and back.</Text>
 
       <ActionButton
-        title="Select Full Current Month"
+        title="Select Full Month"
         onPress={handleMonthSelect}
         mode="elevated"
+        buttonColor={Theme.accent}
       />
 
       <ActionButton
         title="Pick Start Time"
         onPress={() => setShowTimePicker("start")}
         mode="elevated"
+        buttonColor={Theme.accent}
       />
 
       {userData?.membershipPlan?.plan === 'basic' && (
@@ -191,11 +193,16 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
         <Text variant="bodyMedium" style={{fontSize: 18, color: Theme.primary}}>Start Time: {startTime.toLocaleTimeString()}</Text>
       </View>
 
-      <ActionPrimaryButton
-        buttonTitle="Save Schedule"
-        onSubmit={saveSchedule}
-        isLoading={loading}
-      />
+      <View
+        style={{alignItems: "center"}}
+      >
+        <ActionPrimaryButton
+          buttonTitle="Save Schedule"
+          onSubmit={saveSchedule}
+          isLoading={loading}
+        />
+      </View>
+
     </View>
   );
 };

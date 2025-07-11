@@ -3,7 +3,7 @@ export const Theme = {
   gradientColorBottom: "#C6DDA8",
   background: "#FFFFFF", // "#ebe3ce",
   backgroundGray: "#9e9e9e",
-  primary: "#1E1E1E", // "#795547",
+  primary: "#4A2B22", // "#6F4E37", // "#1E1E1E", // "#795547",
   secondary: "#9B8379",
   accent: "#C6302C", // "#E53935",
   link: "#1E1E1E", // "#d1b48c",

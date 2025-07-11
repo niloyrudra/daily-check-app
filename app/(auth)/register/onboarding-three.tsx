@@ -36,6 +36,9 @@ const OnboardingScreenThree: React.FC = () => {
         <ActionPrimaryButton
           buttonTitle="Continue"
           onSubmit={() => router.push({pathname: "/(auth)/register/signup", params: { initialEmail: initialEmail }})}
+          buttonStyle={{
+            marginTop: 10
+          }}
         />
 
       </View>

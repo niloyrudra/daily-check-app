@@ -22,10 +22,12 @@ const OnboardingTwo: React.FC = () => {
   ) => {
     setLoading(true);
     try {
-      Alert.alert(
-        "Thank you!",
-        "Your email address is stowed for future use case."
-      );
+      if(email) {
+        Alert.alert(
+          "Thank you!",
+          "Your email address is stowed for future use case."
+        );
+      }
   
       router.push({pathname: "/(auth)/register/onboarding-three", params: { initialEmail: email }});
 
