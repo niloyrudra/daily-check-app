@@ -40,19 +40,33 @@ const NumberDropdown: React.FC = () => {
   }
 
   return (
-    <View style={{gap:20}}>
-      <Dropdown
-        label="Select your response time"
-        mode="outlined" // "outlined" / "flat"
-        value={value}
-        options={numberList}
-        onSelect={responseTimeHandler}
-        maxMenuHeight={300}
-        menuContentStyle={{
-          borderColor: Theme.primary,
-          borderRadius: 30
-        }}
-      />
+    <View style={{gap:20 }}>
+      <View style={{ backgroundColor: '#FFFFFF' }}>
+
+        <Dropdown
+          label="Select your response time"
+          placeholder="Select your response time"
+          mode="outlined" // "outlined" / "flat"
+          value={value}
+          options={numberList}
+          onSelect={responseTimeHandler}
+          maxMenuHeight={300}
+          menuContentStyle={{
+            borderColor: Theme.primary,
+            borderRadius: 30,
+            // fontSize: SIZES.contentText
+          }}
+          // theme={{}}
+          // dropdownContainerStyle={{
+          //   backgroundColor: '#ffffff', // 👈 force white background
+          //   borderRadius: 16,
+          //   borderWidth: 1,
+          //   borderColor: Theme.primary,
+          //   elevation: 4, // for shadow on Android
+          //   zIndex: 9999 // optional, to bring it above
+          // }}
+        />
+      </View>
 
       {loading && (<ActivityIndicator size="large" color={Theme.accent} />)}
 

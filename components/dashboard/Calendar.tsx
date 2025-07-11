@@ -157,7 +157,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
         }}
       />
 
-      <Text variant="bodyMedium" style={{fontSize: 18}}>To reset days click arrow to the previous month and back.</Text>
+      <Text variant="bodyMedium" style={{fontSize: 18, color: Theme.primary}}>To reset days click arrow to the previous month and back.</Text>
 
       <ActionButton
         title="Select Full Current Month"
@@ -187,8 +187,8 @@ const CalendarComponent: React.FC<CalendarProps> = ({onModalHandler, userData}) 
       )}
 
       <View style={{gap: 5}}>
-        <Text variant="bodyMedium" style={{fontSize: 18}}>Selected Range: {range.start} → {range.end || "..."}</Text>
-        <Text variant="bodyMedium" style={{fontSize: 18}}>Start Time: {startTime.toLocaleTimeString()}</Text>
+        <Text variant="bodyMedium" style={{fontSize: 18, color: Theme.primary}}>Selected Range: {range.start} → {range.end || "..."}</Text>
+        <Text variant="bodyMedium" style={{fontSize: 18, color: Theme.primary}}>Start Time: {startTime.toLocaleTimeString()}</Text>
       </View>
 
       <ActionPrimaryButton
