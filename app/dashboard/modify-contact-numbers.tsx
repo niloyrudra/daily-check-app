@@ -1,34 +1,18 @@
 import { auth, db } from "@/config/firebase";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
-import { Formik } from "formik";
 import React, { useState } from "react";
 import { Alert, View } from "react-native";
-import * as Yup from "yup";
 
+import RenderContactInput from "@/components/auth/RenderContactInput";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
-import TextInputComponent from "@/components/form-components/TextInputComponent";
 import GreetingCard from "@/components/GreetingCard";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import SkipButton from "@/components/SkipButton";
 import STYLES from "@/constants/styles";
 import { Theme } from "@/constants/theme";
-import { getErrorMessage } from "@/utils";
-import { Text } from "react-native-paper";
-
-const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
-
-const phoneSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Name requires two characters minimum.")
-    .required("Name is required"),
-  phone: Yup.string()
-    .matches(/^\+[1-9]\d{1,14}$/, "Phone must be in E.164 format (e.g. +1234567890)")
-    .required("Phone is required"),
-  code: Yup.string()
-    .min(4, "Code too short")
-    .max(8, "Code too long"),
-});
+import { BASE_URL, getErrorMessage } from "@/utils";
+import { Divider } from "react-native-paper";
 
 
 const ModifyContactNumbersScreen: React.FC = () => {
@@ -137,91 +121,9 @@ const ModifyContactNumbersScreen: React.FC = () => {
     }
   };
 
-  const renderContactInput = (
-    step: "enterPhone" | "enterCode",
-    contactKey: "contact1" | "contact2",
-    storedName: string,
-    setStoredName: (v: string) => void,
-    storedPhone: string,
-    setStoredPhone: (v: string) => void,
-    stepSetter: (v: "enterPhone" | "enterCode") => void
-  ) => (
-    <Formik
-      enableReinitialize
-      initialValues={{
-        name: contactKey === "contact1" ? (storedName || (typeof c1Name === "string" ? c1Name : "")) : (storedName || (typeof c2Name === "string" ? c2Name : "")),
-        phone: contactKey === "contact1" ? (storedPhone || (typeof c1PhnNum === "string" ? c1PhnNum : "")) : (storedPhone || (typeof c2PhnNum === "string" ? c2PhnNum : "")),
-        code: ""
-      }}
-      validationSchema={phoneSchema}
-      onSubmit={() => {}}
-    >
-      {({ handleChange, values, errors, touched }) => (
-        <View style={[STYLES.formGroup, {alignItems: "center"}]}>
-        
-          <Text style={STYLES.formLabel}>
-            {contactKey === "contact1" ? "Primary Contact" : "Secondary Contact"}
-          </Text>
-
-          {step === "enterPhone" ? (
-            <>
-              <TextInputComponent
-                placeholder="Name"
-                autoCapitalize="words"
-                value={values.name}
-                onChange={handleChange("name")}
-                isPassword={false}
-              />
-              {touched.name && errors.name && <Text style={STYLES.errorMessage}>{errors.name}</Text>}
-              
-              <TextInputComponent
-                placeholder="+1234567890"
-                keyboardType="phone-pad"
-                inputMode="tel"
-                value={values.phone}
-                onChange={handleChange("phone")}
-                isPassword={false}
-              />
-              {touched.phone && errors.phone && <Text style={STYLES.errorMessage}>{errors.phone}</Text>}
-              
-              <ActionPrimaryButton
-                buttonTitle="Send Code"
-                onSubmit={() => {
-                  setStoredName(values.name);
-                  setStoredPhone(values.phone);
-                  handleSendCode(values.phone, values.name, contactKey);
-                }}
-                isLoading={(contactKey === "contact1" ? loading1 : loading2)}
-              />
-            </>
-          ) : (
-            <>
-              <TextInputComponent
-                placeholder="123456"
-                keyboardType="number-pad"
-                inputMode="numeric"
-                value={values.code}
-                onChange={handleChange("code")}
-              />
-              {touched.code && errors.code && <Text style={STYLES.errorMessage}>{errors.code}</Text>}
-              
-              <ActionPrimaryButton
-                buttonTitle="Verify Code"
-                onSubmit={() => handleVerifyCode(values.code, contactKey, storedPhone)}
-                isLoading={(contactKey === "contact1" ? loading1 : loading2)}
-              />
-            </>
-          )}
-        </View>
-      )}
-    </Formik>
-  );
-
   return (
-    <AuthScreenLayout title="Emergency Contacts" isScrollable={true}>
+    <AuthScreenLayout title="Safety Contacts" isScrollable={true}>
       
-      {/* <ArrowButton /> */}
-
       <SkipButton
         onPress={() => router.push("/dashboard/home")}
         title="CANCEL"
@@ -231,17 +133,51 @@ const ModifyContactNumbersScreen: React.FC = () => {
 
         { isVerified1
           ? (<GreetingCard greet="Your primary contact&apos;s phone number is verified." />)
-          : renderContactInput(step1, "contact1", contact1Name, setContact1Name, contact1Phone, setContact1Phone, setStep1)
+          :
+            (
+              <RenderContactInput
+                contactKey="contact1"
+                step={step1}
+                storedName={contact1Name}
+                setStoredName={setContact1Name}
+                storedPhone={contact1Phone}
+                setStoredPhone={setContact1Phone}
+                stepSetter={setStep1}
+                loading={loading1}
+                handleSendCode={handleSendCode}
+                handleVerifyCode={handleVerifyCode}
+                cName={typeof c1Name === "string" ? c1Name : ""}
+                cPhoneNumber={typeof c1PhnNum === "string" ? c1PhnNum : ""}
+                isModificationOn={true}
+              />
+            )
         }
 
         {
           membershipPlan && membershipPlan === "premium" && (
             <>
-              <View style={{width: "100%",height:0, borderBottomWidth: 1, borderBottomColor: Theme.borderColor, marginVertical: 30}} />
+              <Divider style={{backgroundColor: Theme.primary}} />
               
               { isVerified2
                 ? (<GreetingCard greet="Your secondary contact&apos;s phone number is verified." />)
-                : renderContactInput(step2, "contact2", contact2Name, setContact2Name, contact2Phone, setContact2Phone, setStep2)
+                :
+                  (
+                    <RenderContactInput
+                      contactKey="contact2"
+                      step={step2}
+                      storedName={contact2Name}
+                      setStoredName={setContact2Name}
+                      storedPhone={contact2Phone}
+                      setStoredPhone={setContact2Phone}
+                      stepSetter={setStep2}
+                      loading={loading2}
+                      handleSendCode={handleSendCode}
+                      handleVerifyCode={handleVerifyCode}
+                      cName={typeof c2Name === "string" ? c2Name : ""}
+                      cPhoneNumber={typeof c2PhnNum === "string" ? c2PhnNum : ""}
+                      isModificationOn={true}
+                    />
+                  )
               }
               
             </>
@@ -250,10 +186,12 @@ const ModifyContactNumbersScreen: React.FC = () => {
         
       </View>
 
+      <Divider style={{backgroundColor: Theme.primary}} />
+
       <ActionPrimaryButton
         buttonTitle="Go To Dashboard"
         buttonStyle={{
-          backgroundColor: Theme.primary
+          backgroundColor: Theme.accent
         }}
         onSubmit={() => router.push( "/dashboard/home" )}
       />

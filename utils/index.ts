@@ -16,7 +16,9 @@ const getErrorMessage = (error: any): string => {
   return "An unexpected error occurred.";
 };
 
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
+
 export {
-  getErrorMessage
+  BASE_URL, getErrorMessage
 };
 

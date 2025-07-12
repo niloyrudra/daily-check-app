@@ -4,11 +4,12 @@ import { auth, db } from '@/config/firebase';
 import SIZES from '@/constants/size';
 import STYLES from '@/constants/styles';
 import { Theme } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
 import { Checkbox } from 'expo-checkbox';
 import { doc, updateDoc } from 'firebase/firestore';
 import { Formik } from 'formik';
 import * as React from 'react';
-import { Alert, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
 import { Modal, Portal, Text } from 'react-native-paper';
 import * as Yup from 'yup';
 
@@ -36,6 +37,7 @@ interface EmergencyModalProps {
 
 const ModalComponent: React.FC<EmergencyModalProps> = ({visible, onRequestClose}) => {
   const [loading, setLoading] = React.useState<boolean>(false);
+
   const initialValues: EmergencyFormValues = {
     children: false,
     dog: false,
@@ -62,14 +64,21 @@ const ModalComponent: React.FC<EmergencyModalProps> = ({visible, onRequestClose}
             keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
           >
             
-            <View
-              style={{
-                gap: 20
-              }}
-            >
-              <Text style={{ fontSize: SIZES.title, color: Theme.primary, fontWeight: "800", textAlign: "center", marginBottom: 10 }}>
+            <View style={{gap: 20, position: "relative"}}>
+              <Text style={{ fontSize: 28, lineHeight: 36, color: Theme.primary, fontWeight: "800", textAlign: "center", marginVertical: 30 }}>
                 In Case of Emergency, list your dependent loved ones at home:
               </Text>
+
+              <TouchableOpacity
+                onPress={() => onRequestClose()}
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: -5
+                }}
+              >
+                <Ionicons name='close' size={36} color={Theme.accent} />
+              </TouchableOpacity>
               
               <Formik
                   initialValues={initialValues}
@@ -92,7 +101,7 @@ const ModalComponent: React.FC<EmergencyModalProps> = ({visible, onRequestClose}
 
                       Alert.alert("Successful!", "You have successfully added your dependency information.")
 
-                      onRequestClose();
+                      // onRequestClose();
                     }
                     catch( error: any ) {
                       console.error("Error", error?.message)
@@ -113,14 +122,16 @@ const ModalComponent: React.FC<EmergencyModalProps> = ({visible, onRequestClose}
                   }) => (
                     <>
 
-                      {(Object.keys(initialValues) as (keyof EmergencyFormValues)[]).slice(0, 4).map((key) => (
+                      {/* <View style={{flex: 1, gap: 20 }}> */}
+
+                        {(Object.keys(initialValues) as (keyof EmergencyFormValues)[]).slice(0, 4).map((key) => (
                           <View
                             style={{
                               flexDirection: 'row',
                               gap: 20,
                               alignItems: 'center',
                               paddingLeft: 50,
-                              marginBottom: 10,
+                              marginBottom: 15,
                             }}
                             key={key}
                           >
@@ -136,23 +147,26 @@ const ModalComponent: React.FC<EmergencyModalProps> = ({visible, onRequestClose}
                             </Text>
 
                           </View>
-                      ))}
+                        ))}
 
+                        <TextInputComponent
+                          placeholder="Tell us more"
+                          multiline
+                          value={values.extra}
+                          onChange={handleChange('extra')}
+                        />
 
-                      <TextInputComponent
-                        placeholder="Tell us more"
-                        multiline
-                        value={values.extra}
-                        onChange={handleChange('extra')}
-                      />
+                        {touched.extra && errors.extra && (<Text style={STYLES.errorMessage}>{errors.extra}</Text>)}
 
-                      {touched.extra && errors.extra && (<Text style={STYLES.errorMessage}>{errors.extra}</Text>)}
+                      {/* </View> */}
+                      <View style={{marginTop: 20, alignItems: "center"}}>
 
-                      <ActionPrimaryButton
-                        buttonTitle="Submit"
-                        onSubmit={() => handleSubmit()}
-                        isLoading={loading}
-                      />
+                        <ActionPrimaryButton
+                          buttonTitle="Submit"
+                          onSubmit={() => handleSubmit()}
+                          isLoading={loading}
+                        />
+                      </View>
 
                     </>
                   )}

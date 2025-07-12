@@ -2,9 +2,8 @@ import { auth, db } from "@/config/firebase";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import { Formik } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import { Alert, Text, View } from "react-native";
-import * as Yup from "yup";
 
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
@@ -12,42 +11,17 @@ import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import SkipButton from "@/components/SkipButton";
 import STYLES from "@/constants/styles";
 import { Theme } from "@/constants/theme";
-
-const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
-
-const phoneSchema = Yup.object().shape({
-  phone: Yup.string()
-    .matches(/^\+[1-9]\d{1,14}$/, "Phone number must be in E.164 format (e.g. +1234567890)")
-    .required("Phone number is required"),
-  code: Yup.string()
-    .min(4, "Code too short")
-    .max(8, "Code too long"),
-});
-
-const errorMap: Record<number, string> = {
-  21408: "We are not allowed to send SMS to this country.",
-  21610: "User has opted out of messages. They must reply START to receive messages again.",
-  21614: "Invalid phone number. Please use the E.164 format.",
-  20429: "Too many OTP requests. Please wait a while.",
-  60200: "Invalid phone number format.",
-  60203: "Your phone number is blacklisted.",
-  20404: "Verification SID not found or deleted.",
-};
-
-const getErrorMessage = (error: any): string => {
-  if (error?.code && errorMap[error.code]) return errorMap[error.code];
-  if (error?.message) return error.message;
-  return "An unexpected error occurred.";
-};
+import { phoneSchema } from "@/schemas";
+import { BASE_URL, getErrorMessage } from "@/utils";
 
 const PhoneNumberModificationScreen: React.FC = () => {
   const router = useRouter();
   const { existingPhoneNumber } = useLocalSearchParams();
   const user = auth.currentUser;
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loadingResend, setLoadingResend] = useState<boolean>(false);
-  const [step, setStep] = useState<"enterPhone" | "enterCode">("enterPhone");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loadingResend, setLoadingResend] = React.useState<boolean>(false);
+  const [step, setStep] = React.useState<"enterPhone" | "enterCode">("enterPhone");
+  const [phoneNumber, setPhoneNumber] = React.useState<string>("");
 
   // Send OTP handler
   const handleSendCode = async (phone: string) => {
@@ -223,8 +197,6 @@ const PhoneNumberModificationScreen: React.FC = () => {
 
   return (
     <AuthScreenLayout title="Phone Number Modification">
-
-      {/* <ArrowButton /> */}
 
       <SkipButton
         onPress={() => router.push("/dashboard/home")}

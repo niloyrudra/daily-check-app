@@ -144,7 +144,7 @@ const DashboardScreen: React.FC = () => {
               />
   
               <ActionButton
-                title="Signout"
+                title="Sign out"
                 onPress={async () => {
                   await auth.signOut();
                   router.replace("/(auth)/login");

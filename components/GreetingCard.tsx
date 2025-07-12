@@ -9,7 +9,7 @@ import MotiAnimatedSection from './dashboard/MotiAnimatedSection'
 const GreetingCard = ({greet}: {greet:string}) => {
   return (
     <MotiAnimatedSection>
-        <Card style={STYLES.card}>
+        <Card style={STYLES.card} mode='contained' >
           <View style={{justifyContent: "center", alignItems: "center", gap: 10}}>
             
             <FontAwesome5 name="check-circle" size={32} color="green" />
