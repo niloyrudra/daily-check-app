@@ -2,7 +2,7 @@
 const errorMap: Record<number, string> = {
   21408: "SMS/Text message is not allowed to this country.",
   21610: "User has opted out of messages. They must reply START to receive messages again.",
-  21614: "Invalid phone number. Please use the E.164 format.",
+  21614: "Invalid phone number. Please use the E.164 format [e.g. +1(555)555-5555].",
   20429: "Too many OTP requests. Please wait a while.",
   60200: "Invalid phone number format.",
   60203: "Your phone number is blacklisted.",

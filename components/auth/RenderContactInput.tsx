@@ -19,7 +19,6 @@ interface Props {
   handleVerifyCode: (code: string, contactKey: "contact1" | "contact2", phone: string) => Promise<void>;
   cName?: string | "";
   cPhoneNumber?: string | "";
-  isModificationOn?: boolean
 }
 
 const RenderContactInput: React.FC<Props> = ({
@@ -35,7 +34,6 @@ const RenderContactInput: React.FC<Props> = ({
   handleVerifyCode,
   cName,
   cPhoneNumber,
-  isModificationOn=false
 }) => {
     const [loadingResend, setLoadingResend] = React.useState<boolean>(false);
 
@@ -85,7 +83,7 @@ const RenderContactInput: React.FC<Props> = ({
               )}
 
               <TextInputComponent
-                placeholder="+1234567890"
+                placeholder="e.g. +1(555)555-5555"
                 keyboardType="phone-pad"
                 inputMode="tel"
                 value={values.phone}
@@ -118,14 +116,6 @@ const RenderContactInput: React.FC<Props> = ({
               {touched.code && errors.code && (
                 <Text style={STYLES.errorMessage}>{errors.code}</Text>
               )}
-
-              {/* <ActionPrimaryButton
-                buttonTitle="Verify Code"
-                onSubmit={() =>
-                  handleVerifyCode(values.code, contactKey, storedPhone)
-                }
-                isLoading={loading}
-              /> */}
 
               <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%", gap: 10 }}>
                 <ActionPrimaryButton

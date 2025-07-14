@@ -148,7 +148,6 @@ const ModifyContactNumbersScreen: React.FC = () => {
                 handleVerifyCode={handleVerifyCode}
                 cName={typeof c1Name === "string" ? c1Name : ""}
                 cPhoneNumber={typeof c1PhnNum === "string" ? c1PhnNum : ""}
-                isModificationOn={true}
               />
             )
         }
@@ -175,7 +174,6 @@ const ModifyContactNumbersScreen: React.FC = () => {
                       handleVerifyCode={handleVerifyCode}
                       cName={typeof c2Name === "string" ? c2Name : ""}
                       cPhoneNumber={typeof c2PhnNum === "string" ? c2PhnNum : ""}
-                      isModificationOn={true}
                     />
                   )
               }

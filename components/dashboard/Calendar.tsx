@@ -3,15 +3,18 @@ import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Alert, View } from "react-native";
+import { Alert, Text as RNText, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Divider, Text } from "react-native-paper";
 import ActionPrimaryButton from "../form-components/ActionPrimaryButton";
 import DropDownComponent from "../form-components/DropDownComponent";
 import TitleComponent from "../TitleComponent";
 import ActionButton from "./ActionButton";
+
+dayjs.extend(customParseFormat);
 
 interface CalendarProps {
   onModalHandler: () => void;
@@ -24,16 +27,9 @@ interface MarkedDates {
     marked?: boolean;
     color?: string;
     textColor?: string;
+    time?: string; // ✅ NEW
   };
 }
-
-type DateObject = {
-  dateString: string;
-  day: number;
-  month: number;
-  year: number;
-  timestamp: number;
-};
 
 const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }) => {
   const [markedDates, setMarkedDates] = useState<MarkedDates>({});
@@ -41,7 +37,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
   const [showTimePicker, setShowTimePicker] = useState<"start" | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // 🔁 Load previously saved dates from Firestore
   useEffect(() => {
     const fetchPreviousSchedule = async () => {
       try {
@@ -53,21 +48,20 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
 
         if (userSnap.exists()) {
           const data = userSnap.data();
-          const selectedDates: string[] = data?.automation?.selectedDates || [];
-          const time = data?.automation?.startingTime;
-
+          const selectedDates: { date: string; time: string }[] = data?.automation?.selectedDates || [];
           const restored: MarkedDates = {};
-          selectedDates.forEach((date) => {
+
+          selectedDates.forEach(({ date, time }) => {
             restored[date] = {
               selected: true,
               marked: true,
               color: Theme.primary,
               textColor: "#fff",
+              time: dayjs(time).format("hh:mm A"),
             };
           });
 
           setMarkedDates(restored);
-          if (time) setStartTime(new Date(time));
         }
       } catch (error: any) {
         console.error("Failed to fetch schedule", error);
@@ -77,8 +71,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
     fetchPreviousSchedule();
   }, []);
 
-  // 🔘 Toggle day selection
-  const handleDayPress = (day: DateObject) => {
+  const handleDayPress = (day: { dateString: string }) => {
     const selected = day.dateString;
 
     setMarkedDates((prev) => {
@@ -93,6 +86,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
           marked: true,
           color: Theme.primary,
           textColor: "#fff",
+          time: dayjs(startTime).format("hh:mm A"), // Assign current start time
         };
       }
 
@@ -100,16 +94,15 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
     });
   };
 
-  // 📅 Select all days of the current month
   const handleMonthSelect = () => {
     const today = dayjs();
     const firstDay = today.startOf("month");
     const lastDay = today.endOf("month");
-
     const monthDays: MarkedDates = {};
+
     for (let i = 0; i <= lastDay.diff(firstDay, "day"); i++) {
       const date = firstDay.add(i, "day");
-      if (date.isBefore(today, 'day')) continue; // 🚫 skip past dates
+      if (date.isBefore(today, "day")) continue;
 
       const dateStr = date.format("YYYY-MM-DD");
       monthDays[dateStr] = {
@@ -117,25 +110,22 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
         marked: true,
         color: Theme.primary,
         textColor: "#fff",
+        time: dayjs(startTime).format("hh:mm A"),
       };
     }
 
     setMarkedDates((prev) => ({ ...prev, ...monthDays }));
   };
 
-
-  // 📆 Select current week (excluding weekends)
   const selectWeekExcludingWeekends = (startDate: string) => {
     const start = dayjs(startDate);
-    const today = dayjs(); // 🔐 today's date for filtering
+    const today = dayjs();
     const week: MarkedDates = {};
 
     for (let i = 0; i < 7; i++) {
       const current = start.add(i, "day");
-      const weekday = current.day(); // 0 = Sunday, 6 = Saturday
-
-      // 🚫 skip weekends & past dates
-      if ((weekday === 0 || weekday === 6) || current.isBefore(today, 'day')) continue;
+      const weekday = current.day();
+      if (weekday === 0 || weekday === 6 || current.isBefore(today, "day")) continue;
 
       const dateStr = current.format("YYYY-MM-DD");
       week[dateStr] = {
@@ -143,29 +133,35 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
         marked: true,
         color: Theme.primary,
         textColor: "#fff",
+        time: dayjs(startTime).format("hh:mm A"),
       };
     }
 
     setMarkedDates((prev) => ({ ...prev, ...week }));
   };
 
-
-  // 🔄 Reset calendar
   const resetCalendar = () => {
     setMarkedDates({});
     setStartTime(new Date());
   };
 
-  // 🕐 Time picker handler
   const handleTimeChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (!selectedDate) return;
     setShowTimePicker(null);
     if (showTimePicker === "start") {
       setStartTime(selectedDate);
+
+      // Apply to all selected dates
+      setMarkedDates((prev) => {
+        const updated = { ...prev };
+        Object.keys(updated).forEach((date) => {
+          updated[date].time = dayjs(selectedDate).format("hh:mm A");
+        });
+        return updated;
+      });
     }
   };
 
-  // 📌 Get display range from selected dates
   const getSelectedRange = () => {
     const dates = Object.keys(markedDates).sort();
     return {
@@ -174,10 +170,9 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
     };
   };
 
-  // 💾 Save to Firestore
   const saveSchedule = async () => {
-    const selectedDates = Object.keys(markedDates);
-    if (selectedDates.length === 0) {
+    const entries = Object.entries(markedDates);
+    if (entries.length === 0) {
       Alert.alert("Select at least one date");
       return;
     }
@@ -188,15 +183,37 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
       if (!user) throw new Error("Not logged in");
 
       const userRef = doc(db, "users", user.uid);
+
+      const formatted = entries.map(([date, data]) => {
+        const timeStr = data.time;
+
+        if (!timeStr || typeof timeStr !== "string") {
+          throw new Error(`Invalid or missing time for date: ${date}`);
+        }
+
+        const dateTime = dayjs(`${date} ${timeStr}`, "YYYY-MM-DD hh:mm A");
+
+        if (!dateTime.isValid()) {
+          throw new Error(`Could not parse datetime: ${date} ${timeStr}`);
+        }
+
+        return {
+          date,
+          time: dateTime.toISOString(),
+        };
+      });
+
+      console.log("✅ Final payload to Firestore:", formatted);
+
       await updateDoc(userRef, {
-        "automation.selectedDates": selectedDates,
-        "automation.startingTime": startTime.toISOString(),
+        "automation.selectedDates": formatted,
       });
 
       Alert.alert("Success", "Your schedule has been saved.");
       onModalHandler();
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      console.error("❌ Save Error:", error);
+      Alert.alert("Error", error.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -208,9 +225,47 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
     <View style={{ flex: 1, gap: 20 }}>
       <Calendar
         onDayPress={handleDayPress}
-        markedDates={markedDates}
         markingType="period"
-        minDate={dayjs().format("YYYY-MM-DD")} // ✅ disables past dates
+        minDate={dayjs().format("YYYY-MM-DD")}
+        dayComponent={({ date }) => {
+          
+          if (!date) return null; // ✅ Safely handle undefined
+
+          const { dateString, day } = date;
+          const today = dayjs().startOf("day");
+          const isPast = dayjs(dateString).isBefore(today, "day");
+
+          const marking = markedDates[dateString];
+          const isSelected = !!marking;
+
+          return (
+            <TouchableOpacity
+              onPress={() => !isPast && handleDayPress(date)} // ❌ disable tap if past
+              activeOpacity={isPast ? 1 : 0.5}
+            >
+              <View style={{ alignItems: "center", padding: 4 }}>
+                <RNText
+                  style={{
+                    color: isPast ? "#bbb" : isSelected ? "#fff" : Theme.primary,
+  
+                    backgroundColor: isSelected ? Theme.primary : "transparent",
+                    borderRadius: 20,
+                    padding: 5,
+                    width: 30,
+                    textAlign: "center",
+                    fontSize: 18
+                  }}
+                >
+                  {date.day}
+                </RNText>
+                {marking?.time && (
+                  <RNText style={{ fontSize: 10, color: Theme.primary }}>{marking.time}</RNText>
+                )}
+              </View>
+
+            </TouchableOpacity>
+          );
+        }}
         style={{
           borderWidth: 1,
           borderColor: Theme.primary,
@@ -240,22 +295,22 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
       />
 
       <ActionButton
-        title="Pick Start Time"
-        onPress={() => setShowTimePicker("start")}
-        mode="elevated"
-        buttonColor={Theme.accent}
-      />
-
-      <Divider style={{backgroundColor: Theme.primary}} />
-
-      <ActionButton
         title="Reset Calendar"
         onPress={resetCalendar}
         mode="outlined"
         buttonColor={Theme.accent}
       />
 
-      <Divider style={{backgroundColor: Theme.primary}} />
+      <Divider style={{ backgroundColor: Theme.primary }} />
+
+      <ActionButton
+        title="Time You Get Our Text"
+        onPress={() => setShowTimePicker("start")}
+        mode="elevated"
+        buttonColor={Theme.accent}
+      />
+
+      <Divider style={{ backgroundColor: Theme.primary }} />
 
       {userData?.membershipPlan?.plan === "basic" && (
         <View style={{ gap: 10 }}>

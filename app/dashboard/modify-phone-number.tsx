@@ -5,6 +5,8 @@ import { Formik } from "formik";
 import React from "react";
 import { Alert, Text, View } from "react-native";
 
+import RenderCodeInput from "@/components/auth/RenderCodeInput";
+import RenderPhoneInput from "@/components/auth/RenderPhoneInput";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
@@ -212,8 +214,28 @@ const PhoneNumberModificationScreen: React.FC = () => {
         {({ handleChange, values, errors, touched }) => (
           <View style={STYLES.childContentCentered}>
             {step === "enterPhone"
-              ? renderPhoneInput(values, handleChange, errors, touched)
-              : renderCodeInput(values, handleChange, errors, touched)}
+              ? 
+                (
+                  <RenderPhoneInput
+                    values={values}
+                    handleChange={handleChange}
+                    errors={errors}
+                    touched={touched}
+                    handleSendCode={handleSendCode}
+                    loading={loading}
+                  />
+                )
+              :  (
+                  <RenderCodeInput
+                    label="Enter Code"
+                    values={values}
+                    handleChange={handleChange}
+                    phoneNumber={phoneNumber}
+                    touched={touched}
+                    errors={errors}
+                  />
+                )
+            }
           </View>
         )}
       </Formik>

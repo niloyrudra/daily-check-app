@@ -44,7 +44,7 @@ const NumberDropdown: React.FC = () => {
       <View style={{ backgroundColor: '#FFFFFF' }}>
 
         <Dropdown
-          label="Select your response time"
+          label=""
           placeholder="Select your response time"
           mode="outlined" // "outlined" / "flat"
           value={value}
