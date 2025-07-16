@@ -33,9 +33,7 @@ const RenderPhoneInput: React.FC<Props> = ({
         inputMode="tel"
         isPassword={false}
       />
-      {touched.phone && errors.phone && (
-        <Text style={STYLES.errorMessage}>{errors.phone}</Text>
-      )}
+      {touched.phone && errors.phone && (<Text style={STYLES.errorMessage}>{errors.phone}</Text>)}
 
       <ActionPrimaryButton
         buttonTitle="Send Code"

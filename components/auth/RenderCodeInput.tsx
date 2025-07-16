@@ -17,6 +17,7 @@ interface RenderCodeInputProps {
     phoneNumber: string;
     touched: { code?: boolean };
     errors: { code?: string };
+    isModifiying?: boolean
 }
 
 const RenderCodeInput: React.FC<RenderCodeInputProps> = ({
@@ -26,6 +27,7 @@ const RenderCodeInput: React.FC<RenderCodeInputProps> = ({
     phoneNumber,
     touched,
     errors,
+    isModifiying=false
 }) => {
     const router = useRouter();
     const user = auth.currentUser;
@@ -45,7 +47,7 @@ const RenderCodeInput: React.FC<RenderCodeInputProps> = ({
 
             const data = await response.json();
 
-            // console.log(data)
+            console.log(data)
 
             if (!data.success) {
                 return Alert.alert("Sorry!", getErrorMessage(data.error || data));
@@ -63,6 +65,7 @@ const RenderCodeInput: React.FC<RenderCodeInputProps> = ({
             }
 
             Alert.alert("New OTP Code Sent", "Previous code is now invalid. Please use the new one.");
+
         } catch (error) {
             console.error("Resend OTP failed:", error);
             Alert.alert(getErrorMessage(error));
@@ -76,42 +79,46 @@ const RenderCodeInput: React.FC<RenderCodeInputProps> = ({
         if (!user) return Alert.alert("Invalid User");
 
         const trimmedCode = code.trim();
-        if (!trimmedCode || trimmedCode.length < 4) {
-        return Alert.alert("Validation Error", "Please enter a valid code.");
+        if (!trimmedCode || trimmedCode.length < 6) {
+            return Alert.alert("Validation Error", "Please enter a valid code.");
         }
 
         setLoading(true);
         try {
-        const response = await fetch(`${BASE_URL}/api/verify-otp`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ phone: phoneNumber, otp: trimmedCode }),
-        });
-
-        const data = await response.json();
-
-        if (!data.success) {
-            throw new Error(data.message || "Invalid code");
-        }
-
-        try {
-            const userRef = doc(db, "users", user.uid);
-            await updateDoc(userRef, {
-            phoneNumber,
-            phoneNumberVerified: true,
+            const response = await fetch(`${BASE_URL}/api/verify-otp`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone: phoneNumber, otp: trimmedCode }),
             });
-        } catch (err) {
-            console.error("Firestore update error:", err);
-            Alert.alert("Sorry!", "Server issue occurred.");
-        }
 
-        Alert.alert("Success", "Phone number verified!");
-        router.push("/(auth)/register/contacts-verification");
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.message || "Invalid code");
+            }
+
+            try {
+                const userRef = doc(db, "users", user.uid);
+                await updateDoc(userRef, {
+                    phoneNumber,
+                    phoneNumberVerified: true,
+                });
+
+            } catch (err) {
+                console.error("Firestore update error:", err);
+                Alert.alert("Sorry!", "Server issue occurred.");
+            }
+
+            Alert.alert("Success", "Phone number verified!");
+
+            if ( isModifiying ) router.push("/dashboard/home");
+            else router.push("/(auth)/register/contacts-verification");
+
         } catch (error) {
-        console.error("Verify OTP failed:", error);
-        Alert.alert(getErrorMessage(error));
+            console.error("Verify OTP failed:", error);
+            Alert.alert(getErrorMessage(error));
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
     };
 
@@ -130,17 +137,18 @@ const RenderCodeInput: React.FC<RenderCodeInputProps> = ({
 
             <View style={{ flexDirection: "row", justifyContent: "space-between", width: SIZES.screenBodyWidth }}>
             
-            <ActionPrimaryButton
-                buttonTitle="Verify Code"
-                isLoading={loading}
-                onSubmit={() => handleVerifyCode(values.code)}
-            />
+                <ActionPrimaryButton
+                    buttonTitle="Verify Code"
+                    isLoading={loading}
+                    onSubmit={() => handleVerifyCode(values.code)}
+                />
 
-            <ActionPrimaryButton
-                buttonTitle="Resend Code"
-                isLoading={loadingResend}
-                onSubmit={handleResendCode}
-            />
+                <ActionPrimaryButton
+                    buttonTitle="Resend Code"
+                    isLoading={loadingResend}
+                    onSubmit={handleResendCode}
+                />
+
             </View>
         </View>
     );

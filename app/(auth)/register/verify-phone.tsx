@@ -35,6 +35,8 @@ const PhoneAuthScreen: React.FC = () => {
 
       const data = await response.json();
 
+      console.log(data)
+
       if (!data.success) {
         return Alert.alert("Error", getErrorMessage(data.error || data));
       }

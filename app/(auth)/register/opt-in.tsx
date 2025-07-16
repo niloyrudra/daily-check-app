@@ -71,7 +71,7 @@ const OptInScreen: React.FC = () => {
 
             <View style={[ STYLES.childContentCentered, { gap:30 } ]}>
 
-              <Text style={{color:Theme.primary, textAlign: "center", fontSize: SIZES.contentText, fontWeight: "800"}}>Please, confirm receiving texts and answering calls from Daily Check App by switching the following button ON.</Text>
+              <Text style={{color:Theme.primary, textAlign: "center", fontSize: SIZES.contentText, fontWeight: "800"}}>Please, confirm receiving texts and answering calls from Daily Check-App by switching the following button ON.</Text>
 
               <View
                 style={{

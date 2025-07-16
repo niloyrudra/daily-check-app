@@ -7,18 +7,19 @@ import ActionPrimaryButton from "../form-components/ActionPrimaryButton";
 import TextInputComponent from "../form-components/TextInputComponent";
 
 interface Props {
-  contactKey: "contact1" | "contact2";
-  step: "enterPhone" | "enterCode";
-  storedName: string;
-  setStoredName: (v: string) => void;
-  storedPhone: string;
-  setStoredPhone: (v: string) => void;
-  stepSetter: (v: "enterPhone" | "enterCode") => void;
-  loading: boolean;
-  handleSendCode: (phone: string, name: string, contactKey: "contact1" | "contact2") => Promise<void>;
-  handleVerifyCode: (code: string, contactKey: "contact1" | "contact2", phone: string) => Promise<void>;
-  cName?: string | "";
-  cPhoneNumber?: string | "";
+  contactKey: "contact1" | "contact2",
+  step: "enterPhone" | "enterCode",
+  storedName: string,
+  setStoredName: (v: string) => void,
+  storedPhone: string,
+  setStoredPhone: (v: string) => void,
+  stepSetter: (v: "enterPhone" | "enterCode") => void,
+  loading: boolean,
+  handleSendCode: (phone: string, name: string, contactKey: "contact1" | "contact2") => Promise<void>,
+  handleVerifyCode: (code: string, contactKey: "contact1" | "contact2", phone: string) => Promise<void>,
+  cName?: string | "",
+  cPhoneNumber?: string | "",
+  isModifiying?: boolean
 }
 
 const RenderContactInput: React.FC<Props> = ({
@@ -34,6 +35,7 @@ const RenderContactInput: React.FC<Props> = ({
   handleVerifyCode,
   cName,
   cPhoneNumber,
+  isModifiying=false
 }) => {
     const [loadingResend, setLoadingResend] = React.useState<boolean>(false);
 

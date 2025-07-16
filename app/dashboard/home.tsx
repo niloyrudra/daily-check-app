@@ -3,6 +3,7 @@ import ActionButton from "@/components/dashboard/ActionButton";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import ContactsInformationComponent from "@/components/dashboard/ContactsInformation";
 import ModalComponent from "@/components/dashboard/modals/ModalComponent";
+import ModalMailerComponent from "@/components/dashboard/modals/ModalMailerComponent";
 import MotiAnimatedSection from "@/components/dashboard/MotiAnimatedSection";
 import SectionTitle from "@/components/dashboard/SectionTitle";
 import UserInfoComponent from "@/components/dashboard/UserInfo";
@@ -12,19 +13,19 @@ import SafeAreaLayout from "@/components/layout/SafeAreaLayout";
 import { auth, db } from "@/config/firebase";
 import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
+import { BASE_URL } from "@/utils";
 import { useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ScrollView, View } from "react-native";
 import { Divider, Provider as PaperProvider } from "react-native-paper";
 
-const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
-
 const DashboardScreen: React.FC = () => {
   const router = useRouter();
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [userData, setUserData] = React.useState<UserData | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [modalVisible, setModalVisible] = React.useState<boolean>(false);
+  const [modalMailerVisible, setModalMailerVisible] = React.useState<boolean>(false);
 
   const membershipCancellationHandler = async () => {
     try {
@@ -61,11 +62,11 @@ const DashboardScreen: React.FC = () => {
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchUserData = async () => {
       if (auth.currentUser) {
         const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
-        console.log(userDoc.data())
+        // console.log(userDoc.data())
         if (userDoc.exists()) {
           setUserData(userDoc.data() as UserData);
         }
@@ -85,6 +86,12 @@ const DashboardScreen: React.FC = () => {
         <ModalComponent
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}
+        />
+
+        <ModalMailerComponent
+          userData={userData}
+          visible={modalMailerVisible}
+          onRequestClose={() => setModalMailerVisible(false)}
         />
         
         <SafeAreaLayout>
@@ -165,6 +172,17 @@ const DashboardScreen: React.FC = () => {
   
             <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: Theme.primary }} />
   
+            {/* Contact Us Actions */}
+            <ActionButton
+              title="Contact Us"
+              onPress={() => setModalMailerVisible(true)}
+              mode="outlined"
+              buttonColor={"Transparent"}
+              buttonStyle={{borderWidth: 1, borderColor: Theme.accent, marginBottom: 20}}
+              textStyle={{color: Theme.accent}}
+              loading={loading}
+            />
+
             {/* Cancel Membership Actions */}
             <ActionButton
               title="Cancel Membership"

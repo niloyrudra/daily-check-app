@@ -1,4 +1,5 @@
 import { auth, db } from "@/config/firebase";
+import SIZES from "@/constants/size";
 import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
@@ -8,10 +9,8 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Alert, Text as RNText, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { Divider, Text } from "react-native-paper";
+import { Divider } from "react-native-paper";
 import ActionPrimaryButton from "../form-components/ActionPrimaryButton";
-import DropDownComponent from "../form-components/DropDownComponent";
-import TitleComponent from "../TitleComponent";
 import ActionButton from "./ActionButton";
 
 dayjs.extend(customParseFormat);
@@ -27,15 +26,19 @@ interface MarkedDates {
     marked?: boolean;
     color?: string;
     textColor?: string;
-    time?: string; // ✅ NEW
+    time?: string;
   };
 }
 
 const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }) => {
+
+  
+
   const [markedDates, setMarkedDates] = useState<MarkedDates>({});
-  const [startTime, setStartTime] = useState<Date>(new Date());
-  const [showTimePicker, setShowTimePicker] = useState<"start" | null>(null);
+  const [pendingDates, setPendingDates] = useState<string[]>([]);
+  const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [currentVisibleMonth, setCurrentVisibleMonth] = useState<dayjs.Dayjs>(dayjs());
 
   useEffect(() => {
     const fetchPreviousSchedule = async () => {
@@ -73,101 +76,79 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
 
   const handleDayPress = (day: { dateString: string }) => {
     const selected = day.dateString;
+    const isAlreadySaved = markedDates[selected];
+    const isPending = pendingDates.includes(selected);
 
-    setMarkedDates((prev) => {
-      const isSelected = !!prev[selected];
-      const updated = { ...prev };
-
-      if (isSelected) {
+    if (isAlreadySaved) {
+      setMarkedDates((prev) => {
+        const updated = { ...prev };
         delete updated[selected];
-      } else {
-        updated[selected] = {
-          selected: true,
-          marked: true,
-          color: Theme.primary,
-          textColor: "#fff",
-          time: dayjs(startTime).format("hh:mm A"), // Assign current start time
-        };
-      }
+        return updated;
+      });
+    } else if (isPending) {
+      setPendingDates((prev) => prev.filter((d) => d !== selected));
+    } else {
+      setPendingDates((prev) => [...prev, selected]);
+    }
+  };
 
-      return updated;
+  const applyTimeToPendingDates = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (!selectedDate) return;
+    setShowTimePicker(false);
+
+    const time = dayjs(selectedDate).format("hh:mm A");
+    const updates: MarkedDates = {};
+
+    pendingDates.forEach((date) => {
+      updates[date] = {
+        selected: true,
+        marked: true,
+        color: Theme.primary,
+        textColor: "#fff",
+        time,
+      };
     });
+
+    setMarkedDates((prev) => ({ ...prev, ...updates }));
+    setPendingDates([]);
+  };
+
+  const handleBulkSelect = (dates: string[]) => {
+    const filtered = dates.filter((d) => !markedDates[d] && !pendingDates.includes(d));
+    setPendingDates((prev) => [...prev, ...filtered]);
   };
 
   const handleMonthSelect = () => {
+    const firstDay = currentVisibleMonth.startOf("month");
+    const lastDay = currentVisibleMonth.endOf("month");
     const today = dayjs();
-    const firstDay = today.startOf("month");
-    const lastDay = today.endOf("month");
-    const monthDays: MarkedDates = {};
+    const monthDays: string[] = [];
 
     for (let i = 0; i <= lastDay.diff(firstDay, "day"); i++) {
       const date = firstDay.add(i, "day");
       if (date.isBefore(today, "day")) continue;
-
-      const dateStr = date.format("YYYY-MM-DD");
-      monthDays[dateStr] = {
-        selected: true,
-        marked: true,
-        color: Theme.primary,
-        textColor: "#fff",
-        time: dayjs(startTime).format("hh:mm A"),
-      };
+      monthDays.push(date.format("YYYY-MM-DD"));
     }
 
-    setMarkedDates((prev) => ({ ...prev, ...monthDays }));
+    handleBulkSelect(monthDays);
   };
 
-  const selectWeekExcludingWeekends = (startDate: string) => {
-    const start = dayjs(startDate);
-    const today = dayjs();
-    const week: MarkedDates = {};
+  const selectWeekExcludingWeekends = () => {
+    const start = currentVisibleMonth.startOf("week").add(1, "day");
+    const week: string[] = [];
 
     for (let i = 0; i < 7; i++) {
       const current = start.add(i, "day");
-      const weekday = current.day();
-      if (weekday === 0 || weekday === 6 || current.isBefore(today, "day")) continue;
-
-      const dateStr = current.format("YYYY-MM-DD");
-      week[dateStr] = {
-        selected: true,
-        marked: true,
-        color: Theme.primary,
-        textColor: "#fff",
-        time: dayjs(startTime).format("hh:mm A"),
-      };
+      if (current.day() === 0 || current.day() === 6 || current.isBefore(dayjs(), "day")) continue;
+      week.push(current.format("YYYY-MM-DD"));
     }
 
-    setMarkedDates((prev) => ({ ...prev, ...week }));
+    handleBulkSelect(week);
   };
 
   const resetCalendar = () => {
     setMarkedDates({});
-    setStartTime(new Date());
-  };
-
-  const handleTimeChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    if (!selectedDate) return;
-    setShowTimePicker(null);
-    if (showTimePicker === "start") {
-      setStartTime(selectedDate);
-
-      // Apply to all selected dates
-      setMarkedDates((prev) => {
-        const updated = { ...prev };
-        Object.keys(updated).forEach((date) => {
-          updated[date].time = dayjs(selectedDate).format("hh:mm A");
-        });
-        return updated;
-      });
-    }
-  };
-
-  const getSelectedRange = () => {
-    const dates = Object.keys(markedDates).sort();
-    return {
-      start: dates[0] || null,
-      end: dates[dates.length - 1] || null,
-    };
+    setPendingDates([]);
   };
 
   const saveSchedule = async () => {
@@ -184,6 +165,10 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
 
       const userRef = doc(db, "users", user.uid);
 
+     
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      
+
       const formatted = entries.map(([date, data]) => {
         const timeStr = data.time;
 
@@ -192,7 +177,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
         }
 
         const dateTime = dayjs(`${date} ${timeStr}`, "YYYY-MM-DD hh:mm A");
-
         if (!dateTime.isValid()) {
           throw new Error(`Could not parse datetime: ${date} ${timeStr}`);
         }
@@ -203,145 +187,98 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
         };
       });
 
-      console.log("✅ Final payload to Firestore:", formatted);
-
       await updateDoc(userRef, {
         "automation.selectedDates": formatted,
       });
 
-      Alert.alert("Success", "Your schedule has been saved.");
-      onModalHandler();
+      Alert.alert("Your schedule has been recorded. You will be receiving texts as requested");
+
+      if(  userDoc?.data() && userDoc?.data()?.dependents ) {
+        const {cat, dog, children, otherPet, extra} = userDoc?.data()?.dependents
+        if (cat===false || dog===false || children===false || otherPet===false || extra==="") {
+          onModalHandler();
+        }
+      }
+      
     } catch (error: any) {
-      console.error("❌ Save Error:", error);
-      Alert.alert("Error", error.message || "An unexpected error occurred.");
+      Alert.alert("Error", error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const { start, end } = getSelectedRange();
-
   return (
     <View style={{ flex: 1, gap: 20 }}>
       <Calendar
         onDayPress={handleDayPress}
+        onMonthChange={(month) => setCurrentVisibleMonth(dayjs(`${month.year}-${month.month}-01`))}
         markingType="period"
         minDate={dayjs().format("YYYY-MM-DD")}
+        style={{
+          borderWidth: 1,
+          borderRadius: 12,
+          borderColor: Theme.primary
+        }}
         dayComponent={({ date }) => {
-          
-          if (!date) return null; // ✅ Safely handle undefined
-
-          const { dateString, day } = date;
+          if (!date) return null;
+          const { dateString } = date;
           const today = dayjs().startOf("day");
           const isPast = dayjs(dateString).isBefore(today, "day");
 
           const marking = markedDates[dateString];
           const isSelected = !!marking;
+          const isPending = pendingDates.includes(dateString);
 
           return (
             <TouchableOpacity
-              onPress={() => !isPast && handleDayPress(date)} // ❌ disable tap if past
+              onPress={() => !isPast && handleDayPress(date)}
               activeOpacity={isPast ? 1 : 0.5}
             >
               <View style={{ alignItems: "center", padding: 4 }}>
                 <RNText
                   style={{
-                    color: isPast ? "#bbb" : isSelected ? "#fff" : Theme.primary,
-  
-                    backgroundColor: isSelected ? Theme.primary : "transparent",
+                    color: isPast ? "#bbb" : isSelected || isPending ? "#fff" : Theme.primary,
+                    backgroundColor: isSelected || isPending ? Theme.primary : "transparent",
                     borderRadius: 20,
                     padding: 5,
-                    width: 30,
+                    width: 28,
                     textAlign: "center",
-                    fontSize: 18
                   }}
                 >
                   {date.day}
                 </RNText>
-                {marking?.time && (
-                  <RNText style={{ fontSize: 10, color: Theme.primary }}>{marking.time}</RNText>
+                {(marking?.time || isPending) && (
+                  <RNText style={{ fontSize: 10, color: Theme.primary, textAlign: "center" }}>
+                    {marking?.time || "?"}
+                  </RNText>
                 )}
               </View>
-
             </TouchableOpacity>
           );
         }}
-        style={{
-          borderWidth: 1,
-          borderColor: Theme.primary,
-          borderRadius: 15,
-        }}
       />
 
-      <Text variant="bodyMedium" style={{ fontSize: 18, color: Theme.primary }}>
-        Tap dates to toggle. Use buttons for bulk selection or reset.
-      </Text>
-
-      <ActionButton
-        title="Select Full Month"
-        onPress={handleMonthSelect}
-        mode="elevated"
-        buttonColor={Theme.accent}
-      />
-
-      <ActionButton
-        title="Select This Week"
-        onPress={() => {
-          const monday = dayjs().startOf("week").add(1, "day");
-          selectWeekExcludingWeekends(monday.format("YYYY-MM-DD"));
-        }}
-        mode="elevated"
-        buttonColor={Theme.accent}
-      />
-
-      <ActionButton
-        title="Reset Calendar"
-        onPress={resetCalendar}
-        mode="outlined"
-        buttonColor={Theme.accent}
-      />
-
-      <Divider style={{ backgroundColor: Theme.primary }} />
-
-      <ActionButton
-        title="Time You Get Our Text"
-        onPress={() => setShowTimePicker("start")}
-        mode="elevated"
-        buttonColor={Theme.accent}
-      />
-
-      <Divider style={{ backgroundColor: Theme.primary }} />
-
-      {userData?.membershipPlan?.plan === "basic" && (
-        <View style={{ gap: 10 }}>
-          <TitleComponent title="Your Response Time:" />
-          <DropDownComponent />
-        </View>
-      )}
-
-      {showTimePicker && (
-        <DateTimePicker
-          value={startTime}
-          mode="time"
-          onChange={handleTimeChange}
-        />
-      )}
-
-      <View style={{ gap: 5 }}>
-        <Text variant="bodyMedium" style={{ fontSize: 18, color: Theme.primary }}>
-          Selected Range: {start} → {end || "..."}
-        </Text>
-        <Text variant="bodyMedium" style={{ fontSize: 18, color: Theme.primary }}>
-          Start Time: {startTime.toLocaleTimeString()}
-        </Text>
+      <View style={{marginVertical: 10}}>
+        <RNText style={{color: Theme.primary, fontSize: SIZES.contentText, lineHeight: 24}}>Tap dates to toggle. Use buttons for bulk selection or reset. Click "Save Schedule" then return to calendar to set a different time.</RNText>
       </View>
 
-      <View style={{ alignItems: "center" }}>
-        <ActionPrimaryButton
-          buttonTitle="Save Schedule"
-          onSubmit={saveSchedule}
-          isLoading={loading}
+      <ActionButton title="Select Full Month" onPress={handleMonthSelect} mode="elevated" buttonColor={Theme.accent} />
+      <ActionButton title="Select This Week" onPress={selectWeekExcludingWeekends} mode="elevated" buttonColor={Theme.accent} />
+      <ActionButton title="Reset Calendar" onPress={resetCalendar} mode="outlined" buttonColor={Theme.accent} />
+      
+      <ActionButton title="Apply Time to Selected Dates" onPress={() => setShowTimePicker(true)} mode="elevated" buttonColor={Theme.accent} />
+      {showTimePicker && (
+        <DateTimePicker
+          value={new Date()}
+          mode="time"
+          onChange={applyTimeToPendingDates}
         />
+      )}
+
+      <Divider style={{ backgroundColor: Theme.primary }} />
+
+      <View style={{alignItems: "center" }}>
+        <ActionPrimaryButton buttonTitle="Save Schedule" onSubmit={saveSchedule} isLoading={loading} />
       </View>
     </View>
   );

@@ -19,12 +19,12 @@ const OnboardingScreenThree: React.FC = () => {
 
         <OnboardingInfoComponent
           iconName="stethoscope"
-          content="Have the peace of mind that if something happens to you, others will find out very soon and come to your aid."
+          content="Have the peace of mind that if something happens to you, others will find out very soon and come to your aid"
         />
 
         <OnboardingInfoComponent
           iconName="shield-dog"
-          content="Your pets and young children can be quickly tended to, should anything happen."
+          content="Your pets and young children can be quickly tended to, should anything happen"
         />
 
         <OnboardingInfoComponent

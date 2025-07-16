@@ -2,7 +2,7 @@ import SIZES from '@/constants/size'
 import { Theme } from '@/constants/theme'
 import { View } from 'moti'
 import React from 'react'
-import { ActivityIndicator, StyleProp, Text, ViewStyle } from 'react-native'
+import { ActivityIndicator, StyleProp, Text, TextStyle, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 import MotiAnimatedSection from './MotiAnimatedSection'
 
@@ -14,10 +14,11 @@ interface ActionButtonProps {
   mode?: ButtonMode,
   buttonColor?: string | null, // ColorValue | undefined,
   buttonStyle?: StyleProp<ViewStyle>, // ColorValue | undefined,
+  textStyle?: StyleProp<TextStyle>, // ColorValue | undefined,
   loading?: boolean
 }
 
-const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, buttonColor, buttonStyle, loading}) => {
+const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, buttonColor, buttonStyle, textStyle, loading}) => {
   return (
     <MotiAnimatedSection>
       {loading
@@ -34,7 +35,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, button
               style={[{height: 55, borderRadius:30, alignItems: "center", justifyContent: "center" }, (buttonStyle && buttonStyle)]}
               onPress={onPress}
             >
-              <Text style={{fontSize: SIZES.title, color: "#FFFFFF"}}>{title}</Text>
+              <Text style={[{fontSize: SIZES.title, color: "#FFFFFF"}, (textStyle && textStyle)]}>{title}</Text>
             </Button>
           </View>
         )

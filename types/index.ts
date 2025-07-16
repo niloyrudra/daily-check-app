@@ -8,6 +8,13 @@ import { ColorValue, InputModeOptions, KeyboardType, StyleProp, TextStyle, ViewS
 type WritableTimestamp = Timestamp | FieldValue;
 type AutoCapitalizeType = 'none' | 'sentences' | 'words' | 'characters';
 type Plan = "" | "basic" | "premium"; //  "free" | "monthly" | "yearly";
+type DependentType = {
+  cat: boolean,
+  dog: boolean,
+  children: boolean,
+  otherPet: boolean,
+  extra: string,
+};
 
 type Contact = {
   contactName?: string,
@@ -56,7 +63,8 @@ type UserData = {
     lastInteraction: Timestamp | null,
     scheduleStatus: 'not_started' | 'text_sent' | 'followup_sent' | 'call_made' | 'pending' | 'done',
     lastChecked: Timestamp | null
-  }
+  },
+  dependents: DependentType
 }
 
 type AuthUser =  User | null;
@@ -130,7 +138,19 @@ type FloatingArrowButtonProps = {
   iconColor?: ColorValue
 };
 
-export {
-  AuthUser, BannerProps, Contact, EyeProps, FloatingArrowButtonProps, InputProps, LessonProps, LinkProps, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData
-}
+type EmergencyFormValues = {
+  children: boolean,
+  dog: boolean,
+  cat: boolean,
+  otherPet: boolean,
+  extra: string
+};
+
+type MailerFormValues = {
+  name: string,
+  email: string,
+  message: string,
+};
+
+export { AuthUser, BannerProps, Contact, EmergencyFormValues, EyeProps, FloatingArrowButtonProps, InputProps, LessonProps, LinkProps, MailerFormValues, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData }
 

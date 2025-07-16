@@ -83,6 +83,13 @@ const SignUpScreen: React.FC = () => {
           lastInteraction: null,
           scheduleStatus: "not_started",
           lastChecked: null
+        },
+        dependents: {
+          cat: false,
+          dog: false,
+          children: false,
+          otherPet: false,
+          extra: "",
         }
       };
   
