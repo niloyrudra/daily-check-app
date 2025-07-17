@@ -152,5 +152,5 @@ type MailerFormValues = {
   message: string,
 };
 
-export { AuthUser, BannerProps, Contact, EmergencyFormValues, EyeProps, FloatingArrowButtonProps, InputProps, LessonProps, LinkProps, MailerFormValues, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData }
+export { AuthUser, BannerProps, Contact, DependentType, EmergencyFormValues, EyeProps, FloatingArrowButtonProps, InputProps, LessonProps, LinkProps, MailerFormValues, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData }
 

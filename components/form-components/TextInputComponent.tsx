@@ -72,12 +72,14 @@ const styles = StyleSheet.create({
         height: SIZES.textFieldHeight
     },
     input: {
+        color: Theme.primary,
         height: SIZES.textFieldHeight,
-        paddingVertical: 8, //16,
+        textAlignVertical: "center",
+        // paddingVertical: 8, //16,
         paddingHorizontal: 16, //16,
         borderRadius: 10, // 16,
         borderWidth: 1,
-        borderColor: "#aaa",
+        borderColor: Theme.borderColor,
         fontSize: SIZES.fontSizeTextInput,
         width: SIZES.screenBodyWidth
     }

@@ -14,11 +14,11 @@ import { Modal, Portal, Text } from 'react-native-paper';
 import * as Yup from 'yup';
 
 type EmergencyFormValues = {
-  children: boolean;
-  dog: boolean;
-  cat: boolean;
-  otherPet: boolean;
-  extra: string;
+  children: boolean,
+  dog: boolean,
+  cat: boolean,
+  otherPet: boolean,
+  extra: string
 };
 
 // Validation schema
@@ -31,11 +31,16 @@ const EmergencySchema = Yup.object().shape({
 });
 
 interface EmergencyModalProps {
+  // dependents: DependentType,
   visible: boolean;
   onRequestClose: (event?: boolean) => void;
 }
 
 const ModalComponent: React.FC<EmergencyModalProps> = ({visible, onRequestClose}) => {
+  // const {cat, dog, children, otherPet, extra} = dependents
+
+  // if( cat || dog || children || otherPet || extra ) onRequestClose();
+
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const initialValues: EmergencyFormValues = {
@@ -43,7 +48,7 @@ const ModalComponent: React.FC<EmergencyModalProps> = ({visible, onRequestClose}
     dog: false,
     cat: false,
     otherPet: false,
-    extra: '',
+    extra: "",
   };
 
   const containerStyle = {

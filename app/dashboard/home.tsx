@@ -84,6 +84,7 @@ const DashboardScreen: React.FC = () => {
 
       <>
         <ModalComponent
+          // dependents={userData.dependents}
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}
         />
@@ -167,7 +168,7 @@ const DashboardScreen: React.FC = () => {
             {/* Scheduler Section */}
             <MotiAnimatedSection>
               <SectionTitle title="Set Your Schedule" />
-              <CalendarComponent onModalHandler={() => setModalVisible(true)} userData={userData} />
+              <CalendarComponent onModalHandler={() => setModalVisible(true)} />
             </MotiAnimatedSection>
   
             <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: Theme.primary }} />

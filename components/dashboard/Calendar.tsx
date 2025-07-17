@@ -1,7 +1,6 @@
 import { auth, db } from "@/config/firebase";
 import SIZES from "@/constants/size";
 import { Theme } from "@/constants/theme";
-import { UserData } from "@/types";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -17,7 +16,7 @@ dayjs.extend(customParseFormat);
 
 interface CalendarProps {
   onModalHandler: () => void;
-  userData: UserData;
+  // userData: UserData;
 }
 
 interface MarkedDates {
@@ -30,14 +29,12 @@ interface MarkedDates {
   };
 }
 
-const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }) => {
-
-  
-
+const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler }) => {
   const [markedDates, setMarkedDates] = useState<MarkedDates>({});
   const [pendingDates, setPendingDates] = useState<string[]>([]);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingReset, setLoadingReset] = useState<boolean>(false);
   const [currentVisibleMonth, setCurrentVisibleMonth] = useState<dayjs.Dayjs>(dayjs());
 
   useEffect(() => {
@@ -146,9 +143,30 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
     handleBulkSelect(week);
   };
 
-  const resetCalendar = () => {
-    setMarkedDates({});
-    setPendingDates([]);
+  const resetCalendar = async () => {
+
+    try {
+      setLoadingReset(true)
+      const user = auth.currentUser;
+      if (!user) throw new Error("Not logged in");
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        "automation.selectedDates": [],
+      });
+      setMarkedDates({});
+      setPendingDates([]);
+
+      Alert.alert("Your scheduled dates are reset!")
+    }
+    catch(error: any) {
+      console.log("Failed to reset the database!", error.message)
+      Alert.alert("Failed to reset the database!")
+      setLoadingReset(false)
+    }
+    finally {
+      setLoadingReset(false)
+    }
+
   };
 
   const saveSchedule = async () => {
@@ -167,7 +185,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
 
      
       const userDoc = await getDoc(doc(db, "users", user.uid));
-      
+      const userData = userDoc?.data();
 
       const formatted = entries.map(([date, data]) => {
         const timeStr = data.time;
@@ -191,15 +209,16 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
         "automation.selectedDates": formatted,
       });
 
-      Alert.alert("Your schedule has been recorded. You will be receiving texts as requested");
-
-      if(  userDoc?.data() && userDoc?.data()?.dependents ) {
-        const {cat, dog, children, otherPet, extra} = userDoc?.data()?.dependents
-        if (cat===false || dog===false || children===false || otherPet===false || extra==="") {
+      if( userData ) {
+        const {cat, dog, children, otherPet, extra} = userData?.dependents
+        if (!cat && !dog && !children && !otherPet && !extra) {
           onModalHandler();
         }
+        // else Alert.alert("Value added!")
       }
       
+      Alert.alert("Your schedule has been recorded. You will be receiving texts as requested");
+
     } catch (error: any) {
       Alert.alert("Error", error.message);
     } finally {
@@ -264,7 +283,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
 
       <ActionButton title="Select Full Month" onPress={handleMonthSelect} mode="elevated" buttonColor={Theme.accent} />
       <ActionButton title="Select This Week" onPress={selectWeekExcludingWeekends} mode="elevated" buttonColor={Theme.accent} />
-      <ActionButton title="Reset Calendar" onPress={resetCalendar} mode="outlined" buttonColor={Theme.accent} />
+      <ActionButton title="Reset Calendar" onPress={resetCalendar} mode="outlined" buttonColor={Theme.accent} loading={loadingReset} />
       
       <ActionButton title="Apply Time to Selected Dates" onPress={() => setShowTimePicker(true)} mode="elevated" buttonColor={Theme.accent} />
       {showTimePicker && (
