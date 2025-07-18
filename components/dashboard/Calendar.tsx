@@ -1,6 +1,7 @@
 import { auth, db } from "@/config/firebase";
 import SIZES from "@/constants/size";
 import { Theme } from "@/constants/theme";
+import { UserData } from "@/types";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -8,15 +9,16 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Alert, Text as RNText, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { Divider } from "react-native-paper";
+import TitleComponent from "../TitleComponent";
 import ActionPrimaryButton from "../form-components/ActionPrimaryButton";
+import DropDownComponent from "../form-components/DropDownComponent";
 import ActionButton from "./ActionButton";
 
 dayjs.extend(customParseFormat);
 
 interface CalendarProps {
   onModalHandler: () => void;
-  // userData: UserData;
+  userData: UserData;
 }
 
 interface MarkedDates {
@@ -29,7 +31,7 @@ interface MarkedDates {
   };
 }
 
-const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler }) => {
+const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }) => {
   const [markedDates, setMarkedDates] = useState<MarkedDates>({});
   const [pendingDates, setPendingDates] = useState<string[]>([]);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
@@ -286,6 +288,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler }) => {
       <ActionButton title="Reset Calendar" onPress={resetCalendar} mode="outlined" buttonColor={Theme.accent} loading={loadingReset} />
       
       <ActionButton title="Apply Time to Selected Dates" onPress={() => setShowTimePicker(true)} mode="elevated" buttonColor={Theme.accent} />
+      
       {showTimePicker && (
         <DateTimePicker
           value={new Date()}
@@ -294,7 +297,14 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler }) => {
         />
       )}
 
-      <Divider style={{ backgroundColor: Theme.primary }} />
+      {/* <Divider style={{ backgroundColor: Theme.primary }} /> */}
+
+      {userData?.membershipPlan?.plan === 'basic' && (
+        <View style={{gap:10, marginBottom: 10}}>
+          <TitleComponent title="Your Response Time:" />
+          <DropDownComponent />
+        </View>
+      )}
 
       <View style={{alignItems: "center" }}>
         <ActionPrimaryButton buttonTitle="Save Schedule" onSubmit={saveSchedule} isLoading={loading} />

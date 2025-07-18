@@ -168,7 +168,7 @@ const DashboardScreen: React.FC = () => {
             {/* Scheduler Section */}
             <MotiAnimatedSection>
               <SectionTitle title="Set Your Schedule" />
-              <CalendarComponent onModalHandler={() => setModalVisible(true)} />
+              <CalendarComponent onModalHandler={() => setModalVisible(true)} userData={userData} />
             </MotiAnimatedSection>
   
             <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: Theme.primary }} />
