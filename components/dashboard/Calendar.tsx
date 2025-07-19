@@ -1,5 +1,5 @@
 import { auth, db } from "@/config/firebase";
-import SIZES from "@/constants/size";
+// import SIZES from "@/constants/size";
 import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
@@ -132,18 +132,18 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
     handleBulkSelect(monthDays);
   };
 
-  const selectWeekExcludingWeekends = () => {
-    const start = currentVisibleMonth.startOf("week").add(1, "day");
-    const week: string[] = [];
+  // const selectWeekExcludingWeekends = () => {
+  //   const start = currentVisibleMonth.startOf("week").add(1, "day");
+  //   const week: string[] = [];
 
-    for (let i = 0; i < 7; i++) {
-      const current = start.add(i, "day");
-      if (current.day() === 0 || current.day() === 6 || current.isBefore(dayjs(), "day")) continue;
-      week.push(current.format("YYYY-MM-DD"));
-    }
+  //   for (let i = 0; i < 7; i++) {
+  //     const current = start.add(i, "day");
+  //     if (current.day() === 0 || current.day() === 6 || current.isBefore(dayjs(), "day")) continue;
+  //     week.push(current.format("YYYY-MM-DD"));
+  //   }
 
-    handleBulkSelect(week);
-  };
+  //   handleBulkSelect(week);
+  // };
 
   const resetCalendar = async () => {
 
@@ -279,12 +279,12 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
         }}
       />
 
-      <View style={{marginVertical: 10}}>
+      {/* <View style={{marginVertical: 10}}>
         <RNText style={{color: Theme.primary, fontSize: SIZES.contentText, lineHeight: 24}}>Tap dates to toggle. Use buttons for bulk selection or reset. Click "Save Schedule" then return to calendar to set a different time.</RNText>
-      </View>
+      </View> */}
 
       <ActionButton title="Select Full Month" onPress={handleMonthSelect} mode="elevated" buttonColor={Theme.accent} />
-      <ActionButton title="Select This Week" onPress={selectWeekExcludingWeekends} mode="elevated" buttonColor={Theme.accent} />
+      {/* <ActionButton title="Select This Week" onPress={selectWeekExcludingWeekends} mode="elevated" buttonColor={Theme.accent} /> */}
       <ActionButton title="Reset Calendar" onPress={resetCalendar} mode="outlined" buttonColor={Theme.accent} loading={loadingReset} />
       
       <ActionButton title="Apply Time to Selected Dates" onPress={() => setShowTimePicker(true)} mode="elevated" buttonColor={Theme.accent} />

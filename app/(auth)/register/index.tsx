@@ -37,6 +37,9 @@ const OnboardingScreen: React.FC = () => {
           <ActionPrimaryButton
             buttonTitle="Log In"
             onSubmit={() => router.push("/(auth)/login")}
+            buttonStyle={{
+              paddingHorizontal: 24
+            }}
           />
 
           {/* Submit Button */}

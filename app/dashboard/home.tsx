@@ -13,7 +13,6 @@ import SafeAreaLayout from "@/components/layout/SafeAreaLayout";
 import { auth, db } from "@/config/firebase";
 import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
-import { BASE_URL } from "@/utils";
 import { useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import React from "react";
@@ -27,40 +26,40 @@ const DashboardScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [modalMailerVisible, setModalMailerVisible] = React.useState<boolean>(false);
 
-  const membershipCancellationHandler = async () => {
-    try {
-      setLoading(true)
+  // const membershipCancellationHandler = async () => {
+  //   try {
+  //     setLoading(true)
 
-      if (!userData) throw new Error("Not logged in");
+  //     if (!userData) throw new Error("Not logged in");
 
-      console.log("userData >>", userData)
+  //     console.log("userData >>", userData)
 
-      const response = await fetch(`${BASE_URL}/api/cancel-subscription`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subscriptionId: userData?.stripeSubscriptionId }),
-      });
+  //     const response = await fetch(`${BASE_URL}/api/cancel-subscription`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ subscriptionId: userData?.stripeSubscriptionId }),
+  //     });
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      console.log(data)
+  //     console.log(data)
       
-      // await updateDoc(userData, {
-      //   membershipPlan: {
-      //       plan: "",
-      //       status: "canceled",
-      //       since: Timestamp.fromDate(new Date())
-      //     },
-      // });
-    }
-    catch( error: any ) {
-      console.error(error)
-      setLoading(false)
-    }
-    finally {
-      setLoading(false)
-    }
-  }
+  //     // await updateDoc(userData, {
+  //     //   membershipPlan: {
+  //     //       plan: "",
+  //     //       status: "canceled",
+  //     //       since: Timestamp.fromDate(new Date())
+  //     //     },
+  //     // });
+  //   }
+  //   catch( error: any ) {
+  //     console.error(error)
+  //     setLoading(false)
+  //   }
+  //   finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   React.useEffect(() => {
     const fetchUserData = async () => {
@@ -185,15 +184,15 @@ const DashboardScreen: React.FC = () => {
             />
 
             {/* Cancel Membership Actions */}
-            <ActionButton
+            {/* <ActionButton
               title="Cancel Membership"
               onPress={membershipCancellationHandler}
               mode="elevated"
               buttonColor={Theme.accent}
               loading={loading}
-            />
+            /> */}
   
-            <View style={{height:30}} />
+            {/* <View style={{height:30}} /> */}
   
           </ScrollView>
   
