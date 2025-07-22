@@ -2,7 +2,6 @@ import { Feather } from "@expo/vector-icons"
 import { Href } from "expo-router"
 import { User } from "firebase/auth"
 import { FieldValue, Timestamp } from "firebase/firestore"
-import { ReactNode } from "react"
 import { ColorValue, InputModeOptions, KeyboardType, StyleProp, TextStyle, ViewStyle } from "react-native"
 
 type WritableTimestamp = Timestamp | FieldValue;
@@ -24,7 +23,7 @@ type Contact = {
 
 type MembershipPlan = {
   plan: Plan,
-  status: "active" | "canceled" | "trialing" | "pending",
+  status: "active" | "canceled" | "trialing" | "pending" | "paused",
   since: WritableTimestamp
 }
 
@@ -92,7 +91,9 @@ type InputProps = { // extends TextInputProps -> better approach
 type LinkProps = {
   text: string,
   linkText: string,
-  route: Href
+  route: Href,
+  bodyStyle?: StyleProp<ViewStyle>
+  linkStyle?: StyleProp<TextStyle>
 }
 
 // BANNER Props
@@ -122,14 +123,6 @@ type EyeProps = {
   style?: StyleProp<ViewStyle>
 }
 
-type LessonProps = {
-    language: string,
-    iconComponent: ReactNode,
-    children?: ReactNode | undefined,
-    style?: StyleProp<ViewStyle>
-    buttonStyle?: StyleProp<ViewStyle>
-}
-
 type FloatingArrowButtonProps = {
   onPress: () => void;
   buttonStyle?: StyleProp<ViewStyle>;
@@ -152,5 +145,5 @@ type MailerFormValues = {
   message: string,
 };
 
-export { AuthUser, BannerProps, Contact, DependentType, EmergencyFormValues, EyeProps, FloatingArrowButtonProps, InputProps, LessonProps, LinkProps, MailerFormValues, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData }
+export { AuthUser, BannerProps, Contact, DependentType, EmergencyFormValues, EyeProps, FloatingArrowButtonProps, InputProps, LinkProps, MailerFormValues, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData }
 

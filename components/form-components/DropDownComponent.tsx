@@ -1,7 +1,7 @@
 import { auth, db } from '@/config/firebase';
 import { Theme } from '@/constants/theme';
 import { doc, updateDoc } from 'firebase/firestore';
-import React, { useState } from 'react';
+import React from 'react';
 import { Alert, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { Dropdown } from 'react-native-paper-dropdown';
@@ -14,8 +14,8 @@ const numberList = [
 
 const NumberDropdown: React.FC = () => {
   // const [showDropDown, setShowDropDown] = useState(false);
-  const [value, setValue] = useState<string | undefined>('1');
-  const [loading, setLoading] = useState<boolean>(false);
+  const [value, setValue] = React.useState<string | undefined>('1');
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const responseTimeHandler = async (time: string | undefined) => {
     try {

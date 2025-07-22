@@ -31,7 +31,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, button
 
             <Button
               mode={mode || "contained"}
-              buttonColor={buttonColor ? buttonColor : Theme.primary}
+              buttonColor={buttonColor ? buttonColor : Theme.accent}
               style={[{height: 55, borderRadius:30, alignItems: "center", justifyContent: "center" }, (buttonStyle && buttonStyle)]}
               onPress={onPress}
             >
