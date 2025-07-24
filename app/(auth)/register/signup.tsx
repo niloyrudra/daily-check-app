@@ -82,7 +82,8 @@ const SignUpScreen: React.FC = () => {
           responseTime: 1,
           lastInteraction: null,
           scheduleStatus: "not_started",
-          lastChecked: null
+          lastChecked: null,
+          advancedScheduler: false
         },
         dependents: {
           cat: false,

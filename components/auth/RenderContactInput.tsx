@@ -85,7 +85,7 @@ const RenderContactInput: React.FC<Props> = ({
               )}
 
               <TextInputComponent
-                placeholder="e.g. +1(555)555-5555"
+                placeholder="+1(555)555-5555"
                 keyboardType="phone-pad"
                 inputMode="tel"
                 value={values.phone}

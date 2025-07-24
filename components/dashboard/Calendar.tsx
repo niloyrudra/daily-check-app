@@ -9,9 +9,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Alert, Text as RNText, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import TitleComponent from "../TitleComponent";
 import ActionPrimaryButton from "../form-components/ActionPrimaryButton";
-import DropDownComponent from "../form-components/DropDownComponent";
 import ActionButton from "./ActionButton";
 
 dayjs.extend(customParseFormat);
@@ -209,6 +207,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
 
       await updateDoc(userRef, {
         "automation.selectedDates": formatted,
+        "automation.advancedScheduler": true,
       });
 
       if( userData ) {
@@ -299,12 +298,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
 
       {/* <Divider style={{ backgroundColor: Theme.primary }} /> */}
 
-      {userData?.membershipPlan?.plan === 'basic' && (
-        <View style={{gap:10, marginBottom: 10}}>
-          <TitleComponent title="Your Response Time:" />
-          <DropDownComponent />
-        </View>
-      )}
+      {/* {userData?.membershipPlan?.plan === 'basic' && (<ResponseTimeComponent />)} */}
 
       <View style={{alignItems: "center" }}>
         <ActionPrimaryButton buttonTitle="Save Schedule" onSubmit={saveSchedule} isLoading={loading} />

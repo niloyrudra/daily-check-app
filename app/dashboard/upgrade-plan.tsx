@@ -1,4 +1,3 @@
-import ArrowButton from "@/components/ArrowButton";
 import PlainTextLink from "@/components/form-components/auth/PlainTextLink";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
 import MembershipPlanOptionComponent from "@/components/MembershipPlanOptionComponent";
@@ -7,15 +6,21 @@ import STYLES from "@/constants/styles";
 import { Theme } from "@/constants/theme";
 import { Plan } from "@/types";
 import { BASE_URL } from "@/utils";
+import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 import * as Linking from "expo-linking";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { getIdToken } from "firebase/auth";
 import { doc, Timestamp, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, View } from "react-native";
+import { ActivityIndicator, Alert, TouchableOpacity, View } from "react-native";
+// import { UserData } from "@/types";
 
-const MembershipScreen: React.FC = () => {
+const UpgradePlan: React.FC = () => {
+
+  const {subscriptionId} = useLocalSearchParams()
+
+  console.log("User's subscriptionId:", subscriptionId)
 
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,15 +52,14 @@ const MembershipScreen: React.FC = () => {
     try {
       const user = auth.currentUser;
       if (!user) throw new Error("User must be signed in");
-      await fetch(`${BASE_URL}/api/create-checkout-session`, {
+      await fetch(`${BASE_URL}/api/upgrade-subscription`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
           plan,
-          quantity: 1,
-          userId: user.uid
+          subscriptionId: subscriptionId,
         })
       })
       .then(res => res.json())
@@ -90,7 +94,7 @@ const MembershipScreen: React.FC = () => {
 
   if (!authReady) {
     return (
-      <AuthScreenLayout title="Membership Plans">
+      <AuthScreenLayout title="Upgrade To Primium">
         <View style={STYLES.childContentCentered}>
           <ActivityIndicator size="large" color={Theme.accent} />
         </View>
@@ -101,7 +105,18 @@ const MembershipScreen: React.FC = () => {
   return (
     <AuthScreenLayout title="" isScrollable={true}>
 
-      <ArrowButton />
+      {/* <ArrowButton /> */}
+
+      <TouchableOpacity
+        style={{
+            position: "absolute",
+            left: 0,
+            top: 0
+        }}
+        onPress={() => router.push("/dashboard/home")}
+      >
+        <Ionicons name="arrow-back" size={24} color={Theme.primary} />
+      </TouchableOpacity>
 
       <View style={{ flexDirection: "row", gap: 15, marginBottom: 20}}>
 
@@ -119,15 +134,6 @@ const MembershipScreen: React.FC = () => {
             <ActivityIndicator size="large" color={Theme.accent} />
           </View>
         ) : (
-          <View style={{gap: 20}}>
-            <MembershipPlanOptionComponent
-              title="Basic"
-              detailedText="We will text you one time each day, at your appointed time. You pick how long we must wait for your answer (1, 2 OR 3 hours). If after your selected time frame, you have not texted &apos;YES&apos; back, we will text your emergency contact to let them know. Basic Plan $0.99/mo billed annually $11.88, plus tax, after free trial."
-              buttonText="Start your 7 day Free Trial"
-              handler={() => handleCheckout("basic")}
-              disabled={!isChecked}
-            />
-            
             <MembershipPlanOptionComponent
               title="Premium"
               detailedText="We will text you 2 times each day, at your appointed time and 1 hour later if you didn't reply. If after 2 hours and 2 texts, you have not texted &apos;YES&apos; back, we will call you. If you don't answer, we will text your 2 safety contacts to let them know. Premium Plan $2.99/mo billed annually $35.88, plus tax, after free trial."
@@ -135,12 +141,10 @@ const MembershipScreen: React.FC = () => {
               handler={() => handleCheckout("premium")}
               disabled={!isChecked}
             />
-            
-          </View>
         )
       }
     </AuthScreenLayout>
   );
 };
 
-export default MembershipScreen;
+export default UpgradePlan;

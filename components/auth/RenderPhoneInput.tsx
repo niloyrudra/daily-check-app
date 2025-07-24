@@ -26,7 +26,7 @@ const RenderPhoneInput: React.FC<Props> = ({
     <View style={[STYLES.formGroup, { alignItems: "center" }]}>
       <Text style={STYLES.formLabel}>Your Phone Number:</Text>
       <TextInputComponent
-        placeholder="e.g. +1(555)555-5555"
+        placeholder="+1(555)555-5555"
         value={values.phone}
         onChange={handleChange("phone")}
         keyboardType="phone-pad"

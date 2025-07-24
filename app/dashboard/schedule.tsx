@@ -19,14 +19,12 @@ const CustomSchedule = () => {
     const [modalVisible, setModalVisible] = React.useState<boolean>(false);
 
     React.useEffect(() => {
+
         const fetchUserData = async () => {
-        if (auth.currentUser) {
-            const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
-            // console.log(userDoc.data())
-            if (userDoc.exists()) {
-            setUserData(userDoc.data() as UserData);
+            if (auth.currentUser) {
+                const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+                if (userDoc.exists()) setUserData(userDoc.data() as UserData);
             }
-        }
         };
         fetchUserData();
     }, []);

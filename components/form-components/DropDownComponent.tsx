@@ -1,65 +1,51 @@
-import { auth, db } from '@/config/firebase';
 import { Theme } from '@/constants/theme';
-import { doc, updateDoc } from 'firebase/firestore';
+import { LabelValueOption } from '@/types';
 import React from 'react';
-import { Alert, View } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { View } from 'react-native';
 import { Dropdown } from 'react-native-paper-dropdown';
+import ActivityIndicatorComponent from '../ActivityIndicatorComponent';
+import TitleComponent from '../TitleComponent';
 
-const numberList = [
-  { label: '1 hr', value: '1' },
-  { label: '2 hrs', value: '2' },
-  { label: '3 hrs', value: '3' },
-];
+interface NumberDropdownProps {
+  onSelectHanlder: (value: string | undefined) => void
+  options: LabelValueOption[],
+  value: string | undefined
+  loading: boolean,
+  title: string | undefined,
+  label?: string | undefined,
+  placeholder?: string | undefined
+}
 
-const NumberDropdown: React.FC = () => {
-  // const [showDropDown, setShowDropDown] = useState(false);
-  const [value, setValue] = React.useState<string | undefined>('1');
-  const [loading, setLoading] = React.useState<boolean>(false);
-
-  const responseTimeHandler = async (time: string | undefined) => {
-    try {
-      setLoading(true);
-      setValue(time)
-      const user = auth.currentUser;
-      if (!user) throw new Error("Not logged in");
-
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        'automation.responseTime': time 
-      });
-
-      Alert.alert("Thank you!", "You have successfully set your response Time to our text message.");
-
-    } catch (error: any) {
-      Alert.alert("Sorry", "Something went wrong!");
-      console.error("Error", error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
+const NumberDropdown: React.FC<NumberDropdownProps> = ({ onSelectHanlder, options, value, loading, title, placeholder }) => {
   return (
-    <View style={{gap:20 }}>
-      <View style={{ backgroundColor: '#FFFFFF' }}>
+    <View style={{gap:10, marginBottom: 20}}>
+      <TitleComponent
+        // title="Your Response Time:"
+        title={title || ""}
+        titleStyle={{textAlign:"center"}}
+      />
 
-        <Dropdown
-          label=""
-          placeholder="Select your response time"
-          mode="outlined" // "outlined" / "flat"
-          value={value}
-          options={numberList}
-          onSelect={responseTimeHandler}
-          maxMenuHeight={300}
-          menuContentStyle={{
-            borderColor: Theme.primary,
-            borderRadius: 30
-          }}
-        />
+      <View style={{gap:20 }}>
+        <View style={{ backgroundColor: '#FFFFFF' }}>
+
+          <Dropdown
+            label=""
+            placeholder={placeholder || ""}
+            mode="outlined" // "outlined" / "flat"
+            value={value}
+            options={options}
+            onSelect={ (time: string | undefined) => onSelectHanlder(time) }
+            maxMenuHeight={300}
+            menuContentStyle={{
+              borderColor: Theme.primary,
+              borderRadius: 30
+            }}
+          />
+        </View>
+
+        {loading && (<ActivityIndicatorComponent />)}
+
       </View>
-
-      {loading && (<ActivityIndicator size="large" color={Theme.accent} />)}
-
     </View>
   );
 };

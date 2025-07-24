@@ -13,7 +13,7 @@ const DashboardLayout = () => {
         >
             <Stack.Screen name="home" options={{ headerShown:false }} />
             <Stack.Screen name="schedule" options={{ headerShown:false }} />
-            {/* <Stack.Screen name="scheduler" options={{ headerShown:false }} /> */}
+            <Stack.Screen name="upgrade-plan" options={{ headerShown:false }} />
             <Stack.Screen name="modify-phone-number" options={{ headerShown:false }} />
             <Stack.Screen name="modify-contact-numbers" options={{ headerShown:false }} />
         </Stack>

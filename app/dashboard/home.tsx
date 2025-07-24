@@ -3,8 +3,11 @@ import ActionButton from "@/components/dashboard/ActionButton";
 import ActionOutlineButton from "@/components/dashboard/ActionOutlineButton";
 import ContactsInformationComponent from "@/components/dashboard/ContactsInformation";
 import ModalMailerComponent from "@/components/dashboard/modals/ModalMailerComponent";
+import MotiAnimatedSection from "@/components/dashboard/MotiAnimatedSection";
 import PausAndResumeServiceButton from "@/components/dashboard/PauseAndResumeServiceButton";
+import ResponseTimeComponent from "@/components/dashboard/ResponseTimeComponent";
 import SectionTitle from "@/components/dashboard/SectionTitle";
+import StartingTimeComponent from "@/components/dashboard/StartingTimeComponent";
 import UserInfoComponent from "@/components/dashboard/UserInfo";
 import UserPhoneNumberComponent from "@/components/dashboard/UserPhoneNumberComponent";
 import WelcomeSection from "@/components/dashboard/WelcomeSection";
@@ -15,7 +18,7 @@ import { UserData } from "@/types";
 import { useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { Divider, Provider as PaperProvider } from "react-native-paper";
 
 const DashboardScreen: React.FC = () => {
@@ -114,21 +117,62 @@ const DashboardScreen: React.FC = () => {
               bodyStyle={{marginBottom: 15}}
               linkStyle={{textDecorationStyle: "solid", textDecorationLine: "underline", textDecorationColor: Theme.accent, color: Theme.accent}}
             /> */}
+
+            <MotiAnimatedSection>
+
+              <StartingTimeComponent />
+
+              <ResponseTimeComponent />
+
+              <ActionButton
+                title="Save Schedule" // "Save Text/Response Time"
+                mode="elevated"
+                onPress={() => {
+
+                  // if( userData?.membershipPlan?.plan === "basic" ) {
+                  //     Alert.alert("Please upgrade your plan to Premium in order to access the custom schedule")
+                  //     router.push({
+                  //       pathname: "/dashboard/upgrade-plan",
+                  //       params: {subscriptionId: userData.stripeSubscriptionId}
+                  //     })
+                  //     return;
+                  // }
+                  
+                }}
+                // buttonStyle={{width: SIZES.screenBodyWidth}}
+              />
+
+              <ActionButton
+                title="Custom Schedule"
+                mode="elevated"
+                onPress={() => {
+
+                  if( userData?.membershipPlan?.plan === "basic" ) {
+                      Alert.alert("Please upgrade your plan to Premium in order to access the custom schedule")
+                      router.push({
+                        pathname: "/dashboard/upgrade-plan",
+                        params: {subscriptionId: userData.stripeSubscriptionId}
+                      })
+                      return;
+                  }
+                  
+                  router.push("/dashboard/schedule")
+                }}
+                buttonStyle={{marginVertical: 20, width: 250}}
+              />
+
+            </MotiAnimatedSection>
             
-            <ActionButton
-              title="Custom Schedule"
-              mode="elevated"
-              onPress={() => router.push("/dashboard/schedule")}
-              buttonStyle={{marginBottom: 20, width: 250}}
-            />
   
-            <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: Theme.primary }} />
+            {/* <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: Theme.primary }} /> */}
   
             {/* Contact Us Actions */}
-            <ActionOutlineButton
-              title="Contact Us"
-              onPress={() => setModalMailerVisible(true)}
-            />
+            <MotiAnimatedSection>
+              <ActionOutlineButton
+                title="Contact Us"
+                onPress={() => setModalMailerVisible(true)}
+              />
+            </MotiAnimatedSection>
     
           </ScrollView>
   

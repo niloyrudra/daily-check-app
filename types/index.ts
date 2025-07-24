@@ -5,8 +5,11 @@ import { FieldValue, Timestamp } from "firebase/firestore"
 import { ColorValue, InputModeOptions, KeyboardType, StyleProp, TextStyle, ViewStyle } from "react-native"
 
 type WritableTimestamp = Timestamp | FieldValue;
+
 type AutoCapitalizeType = 'none' | 'sentences' | 'words' | 'characters';
+
 type Plan = "" | "basic" | "premium"; //  "free" | "monthly" | "yearly";
+
 type DependentType = {
   cat: boolean,
   dog: boolean,
@@ -61,7 +64,8 @@ type UserData = {
     responseTime?: number,
     lastInteraction: Timestamp | null,
     scheduleStatus: 'not_started' | 'text_sent' | 'followup_sent' | 'call_made' | 'pending' | 'done',
-    lastChecked: Timestamp | null
+    lastChecked: Timestamp | null,
+    advancedScheduler: boolean
   },
   dependents: DependentType
 }
@@ -145,5 +149,14 @@ type MailerFormValues = {
   message: string,
 };
 
-export { AuthUser, BannerProps, Contact, DependentType, EmergencyFormValues, EyeProps, FloatingArrowButtonProps, InputProps, LinkProps, MailerFormValues, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData }
+type LabelValueOption = {
+  label: string,
+  value: string
+}
+
+type DropdownProps = {
+  options: LabelValueOption[];
+};
+
+export { AuthUser, BannerProps, Contact, DependentType, DropdownProps, EmergencyFormValues, EyeProps, FloatingArrowButtonProps, InputProps, LabelValueOption, LinkProps, MailerFormValues, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData }
 

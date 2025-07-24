@@ -1,3 +1,4 @@
+import VideoPlayerComponent from "@/components/auth/VideoPlayerComponent";
 import ActionPrimaryButton from "@/components/form-components/ActionPrimaryButton";
 import TextInputComponent from "@/components/form-components/TextInputComponent";
 import AuthScreenLayout from "@/components/layout/AuthScreenLayout";
@@ -72,6 +73,8 @@ const OnboardingTwo: React.FC = () => {
           </View>
         )}
       </Formik>
+
+      <VideoPlayerComponent />
       
     </AuthScreenLayout>
   );

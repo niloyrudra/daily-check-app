@@ -38,6 +38,13 @@ export default {
           backgroundColor: "#ffffff"
         }
       ],
+      [
+        "expo-video",
+        {
+          "supportsBackgroundPlayback": true,
+          "supportsPictureInPicture": true
+        }
+      ],
       "expo-web-browser"
     ],
     experiments: {

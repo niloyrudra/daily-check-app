@@ -26,42 +26,50 @@ const TextInputComponent = ({
     const [ isSecureTextEntry, setIsSecureTextEntry ] = React.useState<boolean>(isPassword);
     const [ isFocused, setIsFocused ] = React.useState<boolean>(false);
 
-  return (
-    <View style={contentContainerStyle}>
-        <TextInput
-            placeholder={placeholder}
-            value={value}
-            keyboardType={keyboardType}
-            autoFocus={false}
-            style={[
-                styles.input,
-                ( isFocused && { borderColor: Theme.primary } ),
-                ( multiline && {
-                    fontSize: SIZES.fontSizeTextArea,
-                    height: SIZES.textFieldHeight * numberOfLines,
-                    textAlignVertical: 'top'
-                })
-            ]}
-            multiline={multiline}
-            numberOfLines={numberOfLines}
-            maxLength={maxLength}
-            placeholderTextColor={placeholderTextColor ?? Theme.primary}
-            enterKeyHint="done"
-            inputMode={inputMode}
-            autoCapitalize={autoCapitalize}
-            secureTextEntry={ isSecureTextEntry ?? isPassword }
+    const handleFocus = () => {
+        setIsFocused(prevValue => prevValue = !prevValue)
 
-            onChangeText={onChange}
-            onFocus={() => setIsFocused(prevValue => prevValue = ! prevValue)}
-            onBlur={onBlur}
-        />
-
-        {
-            isPassword && (<ToggledEyeIcon onChange={() => setIsSecureTextEntry( prevValue => prevValue = !prevValue )} isSecureTextEntry={isSecureTextEntry} />)
+        if (inputMode === "tel" && value.trim() === '') {
+            onChange('+1');
         }
+    };
 
-    </View>
-  )
+    return (
+        <View style={contentContainerStyle}>
+            <TextInput
+                placeholder={placeholder}
+                value={value}
+                keyboardType={keyboardType}
+                autoFocus={false}
+                style={[
+                    styles.input,
+                    ( isFocused && { borderColor: Theme.primary } ),
+                    ( multiline && {
+                        fontSize: SIZES.fontSizeTextArea,
+                        height: SIZES.textFieldHeight * numberOfLines,
+                        textAlignVertical: 'top'
+                    })
+                ]}
+                multiline={multiline}
+                numberOfLines={numberOfLines}
+                maxLength={maxLength}
+                placeholderTextColor={placeholderTextColor ?? Theme.primary}
+                enterKeyHint="done"
+                inputMode={inputMode}
+                autoCapitalize={autoCapitalize}
+                secureTextEntry={ isSecureTextEntry ?? isPassword }
+
+                onChangeText={onChange}
+                onFocus={handleFocus}
+                onBlur={onBlur}
+            />
+
+            {
+                isPassword && (<ToggledEyeIcon onChange={() => setIsSecureTextEntry( prevValue => prevValue = !prevValue )} isSecureTextEntry={isSecureTextEntry} />)
+            }
+
+        </View>
+    )
 }
 
 export default TextInputComponent;
