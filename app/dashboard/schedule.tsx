@@ -3,8 +3,10 @@ import ArrowButton from '@/components/ArrowButton'
 import VideoPlayerComponent from '@/components/auth/VideoPlayerComponent'
 import CalendarComponent from '@/components/dashboard/Calendar'
 import ModalComponent from '@/components/dashboard/modals/ModalComponent'
+import MotiAnimatedSection from '@/components/dashboard/MotiAnimatedSection'
 import SectionTitle from '@/components/dashboard/SectionTitle'
 import SafeAreaLayout from '@/components/layout/SafeAreaLayout'
+import TitleComponent from '@/components/TitleComponent'
 import { auth, db } from '@/config/firebase'
 import SIZES from '@/constants/size'
 import { Theme } from '@/constants/theme'
@@ -13,7 +15,7 @@ import { doc, getDoc } from 'firebase/firestore'
 import { ScrollView } from 'moti'
 import React from 'react'
 import { Text, View } from 'react-native'
-import { PaperProvider } from 'react-native-paper'
+import { Divider, PaperProvider } from 'react-native-paper'
 
 const CustomSchedule = () => {
     const [userData, setUserData] = React.useState<UserData | null>(null);
@@ -46,7 +48,9 @@ const CustomSchedule = () => {
 
                     <ScrollView style={{flex:1}}>
 
-                        <ArrowButton />
+                        <ArrowButton
+                            route='/dashboard/home'
+                        />
 
                         <View
                             style={{
@@ -66,7 +70,12 @@ const CustomSchedule = () => {
                             <CalendarComponent onModalHandler={() => setModalVisible(true)} userData={userData} />
                         </View>
 
-                        <VideoPlayerComponent />
+                        <Divider style={{backgroundColor: Theme.primary, marginVertical: 30}} />
+
+                        <MotiAnimatedSection>
+                            <TitleComponent title="Schedule Instructions are below" />
+                            <VideoPlayerComponent linkType="instruction" />
+                        </MotiAnimatedSection>
 
                     </ScrollView>
 

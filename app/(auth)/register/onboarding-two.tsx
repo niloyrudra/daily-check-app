@@ -74,7 +74,7 @@ const OnboardingTwo: React.FC = () => {
         )}
       </Formik>
 
-      <VideoPlayerComponent />
+      <VideoPlayerComponent linkType="registration" />
       
     </AuthScreenLayout>
   );

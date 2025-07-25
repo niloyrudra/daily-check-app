@@ -8,6 +8,7 @@ import MotiAnimatedSection from "@/components/dashboard/MotiAnimatedSection";
 import PausAndResumeServiceButton from "@/components/dashboard/PauseAndResumeServiceButton";
 import ResponseTimeComponent from "@/components/dashboard/ResponseTimeComponent";
 import SectionTitle from "@/components/dashboard/SectionTitle";
+import SignOutComponent from "@/components/dashboard/SignOutComponent";
 import StartingTimeComponent from "@/components/dashboard/StartingTimeComponent";
 import UserInfoComponent from "@/components/dashboard/UserInfo";
 import UserPhoneNumberComponent from "@/components/dashboard/UserPhoneNumberComponent";
@@ -29,6 +30,7 @@ const DashboardScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [modalMailerVisible, setModalMailerVisible] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [loadingSaveSchedule, setLoadingSaveSchedule] = React.useState<boolean>(false);
   const [startingTime, setStartingTime] = React.useState<string | undefined>("");
   const [responseTime, setResponseTime] = React.useState<string | undefined>('1');
 
@@ -52,7 +54,7 @@ const DashboardScreen: React.FC = () => {
       return;
     }
     try {
-      setLoading(true);
+      setLoadingSaveSchedule(true);
       const user = auth.currentUser;
       if (!user) throw new Error("Not logged in");
 
@@ -60,19 +62,17 @@ const DashboardScreen: React.FC = () => {
 
       
       const userDoc = await getDoc(doc(db, "users", user.uid));
-      const userData = userDoc?.data();
+      const userFreshData = userDoc?.data();
+
+      // console.log("userFreshData", userFreshData)
 
       const selectedTime = startingTime || ""; // "07:30 PM"; // from dropdown
-      // const selectedTime =
-      //   typeof startingTime === "string"
-      //     ? startingTime
-      //     : (startingTime?.toDate?.() instanceof Date
-      //         ? dayjs(startingTime.toDate()).format("hh:mm A")
-      //         : "");
+
       const responseTimeNum = responseTime ? parseInt(responseTime, 10) : 1;
       const selectedResponseTime = responseTimeNum;  // e.g., 1, 2, or 3 (hours) from dropdown
 
-      const timeParsed = dayjs(selectedTime, "hh:mm A");
+      // const timeParsed = dayjs(selectedTime, "hh:mm A");
+      const timeParsed = dayjs(selectedTime, "hh:mm");
 
       if (!timeParsed.isValid()) {
         throw new Error("Invalid selected time format");
@@ -88,25 +88,19 @@ const DashboardScreen: React.FC = () => {
       });
 
 
-      if( userData ) {
-        const {cat, dog, children, otherPet, extra} = userData?.dependents
-        if (!cat && !dog && !children && !otherPet && !extra) {
-          setModalVisible(true);
-        }
-        // else Alert.alert("Value added!")
+      if( userFreshData ) {
+        const {cat, dog, children, otherPet, extra} = userFreshData.dependents
+        if (!cat && !dog && !children && !otherPet && !extra) setModalVisible(true);
       }
       
       Alert.alert("Your schedule has been recorded. You will be receiving texts as requested");
 
-
-
     } catch (error: any) {
+      setLoadingSaveSchedule(false);
       Alert.alert("Error", error.message);
     } finally {
-      setLoading(false);
+      setLoadingSaveSchedule(false);
     }
-
-    setModalVisible(true)
     
   }
 
@@ -133,6 +127,8 @@ const DashboardScreen: React.FC = () => {
   
           <ScrollView style={{ flex: 1 }}>
   
+            <SignOutComponent />
+
             {/* Welcome Section */}
             <WelcomeSection name={userData?.name} email={userData?.email} />
   
@@ -186,14 +182,6 @@ const DashboardScreen: React.FC = () => {
             <Divider style={{marginVertical: 30, backgroundColor: Theme.primary }} />
   
             {/* Scheduler Section */}
-            {/* <PlainTextLink
-              text="if you need a more customized schedule,"
-              linkText="Click here"
-              route="/dashboard/schedule"
-              bodyStyle={{marginBottom: 15}}
-              linkStyle={{textDecorationStyle: "solid", textDecorationLine: "underline", textDecorationColor: Theme.accent, color: Theme.accent}}
-            /> */}
-
             <MotiAnimatedSection>
 
               <StartingTimeComponent handler={setStartingTime} existingData={userData?.automation?.startingTime || ""} />
@@ -204,7 +192,7 @@ const DashboardScreen: React.FC = () => {
                 title="Save Schedule" // "Save Text/Response Time"
                 mode="elevated"
                 onPress={basicScheduleHandler}
-                // buttonStyle={{width: SIZES.screenBodyWidth}}
+                loading={loadingSaveSchedule}
               />
 
               <ActionButton
@@ -238,6 +226,8 @@ const DashboardScreen: React.FC = () => {
                 onPress={() => setModalMailerVisible(true)}
               />
             </MotiAnimatedSection>
+
+            <View style={{height: 30}} />
     
           </ScrollView>
   

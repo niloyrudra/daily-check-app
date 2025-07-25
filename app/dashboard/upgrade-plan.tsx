@@ -78,6 +78,10 @@ const UpgradePlan: React.FC = () => {
             }
           });
 
+          Alert.alert("Congratulations!", "You are now our Premium Member.");
+
+          router.push("/dashboard/home")
+
         } else {
           Alert.alert("Oops!", "Checkout unsuccessful.");
         }

@@ -7,40 +7,41 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import ActivityIndicatorComponent from '../ActivityIndicatorComponent';
 
-const RegistrationTutorial: React.FC = () => {
+interface VideoPlayerProps {
+  linkType: "instruction" | "registration"
+}
+
+const VideoPlayerComponent: React.FC<VideoPlayerProps> = ({linkType}) => {
   // const videoRef = React.useRef<Video>(null);
   const [videoUrl, setVideoUrl] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    const fetchVideoUrl = async () => {
-      try {
-        // Simulate an API fetch
-        const response = await fetch(`${BASE_URL}/api/get-registration-video`);
-        if (!response.ok) throw new Error('Failed to fetch video URL');
+  let isMounted = true;
 
-        const data = await response.json();
+  const fetchVideoUrl = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/get-${linkType}-video`);
+      const data = await response.json();
+      if (isMounted && data.url) setVideoUrl(data.url);
+    } catch (err) {
+      if (isMounted) setError('Unable to load video');
+    } finally {
+      if (isMounted) setLoading(false);
+    }
+  };
 
-        console.log(data)
+  fetchVideoUrl();
 
-        if (!data.url || typeof data.url !== 'string') {
-          throw new Error('Invalid video URL format');
-        }
+  return () => {
+    isMounted = false;
+  };
+}, [linkType]);
 
-        setVideoUrl(data.url);
-      } catch (err) {
-        console.error('Error fetching video:', err);
-        setError('Unable to load the video. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchVideoUrl();
-  }, []);
 
   const player = useVideoPlayer(videoUrl, player => {
+    if (!player) return;
     player.loop = false;
     // player.play();
   });
@@ -49,7 +50,12 @@ const RegistrationTutorial: React.FC = () => {
 
 
   if (loading) {
-    return (<ActivityIndicatorComponent/>);
+    return (
+    <View style={styles.container}>
+      <ActivityIndicatorComponent />
+      <Text style={{ color: Theme.accent, fontSize: SIZES.contentText, marginVertical: 20 }}>Loading video...</Text>
+    </View>
+    );
   }
 
   if (error || !videoUrl) {
@@ -67,28 +73,25 @@ const RegistrationTutorial: React.FC = () => {
   );
 };
 
-export default RegistrationTutorial;
+export default VideoPlayerComponent;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: SIZES.screenBodyWidth,
-    // backgroundColor: Theme.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    // borderRadius: 12,
     marginVertical: 30
   },
   video: {
     width: SIZES.screenBodyWidth,
-    // height: (SIZES.screenBodyWidth) * (9 / 16),
     height: (SIZES.screenBodyWidth) * 0.7,
     borderRadius: 12,
     backgroundColor: Theme.primary,
   },
   errorText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: SIZES.contentText,
     textAlign: 'center',
   },
 });
