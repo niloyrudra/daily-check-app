@@ -7,13 +7,13 @@ import ActivityIndicatorComponent from '../ActivityIndicatorComponent';
 import TitleComponent from '../TitleComponent';
 
 interface NumberDropdownProps {
-  onSelectHanlder: (value: string | undefined) => void
-  options: LabelValueOption[],
-  value: string | undefined
-  loading: boolean,
-  title: string | undefined,
-  label?: string | undefined,
-  placeholder?: string | undefined
+  onSelectHanlder: (value: string) => void;
+  options: LabelValueOption[];
+  value: string;
+  loading?: boolean;
+  title?: string;
+  label?: string;
+  placeholder?: string;
 }
 
 const NumberDropdown: React.FC<NumberDropdownProps> = ({ onSelectHanlder, options, value, loading, title, placeholder }) => {
@@ -34,7 +34,7 @@ const NumberDropdown: React.FC<NumberDropdownProps> = ({ onSelectHanlder, option
             mode="outlined" // "outlined" / "flat"
             value={value}
             options={options}
-            onSelect={ (time: string | undefined) => onSelectHanlder(time) }
+            onSelect={ (time: string | undefined) => (time) && onSelectHanlder(time) }
             maxMenuHeight={300}
             menuContentStyle={{
               borderColor: Theme.primary,

@@ -2,6 +2,7 @@ import ActivityIndicatorComponent from "@/components/ActivityIndicatorComponent"
 import ActionButton from "@/components/dashboard/ActionButton";
 import ActionOutlineButton from "@/components/dashboard/ActionOutlineButton";
 import ContactsInformationComponent from "@/components/dashboard/ContactsInformation";
+import ModalComponent from "@/components/dashboard/modals/ModalComponent";
 import ModalMailerComponent from "@/components/dashboard/modals/ModalMailerComponent";
 import MotiAnimatedSection from "@/components/dashboard/MotiAnimatedSection";
 import PausAndResumeServiceButton from "@/components/dashboard/PauseAndResumeServiceButton";
@@ -15,8 +16,9 @@ import SafeAreaLayout from "@/components/layout/SafeAreaLayout";
 import { auth, db } from "@/config/firebase";
 import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
+import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, Timestamp, updateDoc } from "firebase/firestore";
 import React from "react";
 import { Alert, ScrollView, View } from "react-native";
 import { Divider, Provider as PaperProvider } from "react-native-paper";
@@ -24,8 +26,11 @@ import { Divider, Provider as PaperProvider } from "react-native-paper";
 const DashboardScreen: React.FC = () => {
   const router = useRouter();
   const [userData, setUserData] = React.useState<UserData | null>(null);
-
+  const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [modalMailerVisible, setModalMailerVisible] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [startingTime, setStartingTime] = React.useState<string | Timestamp>("");
+  const [responseTime, setResponseTime] = React.useState<string | number>('1');
 
   React.useEffect(() => {
     const fetchUserData = async () => {
@@ -40,6 +45,71 @@ const DashboardScreen: React.FC = () => {
     fetchUserData();
   }, []);
 
+  // Hanlders
+  const basicScheduleHandler =  async () => {       
+    if (typeof startingTime !== "string" || startingTime === "") {
+      Alert.alert("Please! Select a time slot from the drop-down above.");
+      return;
+    }
+    try {
+      setLoading(true);
+      const user = auth.currentUser;
+      if (!user) throw new Error("Not logged in");
+
+      const userRef = doc(db, "users", user.uid);
+
+      
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      const userData = userDoc?.data();
+
+      const selectedTime = startingTime || ""; // "07:30 PM"; // from dropdown
+      // const selectedTime =
+      //   typeof startingTime === "string"
+      //     ? startingTime
+      //     : (startingTime?.toDate?.() instanceof Date
+      //         ? dayjs(startingTime.toDate()).format("hh:mm A")
+      //         : "");
+      
+      const selectedResponseTime = responseTime || 1;  // e.g., 1, 2, or 3 (hours) from dropdown
+
+      const timeParsed = dayjs(selectedTime, "hh:mm A");
+
+      if (!timeParsed.isValid()) {
+        throw new Error("Invalid selected time format");
+      }
+
+      const time24hr = timeParsed.format("HH:mm"); // e.g., "19:30"
+
+      await updateDoc(userRef, {
+        "automation.startingTime": time24hr,
+        "automation.responseTime": selectedResponseTime,
+        "automation.advancedScheduler": false,      // Ensure it's in basic mode
+        "automation.scheduleStatus": "not_started", // Reset for the scheduler to begin
+      });
+
+
+      if( userData ) {
+        const {cat, dog, children, otherPet, extra} = userData?.dependents
+        if (!cat && !dog && !children && !otherPet && !extra) {
+          setModalVisible(true);
+        }
+        // else Alert.alert("Value added!")
+      }
+      
+      Alert.alert("Your schedule has been recorded. You will be receiving texts as requested");
+
+
+
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
+    }
+
+    setModalVisible(true)
+    
+  }
+
   if (!userData) {
     return (<ActivityIndicatorComponent />);
   }
@@ -47,6 +117,12 @@ const DashboardScreen: React.FC = () => {
   return (
     <PaperProvider>
       <>
+
+        <ModalComponent
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        />
+
         <ModalMailerComponent
           userData={userData}
           visible={modalMailerVisible}
@@ -120,25 +196,14 @@ const DashboardScreen: React.FC = () => {
 
             <MotiAnimatedSection>
 
-              <StartingTimeComponent />
+              <StartingTimeComponent handler={setStartingTime} existingData={userData?.automation?.startingTime || ""} />
 
-              <ResponseTimeComponent />
+              <ResponseTimeComponent handler={setResponseTime} existingData={userData?.automation?.responseTime || "1"} />
 
               <ActionButton
                 title="Save Schedule" // "Save Text/Response Time"
                 mode="elevated"
-                onPress={() => {
-
-                  // if( userData?.membershipPlan?.plan === "basic" ) {
-                  //     Alert.alert("Please upgrade your plan to Premium in order to access the custom schedule")
-                  //     router.push({
-                  //       pathname: "/dashboard/upgrade-plan",
-                  //       params: {subscriptionId: userData.stripeSubscriptionId}
-                  //     })
-                  //     return;
-                  // }
-                  
-                }}
+                onPress={basicScheduleHandler}
                 // buttonStyle={{width: SIZES.screenBodyWidth}}
               />
 

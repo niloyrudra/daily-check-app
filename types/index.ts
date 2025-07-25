@@ -154,9 +154,9 @@ type LabelValueOption = {
   value: string
 }
 
-type DropdownProps = {
-  options: LabelValueOption[];
-};
+// type DropdownProps = {
+//   options: LabelValueOption[];
+// };
 
-export { AuthUser, BannerProps, Contact, DependentType, DropdownProps, EmergencyFormValues, EyeProps, FloatingArrowButtonProps, InputProps, LabelValueOption, LinkProps, MailerFormValues, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData }
+export { AuthUser, BannerProps, Contact, DependentType, EmergencyFormValues, EyeProps, FloatingArrowButtonProps, InputProps, LabelValueOption, LinkProps, MailerFormValues, MembershipPlan, Plan, SubmitButtonProps, TitleProps, UserData }
 

@@ -1,5 +1,6 @@
 import ActivityIndicatorComponent from '@/components/ActivityIndicatorComponent'
 import ArrowButton from '@/components/ArrowButton'
+import VideoPlayerComponent from '@/components/auth/VideoPlayerComponent'
 import CalendarComponent from '@/components/dashboard/Calendar'
 import ModalComponent from '@/components/dashboard/modals/ModalComponent'
 import SectionTitle from '@/components/dashboard/SectionTitle'
@@ -32,46 +33,49 @@ const CustomSchedule = () => {
     if (!userData) {
         return (<ActivityIndicatorComponent />);
     }
-  return (
-    <PaperProvider>
-        <>
-            <ModalComponent
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            />
+    
+    return (
+        <PaperProvider>
+            <>
+                <ModalComponent
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}
+                />
 
-            <SafeAreaLayout>
+                <SafeAreaLayout>
 
-                <ScrollView style={{flex:1}}>
+                    <ScrollView style={{flex:1}}>
 
-                    <ArrowButton />
+                        <ArrowButton />
 
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
                         <View
                             style={{
-                                alignItems:"center",
-                                marginVertical: 30
+                                flex: 1,
                             }}
                         >
-                            <Text style={{color: Theme.primary, fontSize: SIZES.header, fontWeight: "800"}}>Custom Schedule</Text>
+                            <View
+                                style={{
+                                    alignItems:"center",
+                                    marginVertical: 30
+                                }}
+                            >
+                                <Text style={{color: Theme.primary, fontSize: SIZES.header, fontWeight: "800"}}>Custom Schedule</Text>
+                            </View>
+
+                            <SectionTitle title="Set Your Schedule" />
+                            <CalendarComponent onModalHandler={() => setModalVisible(true)} userData={userData} />
                         </View>
 
-                        <SectionTitle title="Set Your Schedule" />
-                        <CalendarComponent onModalHandler={() => setModalVisible(true)} userData={userData} />
-                    </View>
+                        <VideoPlayerComponent />
 
-                </ScrollView>
+                    </ScrollView>
 
 
-            </SafeAreaLayout>
+                </SafeAreaLayout>
 
-        </>
-    </PaperProvider>
-  )
+            </>
+        </PaperProvider>
+    )
 }
 
 export default CustomSchedule
