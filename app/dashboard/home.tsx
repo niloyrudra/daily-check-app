@@ -18,7 +18,7 @@ import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import { doc, getDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React from "react";
 import { Alert, ScrollView, View } from "react-native";
 import { Divider, Provider as PaperProvider } from "react-native-paper";
@@ -29,8 +29,8 @@ const DashboardScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [modalMailerVisible, setModalMailerVisible] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [startingTime, setStartingTime] = React.useState<string | Timestamp>("");
-  const [responseTime, setResponseTime] = React.useState<string | number>('1');
+  const [startingTime, setStartingTime] = React.useState<string | undefined>("");
+  const [responseTime, setResponseTime] = React.useState<string | undefined>('1');
 
   React.useEffect(() => {
     const fetchUserData = async () => {
@@ -69,8 +69,8 @@ const DashboardScreen: React.FC = () => {
       //     : (startingTime?.toDate?.() instanceof Date
       //         ? dayjs(startingTime.toDate()).format("hh:mm A")
       //         : "");
-      
-      const selectedResponseTime = responseTime || 1;  // e.g., 1, 2, or 3 (hours) from dropdown
+      const responseTimeNum = responseTime ? parseInt(responseTime, 10) : 1;
+      const selectedResponseTime = responseTimeNum;  // e.g., 1, 2, or 3 (hours) from dropdown
 
       const timeParsed = dayjs(selectedTime, "hh:mm A");
 
@@ -198,7 +198,7 @@ const DashboardScreen: React.FC = () => {
 
               <StartingTimeComponent handler={setStartingTime} existingData={userData?.automation?.startingTime || ""} />
 
-              <ResponseTimeComponent handler={setResponseTime} existingData={userData?.automation?.responseTime || "1"} />
+              <ResponseTimeComponent handler={setResponseTime} existingData={userData?.automation?.responseTime?.toString() || "1"} />
 
               <ActionButton
                 title="Save Schedule" // "Save Text/Response Time"
