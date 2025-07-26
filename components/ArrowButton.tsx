@@ -2,24 +2,25 @@ import { Theme } from '@/constants/theme';
 import { Feather } from '@expo/vector-icons';
 import { Route, router } from 'expo-router';
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 
 type FeatherIconName = keyof typeof Feather.glyphMap;
 
 interface ArrowButtonProps {
   iconName?: FeatherIconName,
   size?: number,
-  route?: Route
+  route?: Route,
+  buttonStyle?: StyleProp<ViewStyle>
 }
 
-const ArrowButton: React.FC<ArrowButtonProps> = ({ iconName="arrow-left", size=24, route }) => {
+const ArrowButton: React.FC<ArrowButtonProps> = ({ iconName="arrow-left", size=24, route, buttonStyle }) => {
   return (
     <TouchableOpacity
       onPress={() => {
         if(route) router.push(route)
         else router.back()
       }}
-      style={styles.arrowLeftButton}
+      style={[styles.arrowLeftButton, (buttonStyle && buttonStyle)]}
     >
       <Feather name={iconName} size={size} color={Theme.primary} />
     </TouchableOpacity>
@@ -32,6 +33,7 @@ const styles = StyleSheet.create({
   arrowLeftButton: {
     position: 'absolute',
     left: 0,
-    top: 20,
+    top: 0,
+    zIndex: 3
   }
 });

@@ -1,9 +1,19 @@
 import { Theme } from '@/constants/theme'
 import React from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
+import ActivityIndicatorComponent from '../ActivityIndicatorComponent'
 import ActionButton from './ActionButton'
 
-const ActionOutlineButton = ({title, onPress, buttonStyle}: {title: string, onPress: () => void, buttonStyle?: StyleProp<ViewStyle>}) => {
+interface ButtonProps {
+  title: string,
+  onPress: () => void,
+  buttonStyle?: StyleProp<ViewStyle>,
+  isLoading?: boolean
+}
+
+const ActionOutlineButton: React.FC<ButtonProps> = ({title, onPress, buttonStyle, isLoading}) => {
+
+  if (isLoading) return (<ActivityIndicatorComponent />)
 
   return (
     <ActionButton

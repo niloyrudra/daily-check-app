@@ -4,7 +4,6 @@ import VideoPlayerComponent from '@/components/auth/VideoPlayerComponent'
 import CalendarComponent from '@/components/dashboard/Calendar'
 import ModalComponent from '@/components/dashboard/modals/ModalComponent'
 import MotiAnimatedSection from '@/components/dashboard/MotiAnimatedSection'
-import SectionTitle from '@/components/dashboard/SectionTitle'
 import SafeAreaLayout from '@/components/layout/SafeAreaLayout'
 import TitleComponent from '@/components/TitleComponent'
 import { auth, db } from '@/config/firebase'
@@ -14,7 +13,7 @@ import { UserData } from '@/types'
 import { doc, getDoc } from 'firebase/firestore'
 import { ScrollView } from 'moti'
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { Divider, PaperProvider } from 'react-native-paper'
 
 const CustomSchedule = () => {
@@ -46,36 +45,31 @@ const CustomSchedule = () => {
 
                 <SafeAreaLayout>
 
+                    {/* <ArrowButton route='/dashboard/home' buttonStyle={{ left: SIZES.bodyPaddingHorizontal, top: SIZES.bodyPaddingVertical }} /> */}
                     <ScrollView style={{flex:1}}>
 
-                        <ArrowButton
-                            route='/dashboard/home'
-                        />
-
-                        <View
-                            style={{
-                                flex: 1,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    alignItems:"center",
-                                    marginVertical: 30
-                                }}
-                            >
-                                <Text style={{color: Theme.primary, fontSize: SIZES.header, fontWeight: "800"}}>Custom Schedule</Text>
-                            </View>
-
-                            <SectionTitle title="Set Your Schedule" />
-                            <CalendarComponent onModalHandler={() => setModalVisible(true)} userData={userData} />
-                        </View>
-
-                        <Divider style={{backgroundColor: Theme.primary, marginVertical: 30}} />
+                    <ArrowButton route='/dashboard/home' buttonStyle={{zIndex:3}} />
 
                         <MotiAnimatedSection>
-                            <TitleComponent title="Schedule Instructions are below" />
+                            <TitleComponent title="Custom Schedule Help Guide" titleStyle={{fontSize: SIZES.header, textAlign: "center", marginTop: 50}} />
                             <VideoPlayerComponent linkType="instruction" />
                         </MotiAnimatedSection>
+
+                        <Divider style={{backgroundColor: Theme.primary}} />
+                        
+                        <MotiAnimatedSection>
+
+                            <View style={{flex: 1}}>
+                                <TitleComponent title="Custom Schedule" titleStyle={{fontSize: SIZES.header, textAlign: "center", marginVertical: 20}} />
+                                {/* <SectionTitle title="Set Your Schedule" /> */}
+                                <CalendarComponent onModalHandler={() => setModalVisible(true)} userData={userData} />
+                            </View>
+
+                        </MotiAnimatedSection>
+
+
+                        <View style={{height: 30}} />
+                        
 
                     </ScrollView>
 

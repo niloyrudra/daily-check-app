@@ -16,9 +16,10 @@ interface ActionButtonProps {
   buttonStyle?: StyleProp<ViewStyle>, // ColorValue | undefined,
   textStyle?: StyleProp<TextStyle>, // ColorValue | undefined,
   loading?: boolean
+  disabled?: boolean
 }
 
-const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, buttonColor, buttonStyle, textStyle, loading}) => {
+const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, buttonColor, buttonStyle, textStyle, loading, disabled=false}) => {
   return (
     <MotiAnimatedSection>
       {loading
@@ -34,6 +35,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({title, onPress, mode, button
               buttonColor={buttonColor ? buttonColor : Theme.accent}
               style={[{height: 55, borderRadius:30, alignItems: "center", justifyContent: "center" }, (buttonStyle && buttonStyle)]}
               onPress={onPress}
+              disabled={disabled}
             >
               <Text style={[{fontSize: SIZES.title, color: "#FFFFFF"}, (textStyle && textStyle)]}>{title}</Text>
             </Button>

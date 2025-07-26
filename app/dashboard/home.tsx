@@ -29,7 +29,7 @@ const DashboardScreen: React.FC = () => {
   const [userData, setUserData] = React.useState<UserData | null>(null);
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [modalMailerVisible, setModalMailerVisible] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  // const [loading, setLoading] = React.useState<boolean>(false);
   const [loadingSaveSchedule, setLoadingSaveSchedule] = React.useState<boolean>(false);
   const [startingTime, setStartingTime] = React.useState<string | undefined>("");
   const [responseTime, setResponseTime] = React.useState<string | undefined>('1');
@@ -53,6 +53,7 @@ const DashboardScreen: React.FC = () => {
       Alert.alert("Please! Select a time slot from the drop-down above.");
       return;
     }
+
     try {
       setLoadingSaveSchedule(true);
       const user = auth.currentUser;
@@ -60,19 +61,31 @@ const DashboardScreen: React.FC = () => {
 
       const userRef = doc(db, "users", user.uid);
 
-      
-      const userDoc = await getDoc(doc(db, "users", user.uid));
+      const userDoc = await getDoc(userRef);
       const userFreshData = userDoc?.data();
 
-      // console.log("userFreshData", userFreshData)
+      if (userFreshData && userFreshData?.automation?.startingTime && userFreshData?.automation.scheduleStatus !== 'not_started') {
+      const confirm = await new Promise<boolean>((resolve) => {
+        Alert.alert(
+          'Overwrite Schedule?',
+          'You already have a schedule running. Do you want to replace it?',
+          [
+            { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
+            { text: 'Yes', onPress: () => resolve(true) },
+          ]
+        );
+      });
+      if (!confirm) return;
+    }
 
       const selectedTime = startingTime || ""; // "07:30 PM"; // from dropdown
 
-      const responseTimeNum = responseTime ? parseInt(responseTime, 10) : 1;
+      // const responseTimeNum = responseTime ? parseInt(responseTime, 10) : 1;
+      const responseTimeNum = Number.isNaN(parseInt(responseTime || '', 10)) ? 1 : parseInt(responseTime!, 10);
       const selectedResponseTime = responseTimeNum;  // e.g., 1, 2, or 3 (hours) from dropdown
 
       // const timeParsed = dayjs(selectedTime, "hh:mm A");
-      const timeParsed = dayjs(selectedTime, "hh:mm");
+      const timeParsed = dayjs(selectedTime, "HH:mm");
 
       if (!timeParsed.isValid()) {
         throw new Error("Invalid selected time format");
@@ -125,7 +138,7 @@ const DashboardScreen: React.FC = () => {
         
         <SafeAreaLayout>
   
-          <ScrollView style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 40 }}>
   
             <SignOutComponent />
 
@@ -193,6 +206,7 @@ const DashboardScreen: React.FC = () => {
                 mode="elevated"
                 onPress={basicScheduleHandler}
                 loading={loadingSaveSchedule}
+                disabled={!startingTime || !responseTime}
               />
 
               <ActionButton
@@ -227,7 +241,7 @@ const DashboardScreen: React.FC = () => {
               />
             </MotiAnimatedSection>
 
-            <View style={{height: 30}} />
+            {/* <View style={{height: 30}} /> */}
     
           </ScrollView>
   

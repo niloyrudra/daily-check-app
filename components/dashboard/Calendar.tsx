@@ -9,8 +9,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Alert, Text as RNText, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import ActionPrimaryButton from "../form-components/ActionPrimaryButton";
-import ActionButton from "./ActionButton";
+import ActionOutlineButton from "./ActionOutlineButton";
 
 dayjs.extend(customParseFormat);
 
@@ -35,6 +34,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingReset, setLoadingReset] = useState<boolean>(false);
+  const [loadingSubmitButton, setLoadingSubmitButton] = useState<boolean>(false);
   const [currentVisibleMonth, setCurrentVisibleMonth] = useState<dayjs.Dayjs>(dayjs());
 
   useEffect(() => {
@@ -177,7 +177,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
     }
 
     try {
-      setLoading(true);
+      setLoadingSubmitButton(true);
       const user = auth.currentUser;
       if (!user) throw new Error("Not logged in");
 
@@ -221,9 +221,10 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
       Alert.alert("Your schedule has been recorded. You will be receiving texts as requested");
 
     } catch (error: any) {
+      setLoadingSubmitButton(false);
       Alert.alert("Error", error.message);
     } finally {
-      setLoading(false);
+      setLoadingSubmitButton(false);
     }
   };
 
@@ -282,11 +283,11 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
         <RNText style={{color: Theme.primary, fontSize: SIZES.contentText, lineHeight: 24}}>Tap dates to toggle. Use buttons for bulk selection or reset. Click "Save Schedule" then return to calendar to set a different time.</RNText>
       </View> */}
 
-      <ActionButton title="Select Full Month" onPress={handleMonthSelect} mode="elevated" buttonColor={Theme.accent} />
-      {/* <ActionButton title="Select This Week" onPress={selectWeekExcludingWeekends} mode="elevated" buttonColor={Theme.accent} /> */}
-      <ActionButton title="Reset Calendar" onPress={resetCalendar} mode="outlined" buttonColor={Theme.accent} loading={loadingReset} />
+      <ActionOutlineButton title="Select Full Month" onPress={handleMonthSelect} />
+      {/* <ActionOutlineButton title="Select This Week" onPress={selectWeekExcludingWeekends} mode="elevated" buttonColor={Theme.accent} /> */}
+      <ActionOutlineButton title="Reset Calendar" onPress={resetCalendar} isLoading={loadingReset} />
       
-      <ActionButton title="Apply Time to Selected Dates" onPress={() => setShowTimePicker(true)} mode="elevated" buttonColor={Theme.accent} />
+      <ActionOutlineButton title="Apply Time to Selected Dates" onPress={() => setShowTimePicker(true)} />
       
       {showTimePicker && (
         <DateTimePicker
@@ -301,7 +302,8 @@ const CalendarComponent: React.FC<CalendarProps> = ({ onModalHandler, userData }
       {/* {userData?.membershipPlan?.plan === 'basic' && (<ResponseTimeComponent />)} */}
 
       <View style={{alignItems: "center" }}>
-        <ActionPrimaryButton buttonTitle="Save Schedule" onSubmit={saveSchedule} isLoading={loading} />
+        {/* <ActionPrimaryButton buttonTitle="Save Schedule" onSubmit={saveSchedule} isLoading={loading} /> */}
+        <ActionOutlineButton title="Save Schedule" onPress={saveSchedule} isLoading={loadingSubmitButton} />
       </View>
     </View>
   );
