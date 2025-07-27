@@ -9,27 +9,30 @@ import PausAndResumeServiceButton from "@/components/dashboard/PauseAndResumeSer
 import ResponseTimeComponent from "@/components/dashboard/ResponseTimeComponent";
 import SectionTitle from "@/components/dashboard/SectionTitle";
 import SignOutComponent from "@/components/dashboard/SignOutComponent";
-import StartingTimeComponent from "@/components/dashboard/StartingTimeComponent";
+// import StartingTimeComponent from "@/components/dashboard/StartingTimeComponent";
 import UserInfoComponent from "@/components/dashboard/UserInfo";
 import UserPhoneNumberComponent from "@/components/dashboard/UserPhoneNumberComponent";
 import WelcomeSection from "@/components/dashboard/WelcomeSection";
 import SafeAreaLayout from "@/components/layout/SafeAreaLayout";
+import TitleComponent from "@/components/TitleComponent";
 import { auth, db } from "@/config/firebase";
+import SIZES from "@/constants/size";
 import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
+import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React from "react";
-import { Alert, ScrollView, View } from "react-native";
-import { Divider, Provider as PaperProvider } from "react-native-paper";
+import { Alert, ScrollView, TouchableOpacity, View } from "react-native";
+import { Divider, Provider as PaperProvider, Text } from "react-native-paper";
 
 const DashboardScreen: React.FC = () => {
   const router = useRouter();
   const [userData, setUserData] = React.useState<UserData | null>(null);
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [modalMailerVisible, setModalMailerVisible] = React.useState<boolean>(false);
-  // const [loading, setLoading] = React.useState<boolean>(false);
+  const [showTimePicker, setShowTimePicker] = React.useState<boolean>(false);
   const [loadingSaveSchedule, setLoadingSaveSchedule] = React.useState<boolean>(false);
   const [startingTime, setStartingTime] = React.useState<string | undefined>("");
   const [responseTime, setResponseTime] = React.useState<string | undefined>('1');
@@ -48,6 +51,31 @@ const DashboardScreen: React.FC = () => {
   }, []);
 
   // Hanlders
+  const applyTimeToPendingDates = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (!selectedDate) return;
+    setShowTimePicker(false);
+
+    const time = dayjs(selectedDate).format("hh:mm A");
+
+    console.log("Selected Time:", time)
+
+    setStartingTime(time)
+    // const updates: MarkedDates = {};
+
+    // pendingDates.forEach((date) => {
+    //   updates[date] = {
+    //     selected: true,
+    //     marked: true,
+    //     color: Theme.primary,
+    //     textColor: "#fff",
+    //     time,
+    //   };
+    // });
+
+    // setMarkedDates((prev) => ({ ...prev, ...updates }));
+    // setPendingDates([]);
+  };
+
   const basicScheduleHandler =  async () => {       
     if (typeof startingTime !== "string" || startingTime === "") {
       Alert.alert("Please! Select a time slot from the drop-down above.");
@@ -197,7 +225,48 @@ const DashboardScreen: React.FC = () => {
             {/* Scheduler Section */}
             <MotiAnimatedSection>
 
-              <StartingTimeComponent handler={setStartingTime} existingData={userData?.automation?.startingTime || ""} />
+              {/* <StartingTimeComponent handler={setStartingTime} existingData={userData?.automation?.startingTime || ""} /> */}
+
+
+
+              {/* <ActionOutlineButton title="Select Your Time Slot" onPress={() => setShowTimePicker(true)} /> */}
+              <MotiAnimatedSection>
+                <View style={{gap:20, marginBottom: 20}}>
+
+                  <TitleComponent
+                    // title="Your Response Time:"
+                    title={"At what time would you like us to text you daily:"}
+                    titleStyle={{textAlign:"center"}}
+                  />
+                
+                  <TouchableOpacity
+                    onPress={() => setShowTimePicker(true)}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: Theme.primary,
+                      borderRadius: 4,
+                      height: SIZES.textFieldHeight,
+                      alignItems:"flex-start",
+                      justifyContent:"center",
+                      paddingHorizontal: SIZES.bodyPaddingHorizontal
+                    }}
+                  >
+                    <Text variant="bodyMedium" style={{textAlignVertical:"center", fontSize: SIZES.contentText}}>{startingTime ? `Daily At ${startingTime}` : "Select Your Time Slot"}</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </MotiAnimatedSection>
+              
+              {showTimePicker && (
+                <DateTimePicker
+                  value={new Date()}
+                  mode="time"
+                  onChange={applyTimeToPendingDates}
+                />
+              )}
+
+
+
 
               <ResponseTimeComponent handler={setResponseTime} existingData={userData?.automation?.responseTime?.toString() || "1"} />
 
@@ -215,7 +284,7 @@ const DashboardScreen: React.FC = () => {
                 onPress={() => {
 
                   if( userData?.membershipPlan?.plan === "basic" ) {
-                      Alert.alert("Please upgrade your plan to Premium in order to access the custom schedule")
+                      Alert.alert("Please upgrade to Premium Plan to access custom schedule")
                       router.push({
                         pathname: "/dashboard/upgrade-plan",
                         params: {subscriptionId: userData.stripeSubscriptionId}
