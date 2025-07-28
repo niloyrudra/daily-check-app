@@ -16,9 +16,18 @@ const getErrorMessage = (error: any): string => {
   return "An unexpected error occurred.";
 };
 
+// Time Format (24hr to 12hr)
+const formatTimeTo12Hour = (time24: string): string => {
+  const [hourStr, minute] = time24.split(':');
+  let hour = parseInt(hourStr, 10);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  hour = hour % 12 || 12; // convert 0 to 12
+  return `${hour}:${minute} ${ampm}`;
+}
+
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "";
 
 export {
-  BASE_URL, getErrorMessage
+  BASE_URL, formatTimeTo12Hour, getErrorMessage
 };
 

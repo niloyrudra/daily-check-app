@@ -19,6 +19,7 @@ import { auth, db } from "@/config/firebase";
 import SIZES from "@/constants/size";
 import { Theme } from "@/constants/theme";
 import { UserData } from "@/types";
+import { formatTimeTo12Hour } from "@/utils";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
@@ -41,9 +42,9 @@ const DashboardScreen: React.FC = () => {
     const fetchUserData = async () => {
       if (auth.currentUser) {
         const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
-        // console.log(userDoc.data())
         if (userDoc.exists()) {
           setUserData(userDoc.data() as UserData);
+          setStartingTime( userDoc.data()?.automation?.startingTime || "" )
         }
       }
     };
@@ -51,29 +52,19 @@ const DashboardScreen: React.FC = () => {
   }, []);
 
   // Hanlders
-  const applyTimeToPendingDates = (event: DateTimePickerEvent, selectedDate?: Date) => {
+  const dailyTimeSlotHandler = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (!selectedDate) return;
     setShowTimePicker(false);
 
-    const time = dayjs(selectedDate).format("hh:mm A");
+    // const time = dayjs(selectedDate).format("hh:mm A");
+    // const time = dayjs(selectedDate).utc().format(); // or `.toISOString()`
+    const time = dayjs(selectedDate).format("HH:mm");
 
-    console.log("Selected Time:", time)
+    // console.log("Selected Time event:", event)
+    // console.log("Selected Time:", time)
 
     setStartingTime(time)
-    // const updates: MarkedDates = {};
 
-    // pendingDates.forEach((date) => {
-    //   updates[date] = {
-    //     selected: true,
-    //     marked: true,
-    //     color: Theme.primary,
-    //     textColor: "#fff",
-    //     time,
-    //   };
-    // });
-
-    // setMarkedDates((prev) => ({ ...prev, ...updates }));
-    // setPendingDates([]);
   };
 
   const basicScheduleHandler =  async () => {       
@@ -93,18 +84,18 @@ const DashboardScreen: React.FC = () => {
       const userFreshData = userDoc?.data();
 
       if (userFreshData && userFreshData?.automation?.startingTime && userFreshData?.automation.scheduleStatus !== 'not_started') {
-      const confirm = await new Promise<boolean>((resolve) => {
-        Alert.alert(
-          'Overwrite Schedule?',
-          'You already have a schedule running. Do you want to replace it?',
-          [
-            { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
-            { text: 'Yes', onPress: () => resolve(true) },
-          ]
-        );
-      });
-      if (!confirm) return;
-    }
+        const confirm = await new Promise<boolean>((resolve) => {
+          Alert.alert(
+            'Overwrite Schedule?',
+            'You already have a schedule running. Do you want to replace it?',
+            [
+              { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
+              { text: 'Yes', onPress: () => resolve(true) },
+            ]
+          );
+        });
+        if (!confirm) return;
+      }
 
       const selectedTime = startingTime || ""; // "07:30 PM"; // from dropdown
 
@@ -112,17 +103,27 @@ const DashboardScreen: React.FC = () => {
       const responseTimeNum = Number.isNaN(parseInt(responseTime || '', 10)) ? 1 : parseInt(responseTime!, 10);
       const selectedResponseTime = responseTimeNum;  // e.g., 1, 2, or 3 (hours) from dropdown
 
-      // const timeParsed = dayjs(selectedTime, "hh:mm A");
-      const timeParsed = dayjs(selectedTime, "HH:mm");
+      // const timeParsed = dayjs(`${selectedTime}`, "hh:mm A");
+      // const timeParsed = dayjs(selectedTime, "HH:mm", true);
 
-      if (!timeParsed.isValid()) {
-        throw new Error("Invalid selected time format");
+      const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
+      if (!timeRegex.test(startingTime)) {
+        throw new Error("Time format must be HH:mm");
       }
 
-      const time24hr = timeParsed.format("HH:mm"); // e.g., "19:30"
+      const timeParsed = dayjs(startingTime, "HH:mm");
+
+      // console.log("timeParsed", timeParsed)
+
+      // if (!timeParsed?.isValid()) {
+      //   throw new Error("Invalid selected time format");
+      // }
+
+      // const time24hr = timeParsed.format("HH:mm"); // e.g., "19:30"
 
       await updateDoc(userRef, {
-        "automation.startingTime": time24hr,
+        "automation.startingTime": selectedTime, // timeParsed, // time24hr,
         "automation.responseTime": selectedResponseTime,
         "automation.advancedScheduler": false,      // Ensure it's in basic mode
         "automation.scheduleStatus": "not_started", // Reset for the scheduler to begin
@@ -227,14 +228,10 @@ const DashboardScreen: React.FC = () => {
 
               {/* <StartingTimeComponent handler={setStartingTime} existingData={userData?.automation?.startingTime || ""} /> */}
 
-
-
-              {/* <ActionOutlineButton title="Select Your Time Slot" onPress={() => setShowTimePicker(true)} /> */}
               <MotiAnimatedSection>
                 <View style={{gap:20, marginBottom: 20}}>
 
                   <TitleComponent
-                    // title="Your Response Time:"
                     title={"At what time would you like us to text you daily:"}
                     titleStyle={{textAlign:"center"}}
                   />
@@ -251,7 +248,7 @@ const DashboardScreen: React.FC = () => {
                       paddingHorizontal: SIZES.bodyPaddingHorizontal
                     }}
                   >
-                    <Text variant="bodyMedium" style={{textAlignVertical:"center", fontSize: SIZES.contentText}}>{startingTime ? `Daily At ${startingTime}` : "Select Your Time Slot"}</Text>
+                    <Text variant="bodyMedium" style={{color: Theme.primary, textAlignVertical:"center", fontSize: SIZES.contentText}}>{startingTime ? `Daily at ${formatTimeTo12Hour(startingTime)}` : "Select Your Time Slot"}</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -261,12 +258,9 @@ const DashboardScreen: React.FC = () => {
                 <DateTimePicker
                   value={new Date()}
                   mode="time"
-                  onChange={applyTimeToPendingDates}
+                  onChange={dailyTimeSlotHandler}
                 />
               )}
-
-
-
 
               <ResponseTimeComponent handler={setResponseTime} existingData={userData?.automation?.responseTime?.toString() || "1"} />
 
@@ -298,10 +292,7 @@ const DashboardScreen: React.FC = () => {
               />
 
             </MotiAnimatedSection>
-            
-  
-            {/* <Divider style={{marginBottom: 30, marginTop: 10, backgroundColor: Theme.primary }} /> */}
-  
+              
             {/* Contact Us Actions */}
             <MotiAnimatedSection>
               <ActionOutlineButton
@@ -309,8 +300,6 @@ const DashboardScreen: React.FC = () => {
                 onPress={() => setModalMailerVisible(true)}
               />
             </MotiAnimatedSection>
-
-            {/* <View style={{height: 30}} /> */}
     
           </ScrollView>
   
