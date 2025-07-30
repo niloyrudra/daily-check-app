@@ -6,6 +6,7 @@ const TitleComponent = ({title, style, titleStyle}: {title: string, style?: Styl
   return (
     <View
       style={[
+        {alignItems:"center"},
         style && style
       ]}
     >

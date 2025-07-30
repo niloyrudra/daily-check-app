@@ -135,7 +135,7 @@ const DashboardScreen: React.FC = () => {
         if (!cat && !dog && !children && !otherPet && !extra) setModalVisible(true);
       }
       
-      Alert.alert("Your schedule has been recorded. You will be receiving texts as requested");
+      Alert.alert("Your schedule has been recorded. You're all set!");
 
     } catch (error: any) {
       setLoadingSaveSchedule(false);

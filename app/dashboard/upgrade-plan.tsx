@@ -113,9 +113,9 @@ const UpgradePlan: React.FC = () => {
 
       <TouchableOpacity
         style={{
-            position: "absolute",
-            left: 0,
-            top: 0
+          position: "absolute",
+          left: 0,
+          top: 0
         }}
         onPress={() => router.push("/dashboard/home")}
       >
@@ -129,7 +129,12 @@ const UpgradePlan: React.FC = () => {
           onValueChange={setIsChecked}
           color={isChecked ? Theme.accent : undefined}
         />
-        <PlainTextLink text="Check out our" linkText="Terms & Conditions." route={"/(auth)/register/terms"} />
+        <PlainTextLink
+          text="Check out our"
+          linkText="Terms & Conditions."
+          route={"/(auth)/register/terms"}
+          linkStyle={{textDecorationColor: Theme.primary, textDecorationStyle: "solid", textDecorationLine: "underline"}}
+        />
       </View>
 
       {loading ?

@@ -51,7 +51,7 @@ const CustomSchedule = () => {
                     <ArrowButton route='/dashboard/home' buttonStyle={{zIndex:3}} />
 
                         <MotiAnimatedSection>
-                            <TitleComponent title="Custom Schedule Help Guide" titleStyle={{fontSize: SIZES.header, textAlign: "center", marginTop: 50}} />
+                            <TitleComponent title="Custom Schedule Help Guide" titleStyle={{width: "60%", fontSize: SIZES.header, textAlign: "center", marginTop: 40}} />
                             <VideoPlayerComponent linkType="instruction" />
                         </MotiAnimatedSection>
 
