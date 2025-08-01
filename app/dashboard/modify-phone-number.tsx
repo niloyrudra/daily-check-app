@@ -18,7 +18,7 @@ const PhoneNumberModificationScreen: React.FC = () => {
   const { existingPhoneNumber } = useLocalSearchParams();
   const user = auth.currentUser;
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [loadingResend, setLoadingResend] = React.useState<boolean>(false);
+  // const [loadingResend, setLoadingResend] = React.useState<boolean>(false);
   const [step, setStep] = React.useState<"enterPhone" | "enterCode">("enterPhone");
   const [phoneNumber, setPhoneNumber] = React.useState<string>("");
 
@@ -49,7 +49,7 @@ const PhoneNumberModificationScreen: React.FC = () => {
         });
       } catch (err) {
         console.error("Firestore update error:", err);
-        Alert.alert("Sorry!", "Your information failed to store in the Database.");
+        Alert.alert("Sorry!", "Your information failed to store. Please try again later.");
       }
 
       setStep("enterCode");
@@ -171,7 +171,7 @@ const PhoneNumberModificationScreen: React.FC = () => {
                     loading={loading}
                   />
                 )
-              :  (
+              : (
                   <RenderCodeInput
                     label="Enter Code"
                     values={values}

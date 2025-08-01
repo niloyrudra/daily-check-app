@@ -8,6 +8,8 @@ import SIZES from '@/constants/size';
 import { Theme } from '@/constants/theme';
 import ToggledEyeIcon from './auth/ToggledEyeIcon';
 
+const COUNTRY_CODE = '+1';
+
 const TextInputComponent = ({
     value='',
     placeholder,
@@ -30,8 +32,22 @@ const TextInputComponent = ({
         setIsFocused(prevValue => prevValue = !prevValue)
 
         if (inputMode === "tel" && value.trim() === '') {
-            onChange('+1');
+            onChange(COUNTRY_CODE);
         }
+    };
+
+    const handleTextChange = (text: string) => {
+        if (inputMode !== "tel") {
+            onChange(text);
+            return;
+        }
+
+        // Prevent removing or altering the +1 prefix
+        if (!text.startsWith(COUNTRY_CODE)) {
+            text = COUNTRY_CODE + text.replace(/^\+?1?/, '');
+        }
+
+        onChange(text);
     };
 
     return (
@@ -59,7 +75,8 @@ const TextInputComponent = ({
                 autoCapitalize={autoCapitalize}
                 secureTextEntry={ isSecureTextEntry ?? isPassword }
 
-                onChangeText={onChange}
+                onChangeText={handleTextChange}
+                // onChangeText={onChange}
                 onFocus={handleFocus}
                 onBlur={onBlur}
             />

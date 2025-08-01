@@ -51,7 +51,7 @@ const PhoneAuthScreen: React.FC = () => {
         setStep("enterCode");
       } catch (err) {
         console.error("Firestore update error:", err);
-        Alert.alert("Sorry!", "Your information failed to store in the Database.");
+        Alert.alert("Sorry!", "Your information failed to store. Please try again later.");
       }
 
     } catch (error) {

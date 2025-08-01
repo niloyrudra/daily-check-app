@@ -22,7 +22,7 @@ const TermsScreen: React.FC = () => {
         <View style={{alignItems:"center"}}>
           <Text style={[styles.textHeader]} variant="bodyLarge">Daily Check-App Subscription Service</Text>
           <Text style={[styles.textHeader]} variant="bodyLarge">Zero Point 963 Inc.</Text>
-          <Text style={[styles.textHeader]} variant="bodyLarge">Effective Date: [INSERT DATE]</Text>
+          <Text style={[styles.textHeader]} variant="bodyLarge">Effective Date: 8/8/2025</Text>
         </View>
 
         <View style={[styles.section]}>

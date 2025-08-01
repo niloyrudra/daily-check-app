@@ -70,7 +70,7 @@ const ContactsVerificationScreen: React.FC = () => {
 
       } catch (err) {
         console.error("Firestore update error:", err);
-        Alert.alert("Sorry!", "Your information failed to store in the Database.");
+        Alert.alert("Sorry!", "Your information failed to store. Please try again later.");
       }
 
     } catch (error) {
@@ -106,11 +106,6 @@ const ContactsVerificationScreen: React.FC = () => {
         
         if (contactKey === "contact1") setIsVerified1(true);
         else setIsVerified2(true);
-
-        // if (contactKey === "contact1") setStep1("enterCode");
-        // else setStep2("enterCode");
-
-        // router.push( "/(auth)/register/opt-in" );
 
       } else {
         Alert.alert("Sorry!", `Number verification is failed!`);

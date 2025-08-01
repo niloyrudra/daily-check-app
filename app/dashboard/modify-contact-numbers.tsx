@@ -103,11 +103,6 @@ const ModifyContactNumbersScreen: React.FC = () => {
         if (contactKey === "contact1") setIsVerified1(true);
         else setIsVerified2(true);
 
-        // if (contactKey === "contact1") setStep1("enterCode");
-        // else setStep2("enterCode");
-
-        // router.push( "/dashboard/home" );
-
       } else {
         Alert.alert("Sorry!", `Number verification is failed!`);
         throw new Error("Invalid code");
