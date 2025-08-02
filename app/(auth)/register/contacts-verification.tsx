@@ -147,6 +147,7 @@ const ContactsVerificationScreen: React.FC = () => {
                 loading={loading1}
                 handleSendCode={handleSendCode}
                 handleVerifyCode={handleVerifyCode}
+                isModifiying={false}
               />
             )
         }
@@ -168,6 +169,7 @@ const ContactsVerificationScreen: React.FC = () => {
                 loading={loading2}
                 handleSendCode={handleSendCode}
                 handleVerifyCode={handleVerifyCode}
+                isModifiying={false}
               />
             )
         }

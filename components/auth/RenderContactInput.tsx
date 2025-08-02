@@ -69,6 +69,13 @@ const RenderContactInput: React.FC<Props> = ({
           <Text style={STYLES.formLabel}>
             {contactKey === "contact1" ? "Primary Contact" : "Secondary Contact"}
           </Text>
+          {
+            !isModifiying && (
+              <Text style={[STYLES.formLabel, {marginTop:-20}]}>
+                {contactKey === "contact1" ? "Basic Plan" : "Premium Plan (Up to 2 Safety Contacts)"}
+              </Text>
+            )
+          }
 
           {step === "enterPhone" ? (
             <>
