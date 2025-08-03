@@ -20,7 +20,7 @@ const UpgradePlan: React.FC = () => {
 
   const {subscriptionId} = useLocalSearchParams()
 
-  console.log("User's subscriptionId:", subscriptionId)
+  // console.log("User's subscriptionId:", subscriptionId)
 
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);

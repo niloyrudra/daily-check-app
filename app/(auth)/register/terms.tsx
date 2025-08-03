@@ -221,28 +221,50 @@ No pro-rated refunds will be provided for partial subscription periods</Text>
 
         <View style={[styles.section]}>
           <TitleComponent
-            title="11. GENERAL PROVISIONS"
+            title="11. WAIVER OF RIGHT TO SUE AND LEGAL ACTION PROHIBITION
+BY USING THIS SERVICE, YOU EXPRESSLY WAIVE ANY AND ALL RIGHTS TO BRING LEGAL ACTION, INCLUDING BUT NOT LIMITED TO LAWSUITS, CLAIMS, OR LITIGATION OF ANY KIND AGAINST ZERO POINT 963 INC., ITS OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, OR AFFILIATES."
           />
-          <Text style={[styles.textBodyLarge]} variant="bodyLarge">11.1 Entire Agreement</Text>
-          <Text style={[styles.textBodyMedium]} variant="bodyMedium">These Terms constitute the entire agreement between you and the Company regarding the Service and supersede all prior agreements and understandings.</Text>
+
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">You specifically waive your right to sue for:</Text>
           
-          <Text style={[styles.textBodyLarge]} variant="bodyLarge">11.2 Modification</Text>
-          <Text style={[styles.textBodyMedium]} variant="bodyMedium">The Company reserves the right to modify these Terms at any time. Changes will be effective upon posting to our website or app. Continued use of the Service constitutes acceptance of modified Terms.</Text>
-          
-          <Text style={[styles.textBodyLarge]} variant="bodyLarge">11.3 Governing Law</Text>
-          <Text style={[styles.textBodyMedium]} variant="bodyMedium">These Terms shall be governed by and construed in accordance with the laws of [INSERT JURISDICTION], without regard to conflict of law principles.</Text>
-          
-          <Text style={[styles.textBodyLarge]} variant="bodyLarge">11.4 Severability</Text>
-          <Text style={[styles.textBodyMedium]} variant="bodyMedium">If any provision of these Terms is found to be unenforceable, the remaining provisions shall remain in full force and effect.</Text>
-          
-          <Text style={[styles.textBodyLarge]} variant="bodyLarge">11.5 Contact Information</Text>
-          <Text style={[styles.textBodyMedium]} variant="bodyMedium">For questions regarding these Terms or the Service, contact:</Text>
-          <Text style={[styles.textBodyMedium]} variant="bodyMedium">Email: dailycheckapp9@gmail.com</Text>
-          <Text style={[styles.textBodyMedium]} variant="bodyMedium">Company: Zero Point 963 Inc.</Text>
-          <Text style={[styles.textBodyMedium]} variant="bodyMedium">BY USING THE SERVICE, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THESE TERMS AND CONDITIONS.</Text>
+          <Text style={[styles.textBodyMedium, {marginTop: 10}]} variant="bodyMedium">Any damages, injuries, or harm of any nature</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">Pain and suffering</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">Emotional distress, psychological distress, or mental anguish</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">Punitive or exemplary damages</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">Lost wages or economic damages</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">Medical expenses</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">Property damage</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">Any other form of compensation or damages</Text>
+
+          <Text style={[styles.textBodyMedium, {marginTop: 10}]} variant="bodyMedium">This waiver applies regardless of the legal theory under which such claims might be brought, including but not limited to negligence, gross negligence, intentional torts, breach of contract, breach of warranty, or strict liability.</Text>
+          <Text style={[styles.textBodyMedium, {marginTop: 10}]} variant="bodyMedium">By continuing to use the Service, you acknowledge that you have voluntarily and knowingly waived these rights with full understanding of the consequences of this waiver.</Text>
         </View>
 
-
+        <View style={[styles.section]}>
+          <TitleComponent
+            title="12. GENERAL PROVISIONS"
+          />
+          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.1 Entire Agreement</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">These Terms constitute the entire agreement between you and the Company regarding the Service and supersede all prior agreements and understandings.</Text>
+          
+          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.2 Modification</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">The Company reserves the right to modify these Terms at any time. Changes will be effective upon posting to our website or app. Continued use of the Service constitutes acceptance of modified Terms.</Text>
+          
+          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.3 Governing Law</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">These Terms shall be governed by and construed in accordance with the laws of [INSERT JURISDICTION], without regard to conflict of law principles.</Text>
+          
+          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.4 Severability</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">If any provision of these Terms is found to be unenforceable, the remaining provisions shall remain in full force and effect.</Text>
+          
+          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.5 Contact Information</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">For questions regarding these Terms or the Service, contact:</Text>
+          
+          <Text style={[styles.textBodyMedium, {marginTop:10, fontWeight: "800"}]} variant="bodyMedium">Email: dailycheckapp9@gmail.com</Text>
+          <Text style={[styles.textBodyMedium, {fontWeight: "800"}]} variant="bodyMedium">Company: Zero Point 963 Inc.</Text>
+          
+          <Text style={[styles.textBodyMedium, {marginTop:10}]} variant="bodyMedium">BY USING THE SERVICE, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THESE TERMS AND CONDITIONS.</Text>
+        </View>
+        
         {/* Submit Button */}
         <ActionPrimaryButton
           buttonTitle="Continue"

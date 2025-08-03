@@ -21,7 +21,6 @@ const CustomSchedule = () => {
     const [modalVisible, setModalVisible] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-
         const fetchUserData = async () => {
             if (auth.currentUser) {
                 const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
@@ -45,13 +44,12 @@ const CustomSchedule = () => {
 
                 <SafeAreaLayout>
 
-                    {/* <ArrowButton route='/dashboard/home' buttonStyle={{ left: SIZES.bodyPaddingHorizontal, top: SIZES.bodyPaddingVertical }} /> */}
                     <ScrollView style={{flex:1}}>
 
-                    <ArrowButton route='/dashboard/home' buttonStyle={{zIndex:3}} />
+                        <ArrowButton route='/dashboard/home' buttonStyle={{zIndex:3}} />
 
                         <MotiAnimatedSection>
-                            <TitleComponent title="Custom Schedule Help Guide" titleStyle={{width: "60%", fontSize: SIZES.header, textAlign: "center", marginTop: 40}} />
+                            <TitleComponent title="Custom Schedule Help Guide" titleStyle={{width: 210, fontSize: SIZES.header, textAlign: "center", marginTop: 30}} />
                             <VideoPlayerComponent linkType="instruction" />
                         </MotiAnimatedSection>
 
