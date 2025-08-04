@@ -250,13 +250,16 @@ BY USING THIS SERVICE, YOU EXPRESSLY WAIVE ANY AND ALL RIGHTS TO BRING LEGAL ACT
           <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.2 Modification</Text>
           <Text style={[styles.textBodyMedium]} variant="bodyMedium">The Company reserves the right to modify these Terms at any time. Changes will be effective upon posting to our website or app. Continued use of the Service constitutes acceptance of modified Terms.</Text>
           
-          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.3 Governing Law</Text>
-          <Text style={[styles.textBodyMedium]} variant="bodyMedium">These Terms shall be governed by and construed in accordance with the laws of [INSERT JURISDICTION], without regard to conflict of law principles.</Text>
+          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.3 Governing Law and Jurisdiction</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">These Terms shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to conflict of law principles. Any legal action or proceeding arising under these Terms shall be brought exclusively in the state or federal courts located in Delaware, and the parties hereby irrevocably consent to the personal jurisdiction and venue of such courts.</Text>
           
-          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.4 Severability</Text>
+          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.4 Mandatory Arbitration</Text>
+          <Text style={[styles.textBodyMedium]} variant="bodyMedium">ANY DISPUTE, CONTROVERSY, OR CLAIM ARISING OUT OF OR RELATING TO THESE TERMS, THE SERVICE, OR THE BREACH, TERMINATION, ENFORCEMENT, INTERPRETATION, OR VALIDITY THEREOF SHALL BE RESOLVED EXCLUSIVELY THROUGH BINDING ARBITRATION. You agree to waive any right to a jury trial or to participate in a class action lawsuit or class-wide arbitration. The arbitration shall be conducted by a single arbitrator under the Commercial Arbitration Rules of the American Arbitration Association (AAA) and shall take place in Delaware. The arbitrator's decision shall be final and binding, and judgment may be entered upon it in any court of competent jurisdiction. The prevailing party shall be entitled to recover reasonable attorneys' fees and costs. This arbitration provision shall survive termination of these Terms.</Text>
+          
+          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.5 Severability</Text>
           <Text style={[styles.textBodyMedium]} variant="bodyMedium">If any provision of these Terms is found to be unenforceable, the remaining provisions shall remain in full force and effect.</Text>
-          
-          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.5 Contact Information</Text>
+                    
+          <Text style={[styles.textBodyLarge]} variant="bodyLarge">12.6 Contact Information</Text>
           <Text style={[styles.textBodyMedium]} variant="bodyMedium">For questions regarding these Terms or the Service, contact:</Text>
           
           <Text style={[styles.textBodyMedium, {marginTop:10, fontWeight: "800"}]} variant="bodyMedium">Email: dailycheckapp9@gmail.com</Text>
